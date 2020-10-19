@@ -3,9 +3,12 @@ import { EventEmitter } from '../helpers/event';
 import { plugins } from '../plugin';
 
 // TODO
-export interface ModuleOptions {
+export abstract class ModuleOptions {
   logger?: Logger;
 }
+
+// TODO
+export const modules: Module[] = [];
 
 // TODO do not extends EventEmttiter, let modules do
 export class Module extends EventEmitter {
@@ -20,6 +23,7 @@ export class Module extends EventEmitter {
       }
     }
     this.logger = options?.logger;
+    modules.push(this);
   }
   public execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
     this.emit('execute', circuit);

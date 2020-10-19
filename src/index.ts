@@ -1,6 +1,6 @@
-import { circuits, Circuit, CircuitOptions, NoFuncError } from './circuit';
+import { circuits, Circuit, CircuitFactory, CircuitOptions, NoFuncError } from './circuit';
 import { use, Plugin } from './plugin';
-import { Module } from './module/index';
+import { modules, Module, ModuleOptions } from './module/index';
 import { Timeout, TimeoutError } from './module/timeout';
 import { Retry } from './module/retry';
 import { Fallback } from './module/fallback';
@@ -12,9 +12,12 @@ export {
   // Circuit
   circuits,
   Circuit,
+  CircuitFactory,
   CircuitOptions,
   // Module
+  modules,
   Module,
+  ModuleOptions,
   Timeout,
   Retry,
   ConsecutiveBreaker,

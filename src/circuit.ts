@@ -28,7 +28,7 @@ export abstract class CircuitOptions {
 }
 
 // TODO
-interface CircuitFactory {
+export abstract class CircuitFactory {
   func?: CircuitFunction;
   options?: CircuitOptions;
 }
@@ -75,7 +75,7 @@ export class Circuit extends EventEmitter {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (...params: any[]): Promise<T> {
-    this.emit('execute');
+    this.emit('execute', this);
     if (this.modules.length) {
       if (this.modules.length > 1) {
         const args = [];

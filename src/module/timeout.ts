@@ -1,5 +1,5 @@
 import { Module, ModuleOptions } from '.';
-import { Circuit, Logger } from '../circuit';
+import { Circuit } from '../circuit';
 
 export class TimeoutError extends Error {
   constructor(message: string) {
@@ -10,7 +10,7 @@ export class TimeoutError extends Error {
 
 // TODO
 interface TimeoutOptions extends ModuleOptions {
-  delay: number;
+  delay?: number;
 }
 
 /**
