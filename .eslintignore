@@ -1,0 +1,6 @@
+/coverage
+/dist
+/docs
+/node_modules
+/madoc.config.js
+/vue.config.js

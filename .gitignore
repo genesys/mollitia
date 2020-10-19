@@ -1,0 +1,5 @@
+/.docs
+/coverage
+/dist
+/docs/vue/dist
+/node_modules
