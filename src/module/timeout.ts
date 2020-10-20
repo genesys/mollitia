@@ -32,7 +32,7 @@ export class Timeout extends Module {
   // Private Methods
   private async _promiseTimeout<T> (circuit: Circuit, time: number, promise: any, ...params: any[]): Promise<T> {
     let timeout: number;
-    if (time !== 0 || time !== Infinity) {
+    if (time !== 0 && time !== Infinity) {
       return Promise.race([
         promise(...params),
         new Promise<T>((resolve, reject) => {

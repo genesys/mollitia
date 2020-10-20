@@ -1,5 +1,5 @@
 import { Module, ModuleOptions } from '.';
-import { Circuit, Logger } from '../circuit';
+import { Circuit } from '../circuit';
 
 // TODO
 interface RetryOptions extends ModuleOptions {
