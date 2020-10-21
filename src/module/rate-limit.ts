@@ -40,7 +40,7 @@ export class RateLimit extends Module {
       return promise(...params);
     } else {
       if (now - this.requestsTime[0] > this.limitPeriod) {
-        this.requestsTime.splice(0,1);
+        this.requestsTime.shift();
         this.requestsTime.push(now);
         return promise(...params);
       } else {
