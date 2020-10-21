@@ -37,7 +37,7 @@ export class Timeout extends Module {
         promise(...params),
         new Promise<T>((resolve, reject) => {
           timeout = <unknown>setTimeout(() => {
-            this.logger?.debug('Has timed out');
+            this.emitTimeout(circuit);
             reject(new TimeoutError('Timed out'));
           }, time) as number;
         })
@@ -48,5 +48,9 @@ export class Timeout extends Module {
     } else {
       return promise(...params);
     }
+  }
+  private emitTimeout (circuit: Circuit) {
+    this.logger?.debug('Has timed out');
+    this.emit('timeout', circuit);
   }
 }
