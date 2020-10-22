@@ -6,6 +6,7 @@ import { Retry } from './module/retry';
 import { RateLimit, RateLimitError } from './module/rate-limit';
 import { Fallback } from './module/fallback';
 import { BreakerError, BreakerState } from './module/breaker';
+import { Cache } from './module/cache';
 import { ConsecutiveBreaker } from './module/breaker/consecutive-breaker';
 import { SlidingCountBreaker } from './module/breaker/sliding/count-breaker'; 
 import { SlidingTimeBreaker } from './module/breaker/sliding/time-breaker'; 
@@ -25,6 +26,7 @@ export {
   Retry,
   ConsecutiveBreaker,
   Fallback,
+  Cache,
   // Plugin
   use,
   Plugin,

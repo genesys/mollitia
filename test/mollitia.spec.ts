@@ -7,7 +7,7 @@ const logger = {
   warn: jest.fn()
 };
 
-const successAsync = jest.fn().mockImplementation((res: unknown, delay = 1) => {
+const successAsync = jest.fn().mockImplementation((res: unknown = 'default', delay = 1) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(res);
@@ -15,7 +15,7 @@ const successAsync = jest.fn().mockImplementation((res: unknown, delay = 1) => {
   });
 });
 
-const failureAsync = jest.fn().mockImplementation((res: unknown, delay = 1) => {
+const failureAsync = jest.fn().mockImplementation((res: unknown = 'default', delay = 1) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(res);
@@ -75,9 +75,10 @@ describe('mollitia.ts', () => {
       describe('Retry', () => {
         it('should retry the function multiple times', async () => {
           const retry = new Mollitia.Retry({
-            attempts: 2,
-            logger
+            attempts: 2
           });
+          const onRetry = jest.fn();
+          retry.on('retry', onRetry);
           const circuit = new Mollitia.Circuit({
             options: {
               modules: [
@@ -86,8 +87,8 @@ describe('mollitia.ts', () => {
             }
           });
           await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
-          expect(logger.debug).toHaveBeenNthCalledWith(1, 'Retry: (1/2)');
-          expect(logger.debug).toHaveBeenNthCalledWith(2, 'Retry: (2/2)');
+          expect(onRetry).toHaveBeenNthCalledWith(1, circuit, 1);
+          expect(onRetry).toHaveBeenNthCalledWith(2, circuit, 2);
         });
       });
       describe('ConsecutiveBreaker', () => {
@@ -466,7 +467,7 @@ describe('mollitia.ts', () => {
         });
       });
       describe('Fallback', () => {
-        it('should timeout the function for circuit', async () => {
+        it('should permit to filter the rejection value', async () => {
           const circuit = new Mollitia.Circuit({
             options: {
               modules: [
@@ -482,18 +483,53 @@ describe('mollitia.ts', () => {
           await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('fallback');
         });
       });
+      describe('Cache', () => {
+        it('should cache the previous response', async () => {
+          const circuit = new Mollitia.Circuit({
+            options: {
+              modules: [
+                new Mollitia.Cache({
+                  logger,
+                  ttl: 100
+                })
+              ]
+            }
+          });
+          await expect(circuit.fn(successAsync).execute()).resolves.toEqual('default');
+          await expect(circuit.fn(successAsync).execute()).resolves.toEqual('default');
+          expect(logger.debug).toHaveBeenNthCalledWith(1, 'Cache: Hit');
+          const objRef = {
+            dummy: 'value1',
+            dummy2: 'value2'
+          };
+          const objRef2 = {
+            dummy: 'value1',
+            dummy2: 'value3'
+          };
+          await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+          objRef.dummy2 = 'value3';
+          await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+          expect(logger.debug).toHaveBeenNthCalledWith(2, 'Cache: Hit');
+          await expect(circuit.fn(successAsync).execute(objRef2)).resolves.toEqual(objRef2);
+          expect(logger.debug).not.toHaveBeenNthCalledWith(3, 'Cache: Hit');
+          await delay(150);
+          await expect(circuit.fn(successAsync).execute()).resolves.toEqual('default');
+          expect(logger.debug).not.toHaveBeenNthCalledWith(3, 'Cache: Hit');
+        });
+      });
     });
     describe('Features', () => {
       describe('Sequential Usage', () => {
         it('should retry function and use the timeout', async () => {
+          const onEvent = jest.fn();
           const retry = new Mollitia.Retry({
-            attempts: 2,
-            logger
+            attempts: 2
           });
+          retry.on('retry', onEvent);
           const timeout = new Mollitia.Timeout({
-            delay: 5,
-            logger
+            delay: 5
           });
+          timeout.on('timeout', onEvent);
           const circuit = new Mollitia.Circuit({
             options: {
               modules: [
@@ -503,15 +539,15 @@ describe('mollitia.ts', () => {
             }
           });
           await expect(circuit.fn(failureAsync).execute('dummy', 6)).rejects.toBeInstanceOf(Mollitia.TimeoutError);
-          expect(logger.debug).toHaveBeenNthCalledWith(1, 'Has timed out');
-          expect(logger.debug).toHaveBeenNthCalledWith(2, 'Retry: (1/2)');
-          expect(logger.debug).toHaveBeenNthCalledWith(3, 'Has timed out');
-          expect(logger.debug).toHaveBeenNthCalledWith(4, 'Retry: (2/2)');
-          expect(logger.debug).toHaveBeenNthCalledWith(5, 'Has timed out');
+          expect(onEvent).toHaveBeenNthCalledWith(1, circuit); // Timeout
+          expect(onEvent).toHaveBeenNthCalledWith(2, circuit, 1); // First Retry
+          expect(onEvent).toHaveBeenNthCalledWith(3, circuit); // Timeout
+          expect(onEvent).toHaveBeenNthCalledWith(4, circuit, 2); // Second Retry
+          expect(onEvent).toHaveBeenNthCalledWith(5, circuit); // Timeout
           circuit.modules = [timeout, retry];
           await expect(circuit.fn(failureAsync).execute('dummy', 4)).rejects.toBeInstanceOf(Mollitia.TimeoutError);
-          expect(logger.debug).toHaveBeenNthCalledWith(6, 'Retry: (1/2)');
-          expect(logger.debug).toHaveBeenNthCalledWith(7, 'Has timed out');
+          expect(onEvent).toHaveBeenNthCalledWith(6, circuit, 1); // Retry
+          expect(onEvent).toHaveBeenNthCalledWith(7, circuit); // Timeout
         });
         it('should use the fallback when the breaker is opened', async () => {
           const circuit = new Mollitia.Circuit({
