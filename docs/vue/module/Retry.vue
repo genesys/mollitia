@@ -1,7 +1,7 @@
 <template>
   <div class="mollitia-playground">
-    <Circuit :modules="modules">
-      <RetryModule ref="r1"></RetryModule>
+    <Circuit ref="c1" :modules="modules">
+      <RetryModule ref="r1" :time="time"></RetryModule>
     </Circuit>
   </div>
 </template>
@@ -17,10 +17,12 @@ export default {
   },
   data () {
     return {
+      time: 0,
       modules: []
     };
   },
   mounted () {
+    this.time = this.$refs.c1.time;
     this.modules.push(this.$refs.r1.retry);
   }
 }

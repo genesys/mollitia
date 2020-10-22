@@ -25,10 +25,12 @@ export class Retry extends Module {
   // Private Methods
   private async _promiseRetry<T> (circuit: Circuit, attempts: number, promise: any, ...params: any[]): Promise<T> {
     if (attempts - 1 === 0) {
+      this.emit('retry', circuit, this.attempts);
       this.logger?.debug(`Retry: (${this.attempts}/${this.attempts})`);
       return promise(...params);
     }
     if (attempts !== (this.attempts + 1)) {
+      this.emit('retry', circuit, attempts - 1);
       this.logger?.debug(`Retry: (${attempts - 1}/${this.attempts})`);
     }
     return promise(...params).catch(() => {

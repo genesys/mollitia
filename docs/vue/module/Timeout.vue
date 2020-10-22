@@ -1,7 +1,7 @@
 <template>
   <div class="mollitia-playground">
     <Circuit ref="c1" :modules="modules" @end="onCircuitEnd">
-      <TimeoutModule ref="t1" :circuit="circuit"></TimeoutModule>
+      <TimeoutModule ref="t1"></TimeoutModule>
     </Circuit>
   </div>
 </template>
@@ -17,7 +17,6 @@ export default {
   },
   data () {
     return {
-      circuit: null,
       modules: []
     };
   },
@@ -27,7 +26,6 @@ export default {
     }
   },
   mounted () {
-    this.circuit = this.$refs.c1.circuit;
     this.modules.push(this.$refs.t1.timeout);
   }
 }
