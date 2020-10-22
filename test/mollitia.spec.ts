@@ -181,7 +181,7 @@ describe('mollitia.ts', () => {
             halfOpenStateMaxDelay: 20,
             openStateDelay: 10,
             state: Mollitia.BreakerState.HALF_OPENED,
-            permittedNumberOfCallsInHalfOpenSate: 1,
+            permittedNumberOfCallsInHalfOpenState: 1,
             minimumNumberOfCalls: 1
           });
           const circuit = new Mollitia.Circuit({
@@ -209,7 +209,7 @@ describe('mollitia.ts', () => {
             failureRateThreshold: 50,
             openStateDelay: 10,
             state: Mollitia.BreakerState.HALF_OPENED,
-            permittedNumberOfCallsInHalfOpenSate: 2
+            permittedNumberOfCallsInHalfOpenState: 2
           });
           const circuit = new Mollitia.Circuit({
             options: {
@@ -233,7 +233,7 @@ describe('mollitia.ts', () => {
             failureRateThreshold: 50,
             openStateDelay: 10,
             state: Mollitia.BreakerState.HALF_OPENED,
-            permittedNumberOfCallsInHalfOpenSate: 2
+            permittedNumberOfCallsInHalfOpenState: 2
           });
           const circuit = new Mollitia.Circuit({
             options: {
@@ -253,7 +253,7 @@ describe('mollitia.ts', () => {
             openStateDelay: 10,
             slidingWindowSize: 10,
             minimumNumberOfCalls: 2,
-            permittedNumberOfCallsInHalfOpenSate: 1,
+            permittedNumberOfCallsInHalfOpenState: 1,
             slowCallDurationThreshold: 100,
             slowCallRateThreshold: 50
           });
@@ -348,7 +348,7 @@ describe('mollitia.ts', () => {
             failureRateThreshold: 50,
             openStateDelay: 10,
             state: Mollitia.BreakerState.HALF_OPENED,
-            permittedNumberOfCallsInHalfOpenSate: 2
+            permittedNumberOfCallsInHalfOpenState: 2
           });
           const circuit = new Mollitia.Circuit({
             options: {
@@ -372,7 +372,7 @@ describe('mollitia.ts', () => {
             openStateDelay: 10,
             slidingWindowSize: 1,
             minimumNumberOfCalls: 2,
-            permittedNumberOfCallsInHalfOpenSate: 1,
+            permittedNumberOfCallsInHalfOpenState: 1,
             slowCallDurationThreshold: 100,
             slowCallRateThreshold: 50
           });

@@ -30,7 +30,6 @@ export interface BreakerNotification {
 export class Breaker extends Module implements BreakerNotification {
   // Public Attributes
   public state: BreakerState;
-  private previousState: BreakerState;
   public openStateDelay: number;
   public halfOpenStateMaxDelay: number;
   private halfOpenMaxDelayTimeout = 0;
@@ -39,7 +38,6 @@ export class Breaker extends Module implements BreakerNotification {
   constructor (options?: BreakerOptions) {
     super(options);
     this.state = options?.state || BreakerState.CLOSED;
-    this.previousState = this.state;
     this.openStateDelay = options?.openStateDelay || 60 * 1000;
     this.halfOpenStateMaxDelay = options?.halfOpenStateMaxDelay || 0;
     if (this.state === BreakerState.OPENED) {
@@ -73,6 +71,7 @@ export class Breaker extends Module implements BreakerNotification {
       this.logger?.debug('Breaker: Open');
       this.setHalfDelay();
       this.onOpened();
+      this.emit('stateChanged');
     }
   }
   public halfOpen (): void {
@@ -81,6 +80,7 @@ export class Breaker extends Module implements BreakerNotification {
       this.state = BreakerState.HALF_OPENED;
       this.setOpenDelay();
       this.onHalfOpened();
+      this.emit('stateChanged');
     }
   }
   public close (): void {
@@ -89,6 +89,7 @@ export class Breaker extends Module implements BreakerNotification {
       this.logger?.debug('Breaker: Close');
       this.state = BreakerState.CLOSED;
       this.onClosed();
+      this.emit('stateChanged');
     }
   }
   private setHalfDelay (): void {

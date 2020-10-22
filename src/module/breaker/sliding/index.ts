@@ -7,7 +7,7 @@ export interface SlidingWindowBreakerOptions extends BreakerOptions {
   failureRateThreshold?:                  number;
   slowCallRateThreshold?:                 number;
   slowCallDurationThreshold?:             number;
-  permittedNumberOfCallsInHalfOpenSate?:  number;
+  permittedNumberOfCallsInHalfOpenState?:  number;
 }
 
 export enum SlidingWindowRequestResult {
@@ -22,7 +22,7 @@ export abstract class SlidingWindowBreaker<T> extends Breaker {
   public failureRateThreshold: number;
   public slowCallRateThreshold: number;
   public slowCallDurationThreshold: number;
-  public permittedNumberOfCallsInHalfOpenSate: number;
+  public permittedNumberOfCallsInHalfOpenState: number;
   public callsInClosedState: T[];
   private nbCallsInHalfOpenedState: number;
   private callsInHalfOpenedState: SlidingWindowRequestResult[];
@@ -34,10 +34,10 @@ export abstract class SlidingWindowBreaker<T> extends Breaker {
     if (this.slidingWindowSize < this.minimumNumberOfCalls) {
       this.slidingWindowSize = this.minimumNumberOfCalls;
     }
-    this.failureRateThreshold                 = (options?.failureRateThreshold || 50) / 100;
+    this.failureRateThreshold                 = (options?.failureRateThreshold || 50);
     this.slowCallDurationThreshold            = options?.slowCallDurationThreshold || 60000;
-    this.slowCallRateThreshold                = (options?.slowCallRateThreshold || 100) / 100;
-    this.permittedNumberOfCallsInHalfOpenSate = options?.permittedNumberOfCallsInHalfOpenSate || 10;
+    this.slowCallRateThreshold                = (options?.slowCallRateThreshold || 100);
+    this.permittedNumberOfCallsInHalfOpenState = options?.permittedNumberOfCallsInHalfOpenState || 10;
     this.nbCallsInHalfOpenedState = 0;
     this.callsInHalfOpenedState = [];
     this.callsInClosedState = [];
@@ -75,11 +75,11 @@ export abstract class SlidingWindowBreaker<T> extends Breaker {
   abstract executeInClosed<T1> (promise: any, ...params: any[]): Promise<T1>;
 
   protected async executeInHalfOpened<T1> (promise: any, ...params: any[]): Promise<T1> {
-    if (this.nbCallsInHalfOpenedState < this.permittedNumberOfCallsInHalfOpenSate) {
+    if (this.nbCallsInHalfOpenedState < this.permittedNumberOfCallsInHalfOpenState) {
       this.nbCallsInHalfOpenedState++;
       const {requestResult, response } = await this.executePromise(promise, ...params);
       this.callsInHalfOpenedState.push(requestResult);
-      if (this.callsInHalfOpenedState.length === this.permittedNumberOfCallsInHalfOpenSate) {
+      if (this.callsInHalfOpenedState.length == this.permittedNumberOfCallsInHalfOpenState) {
         this.checkCallRatesHalfOpen(this.open.bind(this), this.close.bind(this));
       }
       if (requestResult === SlidingWindowRequestResult.FAILURE) {
@@ -117,8 +117,8 @@ export abstract class SlidingWindowBreaker<T> extends Breaker {
 
   protected checkResult(nbSlow: number, nbFailure: number, nbCalls: number, callbackFailure: (() => void), callbackSuccess?: (() => void)): void {
     if (
-      (this.slowCallRateThreshold < 100 && ((nbSlow / nbCalls) >= this.slowCallRateThreshold)) ||
-      (this.failureRateThreshold < 100 && ((nbFailure / nbCalls) >= this.failureRateThreshold))
+      (this.slowCallRateThreshold < 100 && (((nbSlow / nbCalls) * 100) >= this.slowCallRateThreshold)) ||
+      (this.failureRateThreshold < 100 && (((nbFailure / nbCalls) * 100)>= this.failureRateThreshold))
     ) {
       callbackFailure();
     } else {

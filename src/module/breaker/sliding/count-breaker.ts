@@ -7,7 +7,7 @@ export class SlidingCountBreaker extends SlidingWindowBreaker<SlidingWindowReque
     this.callsInClosedState.push(requestResult);
     const nbCalls = this.callsInClosedState.length;
     if (nbCalls >= this.minimumNumberOfCalls) {
-      if (nbCalls > this.slidingWindowSize) {
+      while (nbCalls > this.slidingWindowSize) {
         this.callsInClosedState.shift();
       }
       this.checkCallRatesClosed(this.open.bind(this));

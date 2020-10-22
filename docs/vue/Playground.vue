@@ -9,6 +9,8 @@ import Global from './Global';
 import Timeout from './module/Timeout';
 import Retry from './module/Retry';
 import RateLimit from './module/RateLimit';
+import SlidingCountBreaker from './module/sliding/CountBreaker';
+import SlidingTimeBreaker from './module/sliding/TimeBreaker';
 export default {
   name: 'Playground',
   props: {
@@ -28,6 +30,12 @@ export default {
         }
         case 'rate-limit': {
           return RateLimit;
+        }
+        case 'sliding-count-breaker': {
+          return SlidingCountBreaker;
+        }
+        case 'sliding-time-breaker': {
+          return SlidingTimeBreaker;
         }
         default: case 'playground' : {
           return Global;

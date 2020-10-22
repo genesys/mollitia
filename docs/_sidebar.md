@@ -16,6 +16,12 @@ links:
         path: /api/module/timeout
       - title: Rate Limit
         path: /api/module/rate-limit
+  - group: Circuit Breaker Sliding Window 
+    links:
+      - title: Count Breaker
+        path: /api/module/sliding/count-breaker
+      - title: Time Breaker
+        path: /api/module/sliding/time-breaker
   - group: Modules
     links:
       - title: Create a module

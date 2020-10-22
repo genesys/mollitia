@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="mollitia-module-rate-limit-visual">
-        <div class="cercle" v-for="result in results" :key="result.id" :class="{'failure': result.value === false}"></div>
+        <div class="circle" v-for="result in results" :key="result.id" :class="{'failure': result.value === false}"></div>
       </div>
     </div>
   </div>
@@ -109,16 +109,15 @@ export default {
   .mollitia-module-rate-limit-visual {
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 5px;
     display: flex;
-    .cercle {
+    .circle {
       width: 20px;
       height: 20px;
       border-radius: 10px;
       background: green;
-      margin-right:5px;
+      margin-left:5px;
     }
-    .cercle.failure {
+    .circle.failure {
       background: red;
     }
   }
