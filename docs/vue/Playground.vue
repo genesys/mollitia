@@ -8,6 +8,7 @@
 import Global from './Global';
 import Timeout from './module/Timeout';
 import Retry from './module/Retry';
+import RateLimit from './module/RateLimit';
 export default {
   name: 'Playground',
   props: {
@@ -24,6 +25,9 @@ export default {
         }
         case 'retry' : {
           return Retry;
+        }
+        case 'rate-limit': {
+          return RateLimit;
         }
         default: case 'playground' : {
           return Global;

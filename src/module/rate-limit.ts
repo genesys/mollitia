@@ -44,6 +44,8 @@ export class RateLimit extends Module {
         this.requestsTime.push(now);
         return promise(...params);
       } else {
+        this.logger?.debug('Rate Limited');
+        this.emit('rateLimit', circuit);
         return Promise.reject(new RateLimitError('Rate Limited'));
       }
     }

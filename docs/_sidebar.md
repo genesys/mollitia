@@ -14,6 +14,8 @@ links:
         path: /api/module/retry
       - title: Timeout
         path: /api/module/timeout
+      - title: Rate Limit
+        path: /api/module/rate-limit
   - group: Modules
     links:
       - title: Create a module
