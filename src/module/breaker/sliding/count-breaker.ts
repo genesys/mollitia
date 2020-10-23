@@ -1,14 +1,23 @@
-import { SlidingWindowBreaker, SlidingWindowRequestResult } from './index';
+import { SlidingWindowBreaker, SlidingWindowBreakerOptions, SlidingWindowRequestResult } from './index';
 
 export class SlidingCountBreaker extends SlidingWindowBreaker<SlidingWindowRequestResult> {
+
+  constructor(options?: SlidingWindowBreakerOptions) {
+    super(options);
+    this.slidingWindowSize = options?.slidingWindowSize || 10;
+    if (this.slidingWindowSize < this.minimumNumberOfCalls) {
+      this.slidingWindowSize = this.minimumNumberOfCalls;
+    }
+  }
 
   public async executeInClosed<T> (promise: any, ...params: any[]): Promise<T> {
     const {requestResult, response } = await this.executePromise(promise, ...params);
     this.callsInClosedState.push(requestResult);
-    const nbCalls = this.callsInClosedState.length;
+    let nbCalls = this.callsInClosedState.length;
     if (nbCalls >= this.minimumNumberOfCalls) {
       while (nbCalls > this.slidingWindowSize) {
         this.callsInClosedState.shift();
+        nbCalls--;
       }
       this.checkCallRatesClosed(this.open.bind(this));
     }

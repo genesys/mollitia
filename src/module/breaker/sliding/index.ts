@@ -31,13 +31,10 @@ export abstract class SlidingWindowBreaker<T> extends Breaker {
     super(options);
     this.slidingWindowSize                    = options?.slidingWindowSize || 10;
     this.minimumNumberOfCalls                 = options?.minimumNumberOfCalls || 10;
-    if (this.slidingWindowSize < this.minimumNumberOfCalls) {
-      this.slidingWindowSize = this.minimumNumberOfCalls;
-    }
     this.failureRateThreshold                 = (options?.failureRateThreshold || 50);
     this.slowCallDurationThreshold            = options?.slowCallDurationThreshold || 60000;
     this.slowCallRateThreshold                = (options?.slowCallRateThreshold || 100);
-    this.permittedNumberOfCallsInHalfOpenState = options?.permittedNumberOfCallsInHalfOpenState || 10;
+    this.permittedNumberOfCallsInHalfOpenState = options?.permittedNumberOfCallsInHalfOpenState || 2;
     this.nbCallsInHalfOpenedState = 0;
     this.callsInHalfOpenedState = [];
     this.callsInClosedState = [];

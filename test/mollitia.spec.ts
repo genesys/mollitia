@@ -322,7 +322,6 @@ describe('mollitia.ts', () => {
         it('switch to Open when failure rate exceeded', async () => {
           const slidingTimeBreaker = new Mollitia.SlidingTimeBreaker({
             slidingWindowSize: 100,
-            slidingWindowSizeInMs: true,
             minimumNumberOfCalls: 2,
             failureRateThreshold: 60,
             openStateDelay: 20,
@@ -370,7 +369,7 @@ describe('mollitia.ts', () => {
           const slidingTimeCounter = new Mollitia.SlidingTimeBreaker({
             failureRateThreshold: 50,
             openStateDelay: 10,
-            slidingWindowSize: 1,
+            slidingWindowSize: 1000,
             minimumNumberOfCalls: 2,
             permittedNumberOfCallsInHalfOpenState: 1,
             slowCallDurationThreshold: 100,

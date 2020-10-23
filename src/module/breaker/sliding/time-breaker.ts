@@ -7,16 +7,19 @@ export interface SlidingTimeElem {
 }
 
 interface SlidingTimeBreakerOptions extends SlidingWindowBreakerOptions {
-  slidingWindowSizeInMs?: boolean 
+  slidingWindowSizeInSeconds?: boolean 
 }
 
 export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
   private maxSize: number;
+  private slidingWindowSizeInSeconds: boolean;
+
   constructor(options?: SlidingTimeBreakerOptions) {
     super(options);
-    if (options?.slidingWindowSizeInMs) {
-      //Sliding window is in ms, no need to multiply by 1000
-    } else {
+    this.slidingWindowSize = options?.slidingWindowSize || 60;
+    this.slidingWindowSizeInSeconds = options?.slidingWindowSizeInSeconds || false;
+
+    if (this.slidingWindowSizeInSeconds) {
       this.slidingWindowSize = this.slidingWindowSize * 1000;
     }
     this.maxSize = 1000;
@@ -41,7 +44,6 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
 
   public async executeInClosed<T> (promise: any, ...params: any[]): Promise<T> {
     const {requestResult, response } = await this.executePromise(promise, ...params);
-    //this.callsInClosedState = this.callsInClosedState.filter((elem) => (now - elem.timestamp) <= this.slidingWindowSize)
     this.filterCalls();
     this.callsInClosedState.push({result: requestResult, timestamp: (new Date()).getTime()});
     if (this.callsInClosedState.length >= this.minimumNumberOfCalls) {

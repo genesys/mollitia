@@ -111,8 +111,7 @@ export default {
       slowCallRateThreshold: this.slowCallRateThreshold,
       permittedNumberOfCallsInHalfOpenState: this.permittedNumberOfCallsInHalfOpenState,
       openStateDelay: this.openStateDelay,
-      halfOpenStateMaxDelay: this.halfOpenStateMaxDelay,
-      slidingWindowSizeInMs: true
+      halfOpenStateMaxDelay: this.halfOpenStateMaxDelay
     });
     this.slidingTimeBreaker.on('stateChanged', this.onCircuitStateChanged);
   }
