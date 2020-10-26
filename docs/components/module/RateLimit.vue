@@ -9,11 +9,11 @@
       <div class="mollitia-module-rate-limit-config">
         <div class="form-control">
           <label for="limitPeriod">Limit Period</label>
-          <input v-model="limitPeriod" id="limitPeriod" @input="update" type="number"/>
+          <input v-model.number="limitPeriod" id="limitPeriod" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="limitForPeriod">Limit For Period</label>
-          <input v-model="limitForPeriod" id="limitForPeriod" @input="update" type="number"/>
+          <input v-model.number="limitForPeriod" id="limitForPeriod" @input="update" type="number"/>
         </div>
       </div>
       <div class="mollitia-module-rate-limit-visual">

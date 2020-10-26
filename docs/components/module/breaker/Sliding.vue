@@ -8,35 +8,35 @@
       <div class="mollitia-module-sliding-window-breaker-config">
         <div class="form-control">
           <label for="windowSize">Window Size</label>
-          <input v-model="slidingWindowSize" id="windowSize" @input="update" type="number"/>
+          <input v-model.number="slidingWindowSize" id="windowSize" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="minNumberOfCalls">Min nb calls</label>
-          <input v-model="minimumNumberOfCalls" id="minNumberOfCalls" @input="update" type="number"/>
+          <input v-model.number="minimumNumberOfCalls" id="minNumberOfCalls" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="failureRateThreshold">Failure Rate Threshold</label>
-          <input v-model="failureRateThreshold" id="failureRateThreshold" @input="update" type="number"/>
+          <input v-model.number="failureRateThreshold" id="failureRateThreshold" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="slowCallDurationThreshold">Slow Call Duration Threshold (in ms)</label>
-          <input v-model="slowCallDurationThreshold" id="slowCallDurationThreshold" @input="update" type="number"/>
+          <input v-model.number="slowCallDurationThreshold" id="slowCallDurationThreshold" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="slowCallRateThreshold">Slow Call Rate Threshold</label>
-          <input v-model="slowCallRateThreshold" id="slowCallRateThreshold" @input="update" type="number"/>
+          <input v-model.number="slowCallRateThreshold" id="slowCallRateThreshold" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="permittedNumberOfCallsInHalfOpenState">Number Of Calls in Half Open State</label>
-          <input v-model="permittedNumberOfCallsInHalfOpenState" id="permittedNumberOfCallsInHalfOpenState" @input="update" type="number"/>
+          <input v-model.number="permittedNumberOfCallsInHalfOpenState" id="permittedNumberOfCallsInHalfOpenState" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="openStateDelay">Delay to stay in Open State</label>
-          <input v-model="openStateDelay" id="openStateDelay" @input="update" type="number"/>
+          <input v-model.number="openStateDelay" id="openStateDelay" @input="update" type="number"/>
         </div>
         <div class="form-control">
           <label for="halfOpenStateMaxDelay">Max Delay to stay in Half Open State</label>
-          <input v-model="halfOpenStateMaxDelay" id="halfOpenStateMaxDelay" @input="update" type="number"/>
+          <input v-model.number="halfOpenStateMaxDelay" id="halfOpenStateMaxDelay" @input="update" type="number"/>
         </div>      
       </div>
       <div class="mollitia-module-sliding-window-breaker-visual">

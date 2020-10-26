@@ -8,7 +8,7 @@
     </div>
     <div class="mollitia-circuit-request">
       <div>Simulate Request</div>
-      <div>Time: <input v-model="time" type="number"/></div>
+      <div>Time: <input v-model.number="time" type="number"/></div>
       <div>
         <button @click="triggerSuccess" :disabled="active">Success</button>
         <button @click="triggerFailure" :disabled="active">Failure</button>
