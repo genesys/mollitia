@@ -1,7 +1,7 @@
 <template>
   <div class="mollitia-playground">
     <Circuit ref="c1" :modules="modules" @end="onCircuitEnd">
-      <SlidingWindowBreakerModule slidingType="count" ref="cb1"></SlidingWindowBreakerModule>
+      <SlidingWindowBreakerModule name="toto" slidingType="count" ref="cb1"></SlidingWindowBreakerModule>
     </Circuit>
   </div>
 </template>

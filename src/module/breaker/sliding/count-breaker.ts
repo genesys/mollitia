@@ -13,11 +13,10 @@ export class SlidingCountBreaker extends SlidingWindowBreaker<SlidingWindowReque
   public async executeInClosed<T> (promise: any, ...params: any[]): Promise<T> {
     const {requestResult, response } = await this.executePromise(promise, ...params);
     this.callsInClosedState.push(requestResult);
-    let nbCalls = this.callsInClosedState.length;
+    const nbCalls = this.callsInClosedState.length;
     if (nbCalls >= this.minimumNumberOfCalls) {
-      while (nbCalls > this.slidingWindowSize) {
-        this.callsInClosedState.shift();
-        nbCalls--;
+      if (nbCalls > this.slidingWindowSize) {
+        this.callsInClosedState.splice(0,(nbCalls - this.slidingWindowSize));
       }
       this.checkCallRatesClosed(this.open.bind(this));
     }

@@ -170,10 +170,12 @@ export default {
     .circle {
       width: 20px;
       height: 20px;
-      border-radius: 10px;
+      border-radius: 50%;
       background: green;
       margin-left: 5px;
       margin-right: 5px;
+      // background-image: linear-gradient(to right, transparent 50%, currentColor 0);
+      // color: white
     }
     .circle.halfopened {
       background: orange;
@@ -181,6 +183,24 @@ export default {
     .circle.opened {
       background: red;
     }
+
+    // .circle::before {
+    //   content: '';
+    //   display: block;
+    //   margin-left: 50%;
+    //   height: 100%;
+    //   border-radius: 0 100% 100% 0 / 50%;
+    //   background-color: inherit;
+    //   transform-origin: left;
+    //   animation: spin 5s linear infinite, bg 10s step-end infinite;
+    // }
+
+    // @keyframes spin {
+    //   to { transform: rotate(.5turn); }
+    // }
+    // @keyframes bg {
+    //   50% { background: currentColor; }
+    // }
   }
 }  
 </style>
