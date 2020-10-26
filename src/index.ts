@@ -10,6 +10,7 @@ import { Cache } from './module/cache';
 import { ConsecutiveBreaker } from './module/breaker/consecutive-breaker';
 import { SlidingCountBreaker } from './module/breaker/sliding/count-breaker'; 
 import { SlidingTimeBreaker } from './module/breaker/sliding/time-breaker'; 
+import { Bulkhead, BulkheadOverloadError } from './module/bulkhead';
 
 // Default Export
 export {
@@ -27,6 +28,8 @@ export {
   ConsecutiveBreaker,
   Fallback,
   Cache,
+  Bulkhead,
+  BulkheadOverloadError,
   // Plugin
   use,
   Plugin,
