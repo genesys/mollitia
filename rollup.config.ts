@@ -7,12 +7,14 @@ import json from 'rollup-plugin-json';
 import pkg from './package.json';
 
 const camelName = 'Mollitia';
+const docsPackage = 'docs/plugins/libs/mollitia.es5.js';
 
 export default {
   input: 'src/index.ts',
   output: [
     { file: pkg.main, name: camelName, format: 'umd', sourcemap: true },
-    { file: pkg.module, format: 'es', sourcemap: true }
+    { file: pkg.module, format: 'es', sourcemap: true },
+    { file: docsPackage, format: 'es', sourcemap: true }
   ],
   external: [],
   watch: {

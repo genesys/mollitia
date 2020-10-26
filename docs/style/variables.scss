@@ -1,0 +1,60 @@
+:root {
+  --madoc-white: #FFFFFF;
+  --madoc-black: #000000;
+
+  // Flash
+  --madoc-light-orange: #FF4F1F;
+  --madoc-dark-orange: #E36209;
+
+  // Grey Shade
+  --madoc-grey-1: #111111;
+  --madoc-grey-2: #222222;
+  --madoc-grey-3: #333333;
+  --madoc-grey-4: #444444;
+  --madoc-grey-5: #555555;
+  --madoc-grey-9: #999999;
+
+  // Light
+  --madoc-light-primary: #AAAAAA;
+
+  // Dark
+  --madoc-dark-primary: #444444;
+
+  // Github
+  --madoc-github-blue-link: #0366D6;
+  --madoc-github-red-code: #AF6161;
+  --madoc-github-code-back: rgba(27, 31, 35, .05);
+  --madoc-github-underline: #EAECEF;
+
+  --madoc-github-grey-1: #EAEEEF;
+  --madoc-github-grey-2: #6A737D;
+  --madoc-github-grey-3: #DFE2E5;
+  --madoc-github-grey-4: #E1E4E8;
+  --madoc-github-grey-5: #C6CBD1;
+  --madoc-github-grey-6: #24292E;
+  --madoc-github-grey-7: #D6D3D5;
+  --madoc-github-grey-8: #D6D8DA;
+  --madoc-github-grey-9: #9DA5B4;
+  --madoc-github-grey-10: #181A1F;
+  --madoc-github-grey-11: #1B1D23;
+  --madoc-github-grey-12: #f6f8fa;
+
+  // Opacity
+  --madoc-white-opacity-50: rgba(255, 255, 255, 0.5);
+  --madoc-black-opacity-25: rgba(0, 0, 0, 0.25);
+  --madoc-black-opacity-50: rgba(0, 0, 0, 0.5);
+
+  // Colors
+  --madoc-grey-blue-1: #dce5ed;
+  --madoc-grey-blue-2: #8da9c4;
+  --madoc-grey-blue-3: #778da9;
+
+  --madoc-blue-1: #00a6ed;
+
+  // Mollitia
+  --mollitia-error-color: #EA4F6B;
+  --mollitia-warning-color: #F8A740;
+  --mollitia-success-color: #4AC764;
+  --mollitia-info-color: #2E69DB;
+  --mollitia-event-color: #FF8FDD;
+}

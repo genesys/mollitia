@@ -1,0 +1,5 @@
+/.nuxt
+/coverage
+/dist
+/plugins/libs
+/node_modules

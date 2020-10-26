@@ -1,0 +1,77 @@
+// Links
+a {
+  color: var(--madoc-anchor-link-color);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+// Headings
+h1 {
+  padding-bottom: .3em;
+  font-size: 2em;
+  border-bottom: 1px solid var(--madoc-grey-5);
+}
+h2 {
+  padding-bottom: .3em;
+  font-size: 1.5em;
+  border-bottom: 1px solid var(--madoc-grey-5);
+}
+h3 {
+  font-size: 1.25em
+}
+h4 {
+  font-size: 1em;
+}
+h5 {
+  font-size: .875em;
+}
+h6 {
+  font-size: .85em;
+}
+// Emphasis
+b, strong {
+  font-weight: 600;
+}
+blockquote {
+  padding: 0 1em;
+  border-left: .25em solid var(--madoc-github-grey-10);
+}
+hr {
+  height: .25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: var(--madoc-github-grey-10);
+  border: 0;
+}
+// TODO should go for only text code elements
+// code {
+//   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+//   padding: .2em .4em;
+//   margin: 0;
+//   font-size: 85%;
+//   background-color: var(--madoc-github-grey-11);
+//   color: var(--madoc-github-red-code);
+//   border-radius: 3px;
+// }
+// Tables
+table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  tr {
+    background-color: var(--madoc-grey-2);
+    border-top: 1px solid var(--madoc-github-grey-10);
+    &:nth-child(2n) {
+      background-color: var(--madoc-vscode-grey-3);
+    }
+    > th {
+      padding: 6px 13px;
+      border: 1px solid var(--madoc-github-grey-10);
+    }
+    > td {
+      padding: 6px 13px;
+      border: 1px solid var(--madoc-github-grey-10);
+    }
+  }
+}
