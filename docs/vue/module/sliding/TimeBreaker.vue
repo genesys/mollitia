@@ -1,19 +1,19 @@
 <template>
   <div class="mollitia-playground">
     <Circuit ref="c1" :modules="modules" @end="onCircuitEnd">
-      <TimeBreakerModule ref="tb1"></TimeBreakerModule>
+      <SlidingWindowBreakerModule slidingType="time" ref="tb1"></SlidingWindowBreakerModule>
     </Circuit>
   </div>
 </template>
 
 <script>
 import Circuit from '../../components/Circuit';
-import TimeBreakerModule from '../../components/module/sliding/TimeBreakerModule';
+import SlidingWindowBreakerModule from '../../components/module/SlidingWindowBreakerModule';
 export default {
   name: 'SlidingTimeBreaker',
   components: {
     Circuit,
-    TimeBreakerModule
+    SlidingWindowBreakerModule
   },
   data () {
     return {
@@ -23,7 +23,7 @@ export default {
   },
   mounted () {
     this.circuit = this.$refs.c1.circuit;
-    this.modules.push(this.$refs.tb1.slidingTimeBreaker);
+    this.modules.push(this.$refs.tb1.slidingWindowBreaker);
   }
 }
 </script>

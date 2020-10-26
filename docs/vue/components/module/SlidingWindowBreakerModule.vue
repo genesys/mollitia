@@ -1,11 +1,11 @@
 <template>
-  <div class="mollitia-module-sliding-count-breaker">
-    <div class="mollitia-module-sliding-count-breaker-header">
+  <div class="mollitia-module-sliding-window-breaker">
+    <div class="mollitia-module-sliding-window-breaker-header">
       <div>{{ name }}</div>
     </div>
 
-    <div class="mollitia-module-sliding-count-breaker-content">
-      <div class="mollitia-module-sliding-count-breaker-config">
+    <div class="mollitia-module-sliding-window-breaker-content">
+      <div class="mollitia-module-sliding-window-breaker-config">
         <div class="form-control">
           <label for="windowSize">Window Size</label>
           <input v-model="slidingWindowSize" id="windowSize" @input="update" type="number"/>
@@ -39,7 +39,7 @@
           <input v-model="halfOpenStateMaxDelay" id="halfOpenStateMaxDelay" @input="update" type="number"/>
         </div>      
       </div>
-      <div class="mollitia-module-sliding-count-breaker-visual">
+      <div class="mollitia-module-sliding-window-breaker-visual">
         <label for="circuitStatus">Circuit Status</label>
         <div id="circuitStatus" class="circle" :class="circuitStateClass"></div>
         <div id="circuitStatusText">{{circuitStatusMessage}}</div>
@@ -50,18 +50,22 @@
 
 <script>
 export default {
-  name: 'SlidingCountBreakerModule',
+  name: 'slidingWindowBreakerModule',
   props: {
     name: {
       type: String,
-      default: 'Sliding Count Breaker'
+      default: 'Sliding Window Breaker'
+    },
+    slidingType: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
       circuitStateClass: '',
-      slidingCountBreaker: null,
-      slidingWindowSize: 4,
+      slidingWindowBreaker: null,
+      slidingWindowSize: this.slidingType === 'count' ? 4 : 60000,
       minimumNumberOfCalls: 2,
       failureRateThreshold: 60,
       slowCallDurationThreshold: 500,
@@ -74,7 +78,7 @@ export default {
   },
   methods: {
     onCircuitStateChanged () {
-      switch(this.slidingCountBreaker.state) {
+      switch(this.slidingWindowBreaker.state) {
         case window.Mollitia.BreakerState.HALF_OPENED:
           this.circuitStateClass = 'halfopened';
           this.circuitStatusMessage = 'Half Opened';
@@ -90,48 +94,61 @@ export default {
       } 
     },
     update() {
-      if (this.slidingCountBreaker) {
-        this.slidingCountBreaker.slidingWindowSize = this.slidingWindowSize;
-        this.slidingCountBreaker.minimumNumberOfCalls = this.minimumNumberOfCalls;
-        this.slidingCountBreaker.failureRateThreshold = this.failureRateThreshold;
-        this.slidingCountBreaker.slowCallDurationThreshold = this.slowCallDurationThreshold;
-        this.slidingCountBreaker.slowCallRateThreshold = this.slowCallRateThreshold;
-        this.slidingCountBreaker.permittedNumberOfCallsInHalfOpenState = this.permittedNumberOfCallsInHalfOpenState;
-        this.slidingCountBreaker.openStateDelay = this.openStateDelay;
-        this.slidingCountBreaker.halfOpenStateMaxDelay = this.halfOpenStateMaxDelay;
+      if (this.slidingWindowBreaker) {
+        this.slidingWindowBreaker.slidingWindowSize = this.slidingWindowSize;
+        this.slidingWindowBreaker.minimumNumberOfCalls = this.minimumNumberOfCalls;
+        this.slidingWindowBreaker.failureRateThreshold = this.failureRateThreshold;
+        this.slidingWindowBreaker.slowCallDurationThreshold = this.slowCallDurationThreshold;
+        this.slidingWindowBreaker.slowCallRateThreshold = this.slowCallRateThreshold;
+        this.slidingWindowBreaker.permittedNumberOfCallsInHalfOpenState = this.permittedNumberOfCallsInHalfOpenState;
+        this.slidingWindowBreaker.openStateDelay = this.openStateDelay;
+        this.slidingWindowBreaker.halfOpenStateMaxDelay = this.halfOpenStateMaxDelay;
       }
     }
   },
   created () {
-    this.slidingCountBreaker = new window.Mollitia.SlidingCountBreaker({
-      slidingWindowSize: this.slidingWindowSize,
-      minimumNumberOfCalls: this.minimumNumberOfCalls,
-      failureRateThreshold: this.failureRateThreshold,
-      slowCallDurationThreshold: this.slowCallDurationThreshold,
-      slowCallRateThreshold: this.slowCallRateThreshold,
-      permittedNumberOfCallsInHalfOpenState: this.permittedNumberOfCallsInHalfOpenState,
-      openStateDelay: this.openStateDelay,
-      halfOpenStateMaxDelay: this.halfOpenStateMaxDelay
-    });
-    this.slidingCountBreaker.on('stateChanged', this.onCircuitStateChanged);
+    if (this.slidingType === 'count') {
+      this.slidingWindowBreaker = new window.Mollitia.SlidingCountBreaker({
+        slidingWindowSize: this.slidingWindowSize,
+        minimumNumberOfCalls: this.minimumNumberOfCalls,
+        failureRateThreshold: this.failureRateThreshold,
+        slowCallDurationThreshold: this.slowCallDurationThreshold,
+        slowCallRateThreshold: this.slowCallRateThreshold,
+        permittedNumberOfCallsInHalfOpenState: this.permittedNumberOfCallsInHalfOpenState,
+        openStateDelay: this.openStateDelay,
+        halfOpenStateMaxDelay: this.halfOpenStateMaxDelay
+      });
+    } else {
+      this.slidingWindowBreaker = new window.Mollitia.SlidingTimeBreaker({
+        slidingWindowSize: this.slidingWindowSize,
+        minimumNumberOfCalls: this.minimumNumberOfCalls,
+        failureRateThreshold: this.failureRateThreshold,
+        slowCallDurationThreshold: this.slowCallDurationThreshold,
+        slowCallRateThreshold: this.slowCallRateThreshold,
+        permittedNumberOfCallsInHalfOpenState: this.permittedNumberOfCallsInHalfOpenState,
+        openStateDelay: this.openStateDelay,
+        halfOpenStateMaxDelay: this.halfOpenStateMaxDelay
+      });
+    }
+    this.slidingWindowBreaker.on('stateChanged', this.onCircuitStateChanged);
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.mollitia-module-sliding-count-breaker {
+.mollitia-module-sliding-window-breaker {
   padding: 10px;
   border: 1px solid var(--madoc-heading-underline-color);
 }
 
-.mollitia-module-sliding-count-breaker-header {
+.mollitia-module-sliding-window-breaker-header {
   padding: 10px;
   border-bottom: 1px solid var(--madoc-heading-underline-color);
 }
 
-.mollitia-module-sliding-count-breaker-content {
+.mollitia-module-sliding-window-breaker-content {
   display: flex;
-  .mollitia-module-sliding-count-breaker-config {
+  .mollitia-module-sliding-window-breaker-config {
     padding: 10px;
     border-right: 1px solid var(--madoc-heading-underline-color);
     .form-control {
@@ -145,7 +162,7 @@ export default {
       }
     }
   }
-  .mollitia-module-sliding-count-breaker-visual {
+  .mollitia-module-sliding-window-breaker-visual {
     margin-top: auto;
     margin-bottom: auto;
     display: flex;
