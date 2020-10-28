@@ -10,8 +10,8 @@
       <div>Simulate Request</div>
       <div>Time: <input v-model.number="time" type="number"/></div>
       <div>
-        <button @click="triggerSuccess" :disabled="active">Success</button>
-        <button @click="triggerFailure" :disabled="active">Failure</button>
+        <button @click="triggerSuccess" :disabled="disabled">Success</button>
+        <button @click="triggerFailure" :disabled="disabled">Failure</button>
       </div>
     </div>
     <div ref="logs" class="mollitia-circuit-logs">
@@ -42,23 +42,45 @@ export default {
       type: String,
       default: 'Circuit'
     },
+    initTime: {
+      type: Number,
+      default: 2000
+    },
     modules: {
       type: Array,
       default: () => []
+    },
+    concurrent: {
+      type: Boolean,
+      default: false
+    },
+    successParams: {
+      type: Object,
+      default: () => { return {}; }
+    },
+    failureParams: {
+      type: Object,
+      default: () => { return {}; }
+    }
+  },
+  computed: {
+    disabled () {
+      return !this.concurrent && this.active;
     }
   },
   data () {
     return {
       active: false,
       circuit: null,
-      time: 2000,
+      time: this.initTime,
       logs: ''
     };
   },
   methods: {
     triggerSuccess () {
+      this.$emit('start');
       this.active = true;
-      this.circuit.fn(successAsync).execute('Normal Success', this.time)
+      this.circuit.fn(successAsync).execute('Normal Success', this.time, this.successParams)
         .then((res) => {
           this.logs += `<span>${res}</span><br/>`;
           this.triggerUpdate();
@@ -72,8 +94,9 @@ export default {
         });
     },
     triggerFailure () {
+      this.$emit('start');
       this.active = true;
-      this.circuit.fn(failureAsync).execute('Normal Failure', this.time)
+      this.circuit.fn(failureAsync).execute('Normal Failure', this.time, this.failureParams)
         .catch((err) => {
           this.logs += `<span>${err.message}</span><br/>`;
           this.triggerUpdate();
@@ -85,7 +108,9 @@ export default {
     triggerUpdate () {
       this.$emit('end');
       setTimeout(() => {
-        this.$refs.logs.scrollTop = this.$refs.logs.scrollHeight;
+        if (this.$refs.logs) {
+          this.$refs.logs.scrollTop = this.$refs.logs.scrollHeight;
+        }
       }, 1);
     }
   },

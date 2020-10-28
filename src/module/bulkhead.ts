@@ -1,5 +1,6 @@
 import { Module, ModuleOptions } from '.';
 import { Circuit } from '../circuit';
+import { EventEmitter } from '../helpers/event';
 
 // TODO
 interface BulkheadOptions extends ModuleOptions {
@@ -15,15 +16,34 @@ export class BulkheadOverloadError extends Error {
   }
 }
 
-class BufferedPromise {
+export class BulkheadQueueWaitError extends Error {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, BulkheadQueueWaitError.prototype);
+  }
+}
+
+class BufferedPromise extends EventEmitter {
   promise: any;
   params: any[];
   constructor (promise: any, ...params: any[]) {
+    super();
     this.promise = promise;
     this.params = params;
   }
   public async execute<T> (): Promise<T> {
-    return this.promise(...this.params);
+    return new Promise((resolve, reject) => {
+      this.emit('execute');
+      this.promise(...this.params)
+        .then((res: T) => {
+          this.emit('resolve', res);
+          resolve(res);
+        })
+        .catch((err: Error) => {
+          this.emit('reject', err);
+          reject(err);
+        });
+    });
   }
 }
 
@@ -36,8 +56,8 @@ export class Bulkhead extends Module {
   public queueSize: number;
   public maxQueueWait: number;
   // Private Attributes
-  private concurrentBuffer: BufferedPromise[];
-  private queueBuffer: BufferedPromise[];
+  public concurrentBuffer: BufferedPromise[];
+  public queueBuffer: BufferedPromise[];
   // Constructor
   constructor (options?: BulkheadOptions) {
     super(options);
@@ -65,17 +85,46 @@ export class Bulkhead extends Module {
             reject(err);
           })
           .finally(() => {
-            // TODO remove from buffer
-            // TODO eventually add from queue
-            console.info('SNETCH: finally');
+            this.concurrentBuffer.splice(this.concurrentBuffer.indexOf(ref), 1);
+            this._addBufferedPromise();
           });
         this.concurrentBuffer.push(ref);
-        // TODO push normal
       } else if (this.queueBuffer.length < this.queueSize) {
         this.queueBuffer.push(ref);
+        const timeout = setTimeout(() => {
+          this.queueBuffer.splice(this.queueBuffer.indexOf(ref), 1);
+          resolveDisposable.dispose();
+          rejectDisposable.dispose();
+          reject(new BulkheadQueueWaitError('Waiting for too long in queue'))
+        }, this.maxQueueWait);
+        const executeDisposable = ref.on('execute', () => {
+          executeDisposable.dispose();
+          clearTimeout(timeout);
+        });
+        const resolveDisposable = ref.on('resolve', (res) => {
+          clearTimeout(timeout);
+          this.concurrentBuffer.splice(this.concurrentBuffer.indexOf(ref), 1);
+          resolveDisposable.dispose();
+          this._addBufferedPromise();
+          resolve(res);
+        });
+        const rejectDisposable = ref.on('reject', (err) => {
+          clearTimeout(timeout);
+          this.concurrentBuffer.splice(this.concurrentBuffer.indexOf(ref), 1);
+          rejectDisposable.dispose();
+          this._addBufferedPromise();
+          reject(err);
+        });
       } else {
         reject(new BulkheadOverloadError('Circuit is overloaded'));
       }
     });
+  }
+  private _addBufferedPromise () {
+    if (this.queueBuffer.length > 0) {
+      const queueRef = this.queueBuffer.splice(0, 1)[0];
+      this.concurrentBuffer.push(queueRef);
+      queueRef.execute().catch(() => { return; });
+    }
   }
 }

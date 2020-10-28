@@ -91,6 +91,7 @@ export default {
     this.retry.on('retry', this.onRetry);
   },
   destroyed () {
+    clearInterval(this.interval);
     this.retry.off('execute', this.onExecute);
     this.retry.off('retry', this.onRetry);
   }

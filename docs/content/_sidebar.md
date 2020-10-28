@@ -16,6 +16,8 @@ links:
         path: /api/module/timeout
       - title: Rate Limit
         path: /api/module/rate-limit
+      - title: Bulkhead
+        path: /api/module/bulkhead
       - title: Count Breaker
         path: /api/module/breaker/sliding/count
       - title: Time Breaker

@@ -88,6 +88,7 @@ export default {
     this.timeout.on('timeout', this.onTimeout);
   },
   destroyed () {
+    clearInterval(this.interval);
     this.timeout.off('execute', this.onExecute);
     this.timeout.off('timeout', this.onTimeout);
   }
