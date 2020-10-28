@@ -41,10 +41,15 @@ export class Timeout extends Module {
             reject(new TimeoutError('Timed out'));
           }, time) as number;
         })
-      ]).then((result) => {
+      ])
+      .then((result) => {
         clearTimeout(timeout);
         return result;
-      });
+      })
+      .catch((result) => {
+        clearTimeout(timeout);
+        return Promise.reject(result);
+      })
     } else {
       return promise(...params);
     }

@@ -95,7 +95,7 @@ describe('Sliding Count Breaker', () => {
     expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
   });
   it('Slow Requests', async () => {
-    const slidingTimeCounter = new Mollitia.SlidingTimeBreaker({
+    const slidingTimeBreaker = new Mollitia.SlidingTimeBreaker({
       failureRateThreshold: 50,
       openStateDelay: 10,
       slidingWindowSize: 1000,
@@ -107,18 +107,18 @@ describe('Sliding Count Breaker', () => {
     const circuit = new Mollitia.Circuit({
       options: {
         modules: [
-          slidingTimeCounter
+          slidingTimeBreaker
         ]
       }
     });
     await expect(circuit.fn(successAsync).execute('dummy', 150)).resolves.toEqual('dummy');
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
-    expect(slidingTimeCounter.state).toEqual(Mollitia.BreakerState.OPENED);
+    expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
     await delay(10);
     await expect(circuit.fn(successAsync).execute('dummy', 150)).resolves.toEqual('dummy');
-    expect(slidingTimeCounter.state).toEqual(Mollitia.BreakerState.OPENED);
+    expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
     await delay(10);
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
-    expect(slidingTimeCounter.state).toEqual(Mollitia.BreakerState.CLOSED);
+    expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
   });
 });

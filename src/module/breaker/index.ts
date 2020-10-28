@@ -78,6 +78,7 @@ export class Breaker extends Module implements BreakerNotification {
     if (this.state !== BreakerState.HALF_OPENED) {
       this.clearHalfOpenTimeout();
       this.state = BreakerState.HALF_OPENED;
+      this.logger?.debug('Breaker: Half Opened');
       this.setOpenDelay();
       this.onHalfOpened();
       this.emit('stateChanged');

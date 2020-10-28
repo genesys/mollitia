@@ -61,6 +61,7 @@ export abstract class SlidingWindowBreaker<T> extends Breaker {
     this.emit('execute', circuit);
     switch (this.state) {
       case BreakerState.OPENED:
+        this.logger?.debug('Circuit is opened');
         return Promise.reject(new BreakerError('Circuit is opened'));
       case BreakerState.HALF_OPENED:
         return await this.executeInHalfOpened(promise, ...params);
