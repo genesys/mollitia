@@ -55,7 +55,11 @@ export class MapCache {
         return map.get(params[0]) && map.get(params[0]).cache;
       } else {
         const param = params.splice(0, 1)[0];
-        return this._getLoopMap(map.get(param).map, ...params);
+        if (map.get(param)) {
+          return this._getLoopMap(map.get(param).map, ...params);
+        } else {
+          return null;
+        }
       }
     }
   }

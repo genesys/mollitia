@@ -10,6 +10,8 @@ links:
     path: /api/circuit
   - group: Core Modules
     links:
+      - title: Cache
+        path: /api/module/cache
       - title: Retry
         path: /api/module/retry
       - title: Timeout

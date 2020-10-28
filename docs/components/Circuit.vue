@@ -11,7 +11,7 @@
       <div>Time: <input v-model.number="time" type="number"/></div>
       <div>
         <button @click="triggerSuccess" :disabled="disabled">Success</button>
-        <button @click="triggerFailure" :disabled="disabled">Failure</button>
+        <button v-if="canFail" @click="triggerFailure" :disabled="disabled">Failure</button>
       </div>
     </div>
     <div ref="logs" class="mollitia-circuit-logs">
@@ -54,6 +54,10 @@ export default {
       type: Boolean,
       default: false
     },
+    canFail: {
+      type: Boolean,
+      default: true
+    },
     successParams: {
       type: Object,
       default: () => { return {}; }
@@ -77,6 +81,10 @@ export default {
     };
   },
   methods: {
+    log (msg) {
+      this.logs += `<span>${msg}</span><br/>`;
+      this.triggerUpdate();
+    },
     triggerSuccess () {
       this.$emit('start');
       this.active = true;
