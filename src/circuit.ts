@@ -95,4 +95,10 @@ export class Circuit extends EventEmitter {
       return this.func(...params);
     }
   }
+
+  public end (): void {
+    if (this.modules) {
+      this.modules.forEach(mod => mod.end());
+    }
+  }
 }

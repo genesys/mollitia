@@ -1,4 +1,3 @@
-import { BreakerState } from '../index';
 import { SlidingWindowBreaker, SlidingWindowBreakerOptions, SlidingWindowRequestResult } from './index';
 
 export interface SlidingTimeElem {

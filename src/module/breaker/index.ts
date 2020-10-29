@@ -33,6 +33,7 @@ export class Breaker extends Module implements BreakerNotification {
   public openStateDelay: number;
   public halfOpenStateMaxDelay: number;
   private halfOpenMaxDelayTimeout = 0;
+  private openTimeout = 0;
 
   // Constructor
   constructor (options?: BreakerOptions) {
@@ -94,10 +95,10 @@ export class Breaker extends Module implements BreakerNotification {
     }
   }
   private setHalfDelay (): void {
-    setTimeout(() => {
+    this.openTimeout = <unknown>setTimeout(() => {
       this.logger?.debug('Breaker: Half Open');
       this.halfOpen();
-    }, this.openStateDelay);
+    }, this.openStateDelay) as number;
   }
   private setOpenDelay (): void {
     if (this.halfOpenStateMaxDelay) {
@@ -111,6 +112,14 @@ export class Breaker extends Module implements BreakerNotification {
     if (this.halfOpenMaxDelayTimeout) {
       clearTimeout(this.halfOpenMaxDelayTimeout);
       this.halfOpenMaxDelayTimeout = 0;
+    }
+  }
+
+  public end (): void {
+    this.clearHalfOpenTimeout();
+    if (this.openTimeout) {
+      clearTimeout(this.openTimeout);
+      this.openTimeout = 0;
     }
   }
 }

@@ -29,4 +29,7 @@ export class Module extends EventEmitter {
     this.emit('execute', circuit);
     return promise(...params);
   }
+  public end (): void {
+    //implementation on classes inheriting from this module class
+  }
 }

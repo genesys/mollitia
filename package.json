@@ -25,6 +25,7 @@
     "test": "run-s test:lib test:docs",
     "test:lib": "jest",
     "test:docs": "cd docs && npm run test",
+    "test:perf": "node test/perf/index.js",
     "build": "run-s build:lib build:docs",
     "build:lib": "rimraf dist && run-s build:lib:tsc build:lib:rollup",
     "build:lib:tsc": "tsc --module commonjs",
@@ -49,7 +50,9 @@
     "rollup-plugin-typescript2": "0.27.2",
     "ts-jest": "26.3.0",
     "ts-node": "9.0.0",
-    "typescript": "4.0.2"
+    "typescript": "4.0.2",
+    "fs-extra": "9.0.1",
+    "yaml": "1.10.0"
   },
   "dependencies": {}
 }
