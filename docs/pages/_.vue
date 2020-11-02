@@ -20,6 +20,24 @@
     });
   };
   export default Vue.extend({
+    data () {
+      return {
+        title: 'Mollitia',
+        description: 'JavaScript Resilience Library'
+      };
+    },
+    head () {
+      return {
+        title: this.article.title || this.title,
+        meta: [
+          {
+            hid: 'description',
+            name: 'description',
+            content: this.article.description || this.description
+          }
+        ]
+      };
+    },
     async asyncData ({ $content, params, error }) {
       const path = params.pathMatch || 'index';
       if (path !== '_') {

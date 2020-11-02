@@ -63,7 +63,7 @@ export class Bulkhead extends Module {
     super(options);
     this.concurrentSize = options?.concurrentSize || 10;
     this.queueSize = options?.queueSize || 10;
-    this.maxQueueWait = options?.maxQueueWait || 5000;
+    this.maxQueueWait = options?.maxQueueWait || 60000;
     this.concurrentBuffer = [];
     this.queueBuffer = [];
   }

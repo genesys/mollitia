@@ -10,6 +10,8 @@ links:
     path: /api/circuit
   - group: Core Modules
     links:
+      - title: Fallback
+        path: /api/module/fallback
       - title: Cache
         path: /api/module/cache
       - title: Retry

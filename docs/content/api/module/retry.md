@@ -7,4 +7,5 @@ title: Mollitia - API - Module - Retry
 
 ## Usage
 
-TODO
+* TODO add retryInterval number
+* TODO add filterRetry function to filter errors, choose to retry, and change the retryInterval

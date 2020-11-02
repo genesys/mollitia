@@ -1,13 +1,15 @@
 ---
 title: Mollitia
-description: TODO
+description: JavaScript Resilience Library
 ---
+
+<!-- TODO Badges -->
 
 # Mollitia
 
-> JavaScript Resilience Library
-
-<!-- TODO Description -->
+`Mollitia` is a **JavaScript Resilience** library that works on Node and on browsers.
+The purpose of such kind of tool is to help organize **asynchronous operations** under a highly customizable circuit that helps managing error use cases.
+When everything is falling apart, it stops the classic flow and uses modules to manage failures.
 
 ## Documentation
 
@@ -45,29 +47,23 @@ import { Circuit } from 'mollitia';
 
 ## Usage
 
-<!-- TODO change -->
 ``` javascript
-const myCircuit = new Circuit({
-  name: 'dummy',
-  options: {
-    // Customize the circuit here
-  }
-});
-// First param is your async function
-// Other params will directly be passed to this function
-myCircuit.execute(anyAsyncFunction, param1, param2, ...);
+// Imports the library
+const { Circuit } = require('mollitia');
+// Creates a circuit
+const myCircuit = new Circuit();
+// fn(yourFunction) - execute(yourParams...)
+await circuit.fn(yourFunction).execute('dummy');
 ```
 
 ## Features
 
-<!-- TODO update -->
+The point of `Mollitia` is to get every **Resilience patterns** into one library.
+It is very similar at what does [Resilience4j](https://github.com/resilience4j/resilience4j) on **Java**, but on **Node**.
 
-<div>
+<!-- TODO change links -->
 
-  - Works on Node and on browser (even **IE11**, wow).
-  - Can add `timeout` to your async methods.
-  - Customize your circuit with [a wide variety of options](/api/options).
-
-</div>
-
-<!-- TODO comparison with resilience4j -->
+- Works on Node and on browser (even **IE11**, wow).
+- Implements a wide variety of Resilience patterns, [more on that here.](http://135.39.45.156:8080)
+- Has **Method Agnostic** circuits, meaning you don't have to create one circuit per function.
+- Supports plugins, [more on that here.](http://135.39.45.156:8080)

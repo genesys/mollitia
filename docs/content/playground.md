@@ -1,6 +1,5 @@
 ---
 title: Mollitia - Playground
-description: TODO
 sidebar: null
 ---
 
