@@ -1,29 +1,4 @@
 modules:
-  # SlidingTimeBreaker:
-  #   failureRateThreshold: 50
-  #   openStateDelay: 10000
-  #   slidingWindowSize: 60000
-  #   minimumNumberOfCalls: 3
-  #   permittedNumberOfCallsInHalfOpenState: 3
-  #   slowCallDurationThreshold: 30000
-  #   slowCallRateThreshold: 50
-  # SlidingCountBreaker:
-  #   failureRateThreshold: 50
-  #   openStateDelay: 1000
-  #   slidingWindowSize: 1000
-  #   minimumNumberOfCalls: 3
-  #   permittedNumberOfCallsInHalfOpenState: 1
-  #   slowCallDurationThreshold: 50000
-  #   slowCallRateThreshold: 50
-  # Timeout:
-  #   delay: 2000
-  # RateLimit:
-  #   - limitPeriod: 1000
-  #     limitForPeriod: 3
-  #   - limitPeriod: 200
-  #     limitForPeriod: 1
-  # Retry:
-  #   attempts: 2
   - type: SlidingTimeBreaker
     options:
       failureRateThreshold: 50

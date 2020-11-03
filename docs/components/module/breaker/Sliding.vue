@@ -40,9 +40,15 @@
         </div>      
       </div>
       <div class="mollitia-module-sliding-window-breaker-visual">
-        <label for="circuitStatus">Circuit Status</label>
-        <div id="circuitStatus" class="circle" :class="circuitStateClass"></div>
-        <div id="circuitStatusText">{{circuitStatusMessage}}</div>
+        <div class="mollitia-module-sliding-window-breaker-result">
+          <label for="circuitStatus">Circuit Status</label>
+          <div id="circuitStatus" class="circle" :class="circuitStateClass"></div>
+          <div id="circuitStatusText">{{circuitStatusMessage}}</div>
+        </div>
+        <div class="mollitia-module-sliding-window-breaker-duration">
+          <div class="mollitia-module-sliding-window-breaker-title">{{circuitDuration}}</div>
+          <div class="mollitia-module-sliding-window-breaker-progress" :style="style"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -74,23 +80,65 @@ export default {
       permittedNumberOfCallsInHalfOpenState: 2,
       openStateDelay: 1000,
       halfOpenStateMaxDelay: 30000,
-      circuitStatusMessage: 'Closed'
+      circuitStatusMessage: 'Closed',
+      circuitDuration: '',
+      percent: 0
+    }
+  },
+  computed: {
+    style () {
+      return {
+        'width': `${this.percent}%`,
+        'background-color': 'var(--mollitia-info-color)'
+      }
     }
   },
   methods: {
+    updateStateProgress () {
+      if (this.interval) {
+        clearInterval(this.interval);
+        this.circuitDuration = '';
+        this.percent = 0;
+      }
+      if (this.circuitStateClass === 'halfopened') {
+        this.circuitDuration = 'Half Opened Duration'; 
+        this.interval = setInterval(() => {
+          const now = new Date().getTime();
+          this.percent = ((now - this.timeStateChanged) / this.halfOpenStateMaxDelay) * 100;
+          if (this.percent > 100) {
+            this.percent = 100;
+          }
+        }, 150);
+      } else if (this.circuitStateClass === 'opened') {
+        this.circuitDuration = 'Opened Duration';
+        this.interval = setInterval(() => {
+          const now = new Date().getTime();
+          this.percent = ((now - this.timeStateChanged) / this.openStateDelay) * 100;
+          if (this.percent > 100) {
+            this.percent = 100;
+          }
+        }, 150);
+      }
+    },
     onCircuitStateChanged () {
       switch(this.slidingWindowBreaker.state) {
         case this.$mollitia.BreakerState.HALF_OPENED:
           this.circuitStateClass = 'halfopened';
           this.circuitStatusMessage = 'Half Opened';
+          this.timeStateChanged = new Date().getTime();
+          this.updateStateProgress();
           break;
         case this.$mollitia.BreakerState.OPENED:
           this.circuitStateClass = 'opened';
           this.circuitStatusMessage = 'Opened';
+          this.timeStateChanged = new Date().getTime();
+          this.updateStateProgress();
           break;
         default:
           this.circuitStatusMessage = 'Closed';
           this.circuitStateClass = '';
+          this.timeStateChanged = new Date().getTime();
+          this.updateStateProgress();
           break;
       } 
     },
@@ -164,44 +212,52 @@ export default {
     }
   }
   .mollitia-module-sliding-window-breaker-visual {
-    margin-top: auto;
-    margin-bottom: auto;
+    flex-grow: 1;
     display: flex;
-    margin-left:5px;
-    .circle {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: green;
-      margin-left: 5px;
-      margin-right: 5px;
-      // background-image: linear-gradient(to right, transparent 50%, currentColor 0);
-      // color: white
-    }
-    .circle.halfopened {
-      background: orange;
-    }
-    .circle.opened {
-      background: red;
-    }
+    flex-direction: column;
+    min-height: 50px;
+    .mollitia-module-sliding-window-breaker-result {
+      height: 50%;
+      display: flex;
+      margin-top: 10px;
+      justify-content: center;
+      align-items: center;
 
-    // .circle::before {
-    //   content: '';
-    //   display: block;
-    //   margin-left: 50%;
-    //   height: 100%;
-    //   border-radius: 0 100% 100% 0 / 50%;
-    //   background-color: inherit;
-    //   transform-origin: left;
-    //   animation: spin 5s linear infinite, bg 10s step-end infinite;
-    // }
-
-    // @keyframes spin {
-    //   to { transform: rotate(.5turn); }
-    // }
-    // @keyframes bg {
-    //   50% { background: currentColor; }
-    // }
-  }
+      .circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--mollitia-success-color);
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+      .circle.halfopened {
+        background: var(--mollitia-warning-color);
+      }
+      .circle.opened {
+        background: var(--mollitia-error-color);
+      }
+    }
+    .mollitia-module-sliding-window-breaker-duration {
+      height: 50%;
+      position: relative;
+      .mollitia-module-sliding-window-breaker-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+      }
+      .mollitia-module-sliding-window-breaker-progress {
+        height: 100%;
+        transition:
+          width .25s ease,
+          background-color .25s ease;
+      }
+    }
+  }  
 }  
 </style>
