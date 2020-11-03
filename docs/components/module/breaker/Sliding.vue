@@ -7,7 +7,7 @@
     <div class="mollitia-module-sliding-window-breaker-content">
       <div class="mollitia-module-sliding-window-breaker-config">
         <div class="form-control">
-          <label for="windowSize">Window Size</label>
+          <label for="windowSize">{{windowSizeName}}</label>
           <input v-model.number="slidingWindowSize" id="windowSize" @input="update" type="number"/>
         </div>
         <div class="form-control">
@@ -31,11 +31,11 @@
           <input v-model.number="permittedNumberOfCallsInHalfOpenState" id="permittedNumberOfCallsInHalfOpenState" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="openStateDelay">Delay to stay in Open State</label>
+          <label for="openStateDelay">Delay to stay in Open State (in ms)</label>
           <input v-model.number="openStateDelay" id="openStateDelay" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="halfOpenStateMaxDelay">Max Delay to stay in Half Open State</label>
+          <label for="halfOpenStateMaxDelay">Max Delay to stay in Half Open State (in ms)</label>
           <input v-model.number="halfOpenStateMaxDelay" id="halfOpenStateMaxDelay" @input="update" type="number"/>
         </div>      
       </div>
@@ -66,6 +66,7 @@ export default {
       circuitStateClass: '',
       slidingWindowBreaker: null,
       slidingWindowSize: this.slidingType === 'count' ? 4 : 60000,
+      windowSizeName: this.slidingType === 'count' ? 'Window Size' : 'Window Size (in ms)',
       minimumNumberOfCalls: 2,
       failureRateThreshold: 60,
       slowCallDurationThreshold: 500,
