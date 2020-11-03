@@ -1,5 +1,5 @@
-import * as Mollitia from '../../../src/index';
-import { delay } from '../../../src/helpers/time';
+import * as Mollitia from '../../../../src/index';
+import { delay } from '../../../../src/helpers/time';
 
 const logger = {
   debug: jest.fn(),
