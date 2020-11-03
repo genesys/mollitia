@@ -5,26 +5,87 @@ const Mollitia = require('../../dist/mollitia.umd');
 
 const modules = [];
 const circuitConfig = yaml.parse(fs.readFileSync(path.join(__dirname, 'config.yaml'), 'utf8'));
-if (circuitConfig.modules.SlidingTimeBreaker) {
-  circuitConfig.modules.SlidingTimeBreaker.logger = console;
-  modules.push(new Mollitia.SlidingTimeBreaker(circuitConfig.modules.SlidingTimeBreaker));
-}
-if (circuitConfig.modules.SlidingCountBreaker) {
-  circuitConfig.modules.SlidingCountBreaker.logger = console;
-  modules.push(new Mollitia.SlidingCountBreaker(circuitConfig.modules.SlidingCountBreaker));
-}
-if (circuitConfig.modules.Retry) {
-  circuitConfig.modules.Retry.logger = console;
-  modules.push(new Mollitia.Retry(circuitConfig.modules.Retry));
-}
-if (circuitConfig.modules.RateLimit) {
-  circuitConfig.modules.RateLimit.logger = console;
-  modules.push(new Mollitia.RateLimit(circuitConfig.modules.RateLimit));
-}
-if (circuitConfig.modules.Timeout) {
-  circuitConfig.modules.Timeout.logger = console;
-  modules.push(new Mollitia.Timeout(circuitConfig.modules.Timeout));
-}
+circuitConfig.modules.forEach(mod => {
+  (mod.options || {}).logger = console;
+  switch (mod.type) {
+    case 'SlidingTimeBreaker':
+      modules.push(new Mollitia.SlidingTimeBreaker(mod.options));
+      break;
+    case 'SlidingCountBreaker':
+      modules.push(new Mollitia.SlidingCountBreaker(mod.options));
+      break;
+    case 'RateLimit':
+      modules.push(new Mollitia.RateLimit(mod.options));
+      break;
+    case 'Retry':
+      modules.push(new Mollitia.Retry(mod.options));
+      break;
+    case 'Timeout':
+      modules.push(new Mollitia.Timeout(mod.options));
+      break;
+    // case 'Timeout':
+    //   modules.push(new Mollitia.Timeout(mod.options));
+    //   break;
+    // case 'Timeout':
+    //   modules.push(new Mollitia.Timeout(mod.options));
+    //   break;
+  }
+})
+// if (circuitConfig.modules.SlidingTimeBreaker) {
+//   if (Array.isArray(circuitConfig.modules.SlidingTimeBreaker)) {
+//     circuitConfig.modules.SlidingTimeBreaker.forEach(stb => {
+//       stb.logger = console;
+//       modules.push(new Mollitia.SlidingTimeBreaker(stb));
+//     });
+//   } else {
+//     circuitConfig.modules.SlidingTimeBreaker.logger = console;
+//     modules.push(new Mollitia.SlidingTimeBreaker(circuitConfig.modules.SlidingTimeBreaker));
+//   }
+// }
+// if (circuitConfig.modules.SlidingCountBreaker) {
+//   if (Array.isArray(circuitConfig.modules.SlidingCountBreaker)) {
+//     circuitConfig.modules.SlidingCountBreaker.forEach(scb => {
+//       scb.logger = console;
+//       modules.push(new Mollitia.SlidingCountBreaker(scb));
+//     });
+//   } else {
+//     circuitConfig.modules.SlidingCountBreaker.logger = console;
+//     modules.push(new Mollitia.SlidingCountBreaker(circuitConfig.modules.SlidingCountBreaker));
+//   }
+// }
+// if (circuitConfig.modules.Retry) {
+//   if (Array.isArray(circuitConfig.modules.Retry)) {
+//     circuitConfig.modules.Retry.forEach(r => {
+//       r.logger = console;
+//       modules.push(new Mollitia.Retry(r));
+//     });
+//   } else {
+//     circuitConfig.modules.Retry.logger = console;
+//     modules.push(new Mollitia.Retry(circuitConfig.modules.Retry));
+//   }
+// }
+// if (circuitConfig.modules.RateLimit) {
+//   if (Array.isArray(circuitConfig.modules.RateLimit)) {
+//     circuitConfig.modules.RateLimit.forEach(rl => {
+//       rl.logger = console;
+//       modules.push(new Mollitia.RateLimit(rl));
+//     });
+//   } else {
+//     circuitConfig.modules.RateLimit.logger = console;
+//     modules.push(new Mollitia.RateLimit(circuitConfig.modules.RateLimit));    
+//   }
+// }
+// if (circuitConfig.modules.Timeout) {
+//   if (Array.isArray(circuitConfig.modules.Timeout)) {
+//     circuitConfig.modules.Timeout.forEach(t => {
+//       t.logger = console;
+//       modules.push(new Mollitia.Timeout(t));
+//     });
+//   } else {
+//     circuitConfig.modules.Timeout.logger = console;
+//     modules.push(new Mollitia.Timeout(circuitConfig.modules.Timeout));    
+//   }
+// }
 
 const circuit = new Mollitia.Circuit({
   options: {

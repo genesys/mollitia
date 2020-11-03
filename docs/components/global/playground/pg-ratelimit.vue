@@ -1,6 +1,6 @@
 <template>
   <div class="mollitia-playground">
-    <Circuit ref="c1" :modules="modules" @end="onCircuitEnd">
+    <Circuit ref="c1" :modules="modules" @end="onCircuitEnd" :can-fail="false">
       <RateLimit ref="rl1"></RateLimit>
     </Circuit>
   </div>

@@ -8,7 +8,7 @@
     <div class="mollitia-module-rate-limit-content">
       <div class="mollitia-module-rate-limit-config">
         <div class="form-control">
-          <label for="limitPeriod">Limit Period</label>
+          <label for="limitPeriod">Limit Period (in ms)</label>
           <input v-model.number="limitPeriod" id="limitPeriod" @input="update" type="number"/>
         </div>
         <div class="form-control">
@@ -17,7 +17,13 @@
         </div>
       </div>
       <div class="mollitia-module-rate-limit-visual">
-        <div class="circle" v-for="result in results" :key="result.id" :class="{'failure': result.value === false}"></div>
+        <div class="mollitia-module-rate-limit-result">
+          <div class="circle" v-for="result in results" :key="result.id" :class="{'failure': result.value === false}"></div>
+        </div>
+        <div class="mollitia-module-rate-limit-duration">
+          <div class="mollitia-module-rate-limit-title">Rate Limit Duration</div>
+          <div class="mollitia-module-rate-limit-progress" :style="style"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -38,8 +44,18 @@ export default {
       rateLimit: null,
       limitPeriod: 10000,
       limitForPeriod: 2,
-      results: []
+      results: [],
+      timeForRequests: [],
+      percent: 0
     };
+  },
+  computed: {
+    style () {
+      return {
+        'width': `${this.percent}%`,
+        'background-color': 'var(--mollitia-info-color)'
+      }
+    }
   },
   methods: {
     update () {
@@ -53,6 +69,21 @@ export default {
           this.results.shift();
         }
         this.results.push({id: index++, value: true});
+        this.timeForRequests.push(new Date().getTime());
+        if (!this.interval) {
+          this.percent = 0;
+          this.interval = setInterval(() => {
+            const now = new Date().getTime();
+            this.timeForRequests = this.timeForRequests.filter(tfr => (now - tfr) < this.limitPeriod);
+            if (this.timeForRequests.length < this.limitForPeriod) {
+              this.percent = 0;
+              return;
+            }
+            const rateLimitRemainingDuration = this.limitPeriod - (this.timeForRequests[this.timeForRequests.length - 1] - this.timeForRequests[0]);
+            const currentSpentDuration = now - this.timeForRequests[this.timeForRequests.length - 1];
+            this.percent = (currentSpentDuration / rateLimitRemainingDuration) * 100;
+          }, 150);
+        }
       }
     },
     onRateLimit () {
@@ -107,18 +138,45 @@ export default {
     }
   }
   .mollitia-module-rate-limit-visual {
-    margin-top: auto;
-    margin-bottom: auto;
+    flex-grow: 1;
     display: flex;
-    .circle {
-      width: 20px;
-      height: 20px;
-      border-radius: 10px;
-      background: green;
-      margin-left:5px;
+    flex-direction: column;
+    min-height: 50px;
+    .mollitia-module-rate-limit-result {
+      height: 50%;
+      display: flex;
+      margin-top: 10px;
+
+      .circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        background: var(--mollitia-success-color);
+        margin-left:5px;
+      }
+      .circle.failure {
+        background: var(--mollitia-error-color);
+      }
     }
-    .circle.failure {
-      background: red;
+    .mollitia-module-rate-limit-duration {
+      height: 50%;
+      position: relative;
+      .mollitia-module-rate-limit-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+      }
+      .mollitia-module-rate-limit-progress {
+        height: 100%;
+        transition:
+          width .25s ease,
+          background-color .25s ease;
+      }
     }
   }
 }  
