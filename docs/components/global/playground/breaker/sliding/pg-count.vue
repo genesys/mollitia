@@ -1,6 +1,6 @@
 <template>
   <div class="mollitia-playground">
-    <Circuit ref="c1" :modules="modules" @end="onCircuitEnd">
+    <Circuit ref="c1" :modules="modules">
       <Sliding slidingType="count" ref="cb1"></Sliding>
     </Circuit>
   </div>
