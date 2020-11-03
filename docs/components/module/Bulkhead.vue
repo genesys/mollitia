@@ -62,7 +62,7 @@ export default {
       for (const promise of this.bulkhead.concurrentBuffer) {
         arr.push({
           size: '25px',
-          color: promise.params[2].color
+          color: promise.params[1].color
         });
       }
       return arr;
@@ -72,7 +72,7 @@ export default {
       for (const promise of this.bulkhead.queueBuffer) {
         arr.push({
           size: '25px',
-          color: promise.params[2].color
+          color: promise.params[1].color
         });
       }
       return arr;

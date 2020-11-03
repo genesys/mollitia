@@ -1,6 +1,6 @@
 <template>
   <div class="mollitia-playground">
-    <Circuit ref="c1" @start="randomizeColor" :modules="modules" :concurrent="true" :success-params="successParams" :failure-params="failureParams" :init-time="4000">
+    <Circuit ref="c1" @start="randomizeColor" :modules="modules" :concurrent="true" :success-params="successParams" :failure-params="failureParams" :init-time="4000" :can-fail="false">
       <Bulkhead ref="b1"></Bulkhead>
     </Circuit>
   </div>

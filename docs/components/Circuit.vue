@@ -10,8 +10,8 @@
       <div>Simulate Request</div>
       <div>Time: <input v-model.number="time" type="number"/></div>
       <div>
-        <button @click="triggerSuccess" :disabled="disabled">Success</button>
-        <button v-if="canFail" @click="triggerFailure" :disabled="disabled">Failure</button>
+        <button @click="triggerRequest" :disabled="disabled">Send Request</button>
+        <Toggle v-if="canFail" pre-label="Failure" post-label="Success" v-model="shouldSucceed"/>
       </div>
     </div>
     <div ref="logs" class="mollitia-circuit-logs">
@@ -21,22 +21,12 @@
 </template>
 
 <script>
-const successAsync = (res, delay = 1) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(res);
-    }, delay);
-  });
-};
-const failureAsync = (res, delay = 1) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error(res));
-    }, delay);
-  });
-};
+import Toggle from './Toggle';
 export default {
   name: 'Circuit',
+  components: {
+    Toggle
+  },
   props: {
     name: {
       type: String,
@@ -74,6 +64,7 @@ export default {
   },
   data () {
     return {
+      shouldSucceed: true,
       active: false,
       circuit: null,
       time: this.initTime,
@@ -81,40 +72,39 @@ export default {
     };
   },
   methods: {
+    async request (delay) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (this.shouldSucceed) {
+            resolve('Normal Success');
+          } else {
+            reject(new Error('Normal Failure'));
+          }
+        }, delay);
+      });
+    },
     log (msg) {
       this.logs += `<span>${msg}</span><br/>`;
       this.triggerUpdate();
     },
-    triggerSuccess () {
+    triggerRequest () {
       this.$emit('start');
       this.active = true;
-      this.circuit.fn(successAsync).execute('Normal Success', this.time, this.successParams)
+      this.circuit.fn(this.request).execute(this.time, this.successParams)
         .then((res) => {
           this.logs += `<span>${res}</span><br/>`;
-          this.triggerUpdate();
+          this.triggerUpdate(true);
         })
         .catch((err) => {
           this.logs += `<span>${err.message}</span><br/>`;
-          this.triggerUpdate();
+          this.triggerUpdate(false);
         })
         .finally(() => {
           this.active = false;
         });
     },
-    triggerFailure () {
-      this.$emit('start');
-      this.active = true;
-      this.circuit.fn(failureAsync).execute('Normal Failure', this.time, this.failureParams)
-        .catch((err) => {
-          this.logs += `<span>${err.message}</span><br/>`;
-          this.triggerUpdate();
-        })
-        .finally(() => {
-          this.active = false;
-        });
-    },
-    triggerUpdate () {
-      this.$emit('end');
+    triggerUpdate (success) {
+      this.$emit('end', success);
       setTimeout(() => {
         if (this.$refs.logs) {
           this.$refs.logs.scrollTop = this.$refs.logs.scrollHeight;

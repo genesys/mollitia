@@ -17,7 +17,7 @@ const circuit = new Circuit({
   options: {
     modules: [
       // Creates a bulkhead module
-      new Mollitia.Bulkhead({
+      new Bulkhead({
         concurrentSize: 2, // Allows 2 concurrent requests, if oversizing, goes in a queue.
         queueSize: 2, // Allows 2 requests to be in queue, if oversizing, it will be rejected with a BulkheadOverloadError.
         maxQueueWait: 30000 // After 30 seconds waiting, a queued request will be rejected with a BulkheadQueueWaitError.

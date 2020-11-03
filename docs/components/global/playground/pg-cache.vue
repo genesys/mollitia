@@ -1,6 +1,6 @@
 <template>
   <div class="mollitia-playground">
-    <Circuit ref="c1" :modules="modules" @end="onCircuitEnd" :can-fail="false">
+    <Circuit ref="c1" :modules="modules" @end="onCircuitEnd">
       <Cache ref="ca1"></Cache>
     </Circuit>
   </div>

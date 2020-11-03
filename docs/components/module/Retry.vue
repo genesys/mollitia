@@ -76,10 +76,14 @@ export default {
         this.$refs[`progress-${this.index}`][0].style.width = `${this.requests[this.index]}%`;
         this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
         if (this.requests[this.index] >= 100) {
-          this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
           clearInterval(this.interval);
         }
       }, 100);
+    },
+    onEnd (success) {
+      if (!success) {
+        this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
+      }
     }
   },
   created () {

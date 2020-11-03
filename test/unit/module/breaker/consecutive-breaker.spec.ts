@@ -1,5 +1,5 @@
-import * as Mollitia from '../../../src/index';
-import { delay } from '../../../src/helpers/time';
+import * as Mollitia from '../../../../src/index';
+import { delay } from '../../../../src/helpers/time';
 
 const logger = {
   debug: jest.fn(),
@@ -80,7 +80,7 @@ describe('Consecutive Breaker', () => {
       options: {
         modules: [
           new Mollitia.Fallback({
-            cb (err: Error) {
+            callback (err: Error) {
               if (err instanceof Mollitia.BreakerError) {
                 return 'fallback';
               }

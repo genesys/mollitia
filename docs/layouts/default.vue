@@ -10,6 +10,7 @@ html {
   background-color: var(--madoc-github-grey-6);
   color: var(--madoc-white);
   height: 100%;
+  overflow-x: hidden;
 }
 body {
   height: 100%;

@@ -5,7 +5,7 @@ type FallbackFunction = (...params: any[]) => any;
 
 // TODO
 interface FallbackOptions extends ModuleOptions {
-  cb: FallbackFunction;
+  callback: FallbackFunction;
 }
 
 /**
@@ -13,11 +13,11 @@ interface FallbackOptions extends ModuleOptions {
  */
 export class Fallback extends Module {
   // Public Attributes
-  public cb: FallbackFunction;
+  public callback: FallbackFunction;
   // Constructor
   constructor (options?: FallbackOptions) {
     super(options);
-    this.cb = options?.cb || ((err) => err);
+    this.callback = options?.callback || ((err) => err);
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
@@ -32,7 +32,7 @@ export class Fallback extends Module {
           resolve(res);
         })
         .catch((err: Error) => {
-          reject(this.cb(err));
+          reject(this.callback(err));
         });
     });
   }

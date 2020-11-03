@@ -64,6 +64,9 @@ export default {
       this.cache.ttl = this.ttl;
     },
     onExecute () {
+      if (this.percent === 100) {
+        this.percent = 0;
+      }
       // Time
       this.timePercent = 0;
       this.timeInterval = setInterval(() => {

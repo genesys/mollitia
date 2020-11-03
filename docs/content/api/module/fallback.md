@@ -18,7 +18,7 @@ const circuit = new Circuit({
   options: {
     modules: [
       // Creates a fallback module
-      new Mollitia.Fallback({
+      new Fallback({
         cb (err) {
           // Every time the method rejects, You can filter here
           if (err instanceof MyError) {

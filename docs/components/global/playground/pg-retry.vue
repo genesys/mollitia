@@ -1,6 +1,6 @@
 <template>
   <div class="mollitia-playground">
-    <Circuit ref="c1" :modules="modules">
+    <Circuit ref="c1" :modules="modules" @end="onCircuitEnd">
       <Retry ref="r1" :time="time"></Retry>
     </Circuit>
   </div>
@@ -20,6 +20,11 @@ export default {
       time: 0,
       modules: []
     };
+  },
+  methods: {
+    onCircuitEnd (success) {
+      this.$refs.r1.onEnd(success);
+    }
   },
   mounted () {
     this.time = this.$refs.c1.time;
