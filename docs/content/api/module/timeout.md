@@ -45,7 +45,7 @@ circuit.fn(myLongFunction).execute()
 
 ## Events
 
-| Name       | Description                          | Params             |
-|:-----------|:-------------------------------------|:-------------------|
-| `execute`  | Called when the module is executed.  | `Mollitia.Circuit` |
-| `timeout`  | Called when the module is times out. | `Mollitia.Circuit` |
+| Name       | Description                          | Params                         |
+|:-----------|:-------------------------------------|:--------------- ---------------|
+| `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit** |
+| `timeout`  | Called when the module is times out. | `Mollitia.Circuit` **circuit** |

@@ -57,4 +57,7 @@ export class EventEmitter {
     }
     return false;
   }
+  public dispose (): void {
+    this.listeners = {};
+  }
 }

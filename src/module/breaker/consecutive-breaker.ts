@@ -32,18 +32,18 @@ export class ConsecutiveBreaker extends Breaker {
           .then((res: any) => {
             this.failures = 0;
             if (this.state === BreakerState.HALF_OPENED) {
-              this.close();
+              this._close(circuit);
             }
             resolve(res);
           })
           .catch((err: Error) => {
             if (this.state === BreakerState.HALF_OPENED) {
-              this.open();
+              this._open(circuit);
             } else {
               this.failures++;
-              this.logger?.debug(`ConsecutiveBreaker: (${this.failures}/${this.count})`);
+              this.logger?.debug(`${circuit.name}/${this.name} - ConsecutiveBreaker: (${this.failures}/${this.count})`);
               if (this.failures === this.count) {
-                this.open();
+                this._open(circuit);
               }
             }
             reject(err);

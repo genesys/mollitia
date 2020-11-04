@@ -1,4 +1,4 @@
-import * as Mollitia from '../src/index';
+import * as Mollitia from '../../src/index';
 
 const successAsync = jest.fn().mockImplementation((res: unknown = 'default', delay = 1) => {
   return new Promise((resolve) => {

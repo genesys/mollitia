@@ -5,7 +5,7 @@
     </div>
     <div class="mollitia-module-timeout-content">
       <div class="mollitia-module-timeout-config">
-        <div>Delay: <input v-model.number="delay" @input="update" type="number"/></div>
+        <div>Delay (in ms): <input v-model.number="delay" @input="update" type="number"/></div>
       </div>
       <div class="mollitia-module-timeout-visual">
         <div class="mollitia-module-timeout-percentage">

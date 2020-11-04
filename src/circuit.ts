@@ -29,6 +29,7 @@ export abstract class CircuitOptions {
 
 // TODO
 export abstract class CircuitFactory {
+  name?: string;
   func?: CircuitFunction;
   options?: CircuitOptions;
 }
@@ -48,6 +49,7 @@ export const circuits: Circuit[] = [];
  */
 export class Circuit extends EventEmitter {
   // Public Attributes
+  public name: string;
   public func: CircuitFunction;
   public params: any[];
   public modules: Module[];
@@ -55,6 +57,7 @@ export class Circuit extends EventEmitter {
   // Constructor
   constructor (factory?: CircuitFactory) {
     super();
+    this.name = factory?.name ? factory.name : `Circuit${circuits.length}`;
     for (const plugin of plugins) {
       if (plugin.onCircuitCreate) {
         plugin.onCircuitCreate(this, factory?.options);
@@ -95,10 +98,10 @@ export class Circuit extends EventEmitter {
       return this.func(...params);
     }
   }
-
-  public end (): void {
+  public dispose (): void {
+    super.dispose();
     if (this.modules) {
-      this.modules.forEach(mod => mod.end());
+      this.modules.forEach(mod => mod.dispose());
     }
   }
 }

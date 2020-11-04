@@ -51,6 +51,6 @@ circuit.fn(myFunction).execute()
 
 ## Events
 
-| Name       | Description                         | Params             |
-|:-----------|:------------------------------------|:-------------------|
-| `execute`  | Called when the module is executed. | `Mollitia.Circuit` |
+| Name       | Description                          | Params                         |
+|:-----------|:-------------------------------------|:--------------- ---------------|
+| `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit** |

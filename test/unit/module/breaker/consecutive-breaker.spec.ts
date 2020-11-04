@@ -45,13 +45,14 @@ describe('Consecutive Breaker', () => {
       }
     });
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
-    expect(logger.debug).toHaveBeenNthCalledWith(1, 'ConsecutiveBreaker: (1/3)');
+    expect(logger.debug).toHaveBeenNthCalledWith(1, 'Circuit0/Module0 - ConsecutiveBreaker: (1/3)');
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
-    expect(logger.debug).toHaveBeenNthCalledWith(2, 'ConsecutiveBreaker: (2/3)');
+    expect(logger.debug).toHaveBeenNthCalledWith(2, 'Circuit0/Module0 - ConsecutiveBreaker: (2/3)');
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
-    expect(logger.debug).toHaveBeenNthCalledWith(3, 'ConsecutiveBreaker: (3/3)');
-    expect(logger.debug).toHaveBeenNthCalledWith(4, 'Breaker: Open');
+    expect(logger.debug).toHaveBeenNthCalledWith(3, 'Circuit0/Module0 - ConsecutiveBreaker: (3/3)');
+    expect(logger.debug).toHaveBeenNthCalledWith(4, 'Circuit0/Module0 - Breaker: Open');
     await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.BreakerError);
+    await delay(20);
   });
   it('should go to half open state after delay', async () => {
     const consecutiveBreaker = new Mollitia.ConsecutiveBreaker({
@@ -66,13 +67,13 @@ describe('Consecutive Breaker', () => {
       }
     });
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
-    expect(logger.debug).toHaveBeenNthCalledWith(1, 'ConsecutiveBreaker: (1/2)');
+    expect(logger.debug).toHaveBeenNthCalledWith(1, 'Circuit1/Module1 - ConsecutiveBreaker: (1/2)');
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
-    expect(logger.debug).toHaveBeenNthCalledWith(2, 'ConsecutiveBreaker: (2/2)');
-    expect(logger.debug).toHaveBeenNthCalledWith(3, 'Breaker: Open');
+    expect(logger.debug).toHaveBeenNthCalledWith(2, 'Circuit1/Module1 - ConsecutiveBreaker: (2/2)');
+    expect(logger.debug).toHaveBeenNthCalledWith(3, 'Circuit1/Module1 - Breaker: Open');
     await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.BreakerError);
     await delay(20);
-    expect(logger.debug).toHaveBeenNthCalledWith(4, 'Breaker: Half Open');
+    expect(logger.debug).toHaveBeenNthCalledWith(4, 'Module1 - Breaker: Half Open');
     expect(consecutiveBreaker.state).toEqual(Mollitia.BreakerState.HALF_OPENED);
   });
   it('should use the fallback when the breaker is opened', async () => {

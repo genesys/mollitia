@@ -2,9 +2,7 @@
   <div class="mollitia-module-rate-limit">
     <div class="mollitia-module-rate-limit-header">
       <div>{{ name }}</div>
-    
     </div>
-
     <div class="mollitia-module-rate-limit-content">
       <div class="mollitia-module-rate-limit-config">
         <div class="form-control">

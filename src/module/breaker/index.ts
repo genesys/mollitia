@@ -48,14 +48,24 @@ export class Breaker extends Module implements BreakerNotification {
     }
   }
 
+  protected _open (circuit: Circuit): void {
+    if (this.state !== BreakerState.OPENED) {
+      this.logger?.debug(`${circuit.name}/${this.name} - Breaker: Open`);
+      this.open();
+    }
+  }
+  protected _close (circuit: Circuit): void {
+    if (this.state !== BreakerState.CLOSED) {
+      this.logger?.debug(`${circuit.name}/${this.name} - Breaker: Close`);
+      this.close();
+    }
+  }
   public onOpened(): void {
     //Implementation on classes extending Breaker
   }
-
   public onClosed(): void {
     //Implementation on classes extending Breaker
   }
-
   public onHalfOpened(): void {
     //Implementation on classes extending Breaker
   }
@@ -69,7 +79,6 @@ export class Breaker extends Module implements BreakerNotification {
     if (this.state !== BreakerState.OPENED) {
       this.clearHalfOpenTimeout();
       this.state = BreakerState.OPENED;
-      this.logger?.debug('Breaker: Open');
       this.setHalfDelay();
       this.onOpened();
       this.emit('stateChanged');
@@ -79,7 +88,6 @@ export class Breaker extends Module implements BreakerNotification {
     if (this.state !== BreakerState.HALF_OPENED) {
       this.clearHalfOpenTimeout();
       this.state = BreakerState.HALF_OPENED;
-      this.logger?.debug('Breaker: Half Opened');
       this.setOpenDelay();
       this.onHalfOpened();
       this.emit('stateChanged');
@@ -88,7 +96,6 @@ export class Breaker extends Module implements BreakerNotification {
   public close (): void {
     if (this.state !== BreakerState.CLOSED) {
       this.clearHalfOpenTimeout();
-      this.logger?.debug('Breaker: Close');
       this.state = BreakerState.CLOSED;
       this.onClosed();
       this.emit('stateChanged');
@@ -96,7 +103,7 @@ export class Breaker extends Module implements BreakerNotification {
   }
   private setHalfDelay (): void {
     this.openTimeout = <unknown>setTimeout(() => {
-      this.logger?.debug('Breaker: Half Open');
+      this.logger?.debug(`${this.name} - Breaker: Half Open`);
       this.halfOpen();
     }, this.openStateDelay) as number;
   }
@@ -115,7 +122,8 @@ export class Breaker extends Module implements BreakerNotification {
     }
   }
 
-  public end (): void {
+  public dispose (): void {
+    super.dispose();
     this.clearHalfOpenTimeout();
     if (this.openTimeout) {
       clearTimeout(this.openTimeout);

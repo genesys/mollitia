@@ -3,7 +3,6 @@
     <div class="mollitia-module-sliding-window-breaker-header">
       <div>{{ name }}</div>
     </div>
-
     <div class="mollitia-module-sliding-window-breaker-content">
       <div class="mollitia-module-sliding-window-breaker-config">
         <div class="form-control">

@@ -1,12 +1,6 @@
 import * as Mollitia from '../../../../../src/index';
 import { delay } from '../../../../../src/helpers/time';
 
-const logger = {
-  debug: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn()
-};
-
 const successAsync = jest.fn().mockImplementation((res: unknown = 'default', delay = 1) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -25,17 +19,13 @@ const failureAsync = jest.fn().mockImplementation((res: unknown = 'default', del
 
 describe('Sliding Count Breaker', () => {
   afterEach(() => {
-    logger.debug.mockClear();
-    logger.info.mockClear();
-    logger.warn.mockClear();
     successAsync.mockClear();
     failureAsync.mockClear();
   });
   it('should go to half open state after delay', async () => {
     const slidingCountBreaker = new Mollitia.SlidingCountBreaker({
       state: Mollitia.BreakerState.OPENED,
-      openStateDelay: 20,
-      logger
+      openStateDelay: 20
     });
     new Mollitia.Circuit({
       options: {
@@ -53,8 +43,7 @@ describe('Sliding Count Breaker', () => {
       slidingWindowSize: 10,
       minimumNumberOfCalls: 2,
       failureRateThreshold: 60,
-      openStateDelay: 20,
-      logger
+      openStateDelay: 20
     });
     const circuit = new Mollitia.Circuit({
       options: {

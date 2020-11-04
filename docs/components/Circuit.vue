@@ -8,7 +8,7 @@
     </div>
     <div class="mollitia-circuit-request">
       <div>Simulate Request</div>
-      <div>Time: <input v-model.number="time" type="number"/></div>
+      <div>Time (in ms): <input v-model.number="time" type="number"/></div>
       <div>
         <button @click="triggerRequest" :disabled="disabled">Send Request</button>
         <Toggle v-if="canFail" pre-label="Failure" post-label="Success" v-model="shouldSucceed"/>

@@ -1,16 +1,18 @@
-interface CacheItem {
-  ttl: number;
-  res: any;
+class CacheItem {
+  public ttl: number;
+  public res: any;
+  constructor (ttl: number, res: any) {
+    this.ttl = ttl;
+    this.res = res;
+  }
 }
 
 export class MapCache {
   // Private Attributes
   private map: Map<any, any>;
-  private ttls: any[];
   // Constructor
   constructor () {
     this.map = new Map();
-    this.ttls = [];
   }
   // Public Methods
   public set (ttl: number, ...params: any[]): void {
@@ -19,20 +21,17 @@ export class MapCache {
   public get (...params: any[]): any {
     return this._getLoopMap(this.map, ...params);
   }
+  public clear (): void {
+    this._clearLoopMap(this.map);
+  }
   // Private Methods
   private _setLoopMap (map: Map<any, any>, ttl: number, ...params: any[]): void {
     if (params.length === 2) {
       const ref = {
         map: new Map(),
-        cache: {
-          ttl: Date.now() + ttl,
-          res: params[1]
-        } as CacheItem|undefined
+        cache: new CacheItem(Date.now() + ttl, params[1])
       };
       map.set(params[0], ref);
-      this.ttls.push(setTimeout(() => {
-        delete ref.cache;
-      }, ttl));
     } else {
       if (map.get(params[0])) {
         const param = params.splice(0, 1)[0];
@@ -62,5 +61,15 @@ export class MapCache {
         }
       }
     }
+  }
+  private _clearLoopMap (map: Map<any, any>): any {
+    map.forEach((item: any) => {
+      if (item.map) {
+        this._clearLoopMap(item.map);
+      }
+      if (item.cache && Date.now() > item.cache.ttl) {
+        delete item.cache;
+      }
+    });
   }
 }

@@ -105,12 +105,14 @@ export class Bulkhead extends Module {
           clearTimeout(timeout);
           this.concurrentBuffer.splice(this.concurrentBuffer.indexOf(ref), 1);
           resolveDisposable.dispose();
+          rejectDisposable.dispose();
           this._addBufferedPromise();
           resolve(res);
         });
         const rejectDisposable = ref.on('reject', (err) => {
           clearTimeout(timeout);
           this.concurrentBuffer.splice(this.concurrentBuffer.indexOf(ref), 1);
+          resolveDisposable.dispose();
           rejectDisposable.dispose();
           this._addBufferedPromise();
           reject(err);
@@ -123,8 +125,8 @@ export class Bulkhead extends Module {
   private _addBufferedPromise () {
     if (this.queueBuffer.length > 0) {
       const queueRef = this.queueBuffer.splice(0, 1)[0];
-      this.concurrentBuffer.push(queueRef);
       queueRef.execute().catch(() => { return; });
+      this.concurrentBuffer.push(queueRef);
     }
   }
 }

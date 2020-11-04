@@ -5,6 +5,7 @@ import { MapCache } from '../helpers/map-cache';
 // TODO
 interface CacheOptions extends ModuleOptions {
   ttl?: number;
+  cacheClearInterval?: number;
 }
 
 /**
@@ -15,10 +16,23 @@ export class Cache extends Module {
   public ttl: number;
   // Private Attributes
   private cache: MapCache;
+  private _cacheClearInterval: number;
+  private _cacheInterval: number|null;
+  // Computed Attributes
+  get cacheClearInterval (): number {
+    return this._cacheClearInterval;
+  }
+  set cacheClearInterval (interval: number) {
+    this._cacheClearInterval = interval;
+    this._initializeInterval();
+  }
   // Constructor
   constructor (options?: CacheOptions) {
     super(options);
-    this.ttl = options?.ttl || Infinity;
+    this.ttl = options?.ttl || 6000; // 1 minute
+    this._cacheInterval = null;
+    this._cacheClearInterval = 0;
+    this.cacheClearInterval = options?.cacheClearInterval || 900000; // 15 minutes
     this.cache = new MapCache();
   }
   // Public Methods
@@ -36,11 +50,12 @@ export class Cache extends Module {
               }
               resolve(res);
             })
-            .catch((err: Error) => {
-              reject(err);
+            .catch(() => {
+              this.logger?.debug(`${circuit.name}/${this.name} - Cache: Hit [Old]`);
+              resolve(cacheRes.res);
             });
         } else {
-          this.logger?.debug('Cache: Hit');
+          this.logger?.debug(`${circuit.name}/${this.name} - Cache: Hit`);
           resolve(cacheRes.res);
         }
       } else {
@@ -56,5 +71,26 @@ export class Cache extends Module {
           });
       }
     });
+  }
+  public dispose (): void {
+    super.dispose();
+    if (this._cacheInterval) {
+      clearTimeout(this._cacheInterval);
+      this._cacheInterval = null;
+    }
+  }
+  // Private Methods
+  private _initializeInterval () {
+    if (this._cacheInterval) {
+      clearTimeout(this._cacheInterval);
+      this._cacheInterval = null;
+    }
+    if (this.cacheClearInterval !== 0 && this.cacheClearInterval !== Infinity) {
+      this._cacheInterval = <unknown>setTimeout(() => {
+        this.logger?.debug(`${this.name} - Cache: Clear`);
+        this.cache.clear();
+        this._initializeInterval();
+      }, this.cacheClearInterval) as number;
+    }
   }
 }

@@ -7,7 +7,7 @@
       <div class="mollitia-module-bulkhead-config">
         <div>Concurrent Requests: <input v-model.number="concurrentSize" @input="update" type="number"/></div>
         <div>Queue Size: <input v-model.number="queueSize" @input="update" type="number"/></div>
-        <div>Max Queue Wait: <input v-model.number="maxQueueWait" @input="update" type="number"/></div>
+        <div>Max Queue Wait (in ms): <input v-model.number="maxQueueWait" @input="update" type="number"/></div>
       </div>
       <div class="mollitia-module-bulkhead-visual">
         <div class="mollitia-module-bulkhead-visual-concurrent-container">

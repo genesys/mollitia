@@ -4,6 +4,7 @@ import { plugins } from '../plugin';
 
 // TODO
 export abstract class ModuleOptions {
+  name?: string;
   logger?: Logger;
 }
 
@@ -13,10 +14,12 @@ export const modules: Module[] = [];
 // TODO do not extends EventEmttiter, let modules do
 export class Module extends EventEmitter {
   // Public Attributes
+  public name: string;
   public logger?: Logger;
   // Constructor
   constructor (options?: ModuleOptions) {
     super();
+    this.name = options?.name ? options.name : `Module${modules.length}`;
     for (const plugin of plugins) {
       if (plugin.onModuleCreate) {
         plugin.onModuleCreate(this, options);
@@ -28,8 +31,5 @@ export class Module extends EventEmitter {
   public execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
     this.emit('execute', circuit);
     return promise(...params);
-  }
-  public end (): void {
-    //implementation on classes inheriting from this module class
   }
 }

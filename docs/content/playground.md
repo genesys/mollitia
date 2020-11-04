@@ -3,4 +3,7 @@ title: Mollitia - Playground
 sidebar: null
 ---
 
-TODO Playground
+# TODO Features
+
+* Drag 'n Drop modules in circuit
+* Selectable premade samples

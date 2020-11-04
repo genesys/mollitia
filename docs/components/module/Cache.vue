@@ -5,7 +5,8 @@
     </div>
     <div class="mollitia-module-cache-content">
       <div class="mollitia-module-cache-config">
-        <div>TTL: <input v-model.number="ttl" @input="update" type="number"/></div>
+        <div>TTL (in ms): <input v-model.number="ttl" @input="update" type="number"/></div>
+        <div>Clear Interval (in ms): <input v-model.number="clearanceInterval" @input="update" type="number"/></div>
       </div>
       <div class="mollitia-module-cache-visual">
         <div class="mollitia-module-cache-time">
@@ -33,6 +34,7 @@ export default {
     return {
       cache: null,
       ttl: 10000,
+      clearanceInterval: 20000,
       timePercent: 0,
       percent: 0,
       timeInterval: null,
@@ -62,6 +64,7 @@ export default {
   methods: {
     update () {
       this.cache.ttl = this.ttl;
+      this.cache.cacheClearInterval = this.clearanceInterval;
     },
     onExecute () {
       if (this.percent === 100) {
@@ -76,28 +79,32 @@ export default {
         }
       }, 100);
     },
-    onEnd () {
+    onEnd (success) {
       this.failed = false;
       this.timePercent = 100;
       clearInterval(this.timeInterval);
       // Cache
       if (!this.interval) {
-        this.cached = true;
         this.percent = 0;
-        this.interval = setInterval(() => {
-          this.percent += (100 * 100 / this.ttl);
-          if (this.percent >= 100) {
-            this.cached = false;
-            clearInterval(this.interval);
-            this.interval = null;
-          }
-        }, 100);
+        if (success) {
+          // TODO if this is from cache, do not do that
+          this.cached = true;
+          this.interval = setInterval(() => {
+            this.percent += (100 * 100 / this.ttl);
+            if (this.percent >= 100) {
+              this.cached = false;
+              clearInterval(this.interval);
+              this.interval = null;
+            }
+          }, 100);
+        }
       }
     }
   },
   created () {
     this.cache = new this.$mollitia.Cache({
       ttl: this.ttl,
+      cacheClearInterval: this.clearanceInterval,
       logger: {
         debug: this.$parent.log
       }

@@ -33,7 +33,6 @@ export class RateLimit extends Module {
     if (!this.limitPeriod) {
       return promise(...params);
     }
-
     const now = (new Date()).getTime();
     if (this.requestsTime.length < this.limitForPeriod) {
       this.requestsTime.push(now);
@@ -44,7 +43,7 @@ export class RateLimit extends Module {
         this.requestsTime.push(now);
         return promise(...params);
       } else {
-        this.logger?.debug('Rate Limited');
+        this.logger?.debug(`${circuit.name}/${this.name} - Rate Limited`);
         this.emit('rateLimit', circuit);
         return Promise.reject(new RateLimitError('Rate Limited'));
       }

@@ -86,7 +86,7 @@ async function main() {
     }
     resultsCircuitBreaker.push(calculationDuration('With Circuit Breaker',durations));
   }
-  circuit.end();
+  circuit.dispose();
   console.log('With Circuit Breaker | Without Circuit Breaker | Circuit Breaker latency');
   for (var i=0; i<resultsCircuitBreaker.length; i++) {
     const l = resultsNoCircuitBreaker[i].length;

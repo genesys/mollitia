@@ -13,6 +13,8 @@ Once you call a **function**, with some **parameters**, it will check if it has 
 > It is important to understand that the cache works by reference!<br/>
 > That means that the cache is specificly referenced **for one function**, and **for the same parameters**.<br/>
 
+Also, when a circuit fails and have an outdated cached response (ttl has been passed), the circuit will fire the request, and will respond with the new value if it succeeds, otherwise it will resolve with the cached response.
+
 ``` javascript
 // Imports needed components
 const { Circuit, Cache } = require('mollitia');
@@ -22,7 +24,8 @@ const circuit = new Circuit({
     modules: [
       // Creates a cache module
       new Cache({
-        ttl: 60000  // A cached response will be kept for 1 minute
+        ttl: 60000,  // A cached response will be considered as valid for 1 minute
+        cacheClearInterval: 900000 // A cached response will be kept for 15 minutes
       })
     ]
   }
@@ -46,17 +49,23 @@ await circuit.fn(myFirstFunction).execute(myObject);
 // That won't return the cached result, as the function is different
 await circuit.fn(mySecondFunction).execute(myObject);
 // ... After 1 minute, the function is called again.
-await circuit.fn(myFirstFunction).execute(myObject);
+circuit.fn(myFirstFunction).execute(myObject)
+  .then(() => {
+    // If the request suceeds, it returns the result normally
+    // If not, the old cached response is returned
+  });
+// After 15 minutes, the cache is cleared.
 ```
 
 ## Options
 
-| Name   | Description                                           | Default    |
-|:-------|:------------------------------------------------------|:-----------|
-| `ttl`  | The amount of time before a cached result is cleared. | `Infinity` |
+| Name                  | Description                                                    | Default    |
+|:----------------------|:---------------------------------------------------------------|:-----------|
+| `ttl`                 | The amount of time before a cached result is considered valid. | `6000`     |
+| `cacheClearInterval`  | The amount of time before the cache cleans itself up.          | `900000`   |
 
 ## Events
 
-| Name       | Description                         | Params             |
-|:-----------|:------------------------------------|:-------------------|
-| `execute`  | Called when the module is executed. | `Mollitia.Circuit` |
+| Name       | Description                          | Params                         |
+|:-----------|:-------------------------------------|:--------------- ---------------|
+| `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit** |

@@ -6,6 +6,7 @@
     <div class="mollitia-module-retry-content">
       <div class="mollitia-module-retry-config">
         <div>Attempts: <input v-model.number="retries" @input="update" type="number"/></div>
+        <div>Interval (in ms): <input v-model.number="retryInterval" @input="update" type="number"/></div>
       </div>
       <div class="mollitia-module-retry-visual">
         <div v-for="i in attempts" :key="i" class="mollitia-module-retry-attempt">
@@ -35,6 +36,7 @@ export default {
     return {
       retry: null,
       retries: 2,
+      retryInterval: 0,
       index: 0,
       interval: null,
       requests: []
@@ -54,6 +56,7 @@ export default {
     },
     update () {
       this.retry.attempts = this.retries;
+      this.retry.interval = this.retryInterval;
     },
     onExecute () {
       this.index = 0;
@@ -89,7 +92,8 @@ export default {
   created () {
     this.requests = new Array(this.attempts).fill(0, 0, this.attempts);
     this.retry = new this.$mollitia.Retry({
-      attempts: this.retries
+      attempts: this.retries,
+      interval: this.retryInterval
     });
     this.retry.on('execute', this.onExecute);
     this.retry.on('retry', this.onRetry);

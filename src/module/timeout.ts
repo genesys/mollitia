@@ -55,7 +55,7 @@ export class Timeout extends Module {
     }
   }
   private emitTimeout (circuit: Circuit) {
-    this.logger?.debug('Has timed out');
+    this.logger?.debug(`${circuit.name}/${this.name} - Has timed out`);
     this.emit('timeout', circuit);
   }
 }
