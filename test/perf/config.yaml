@@ -31,8 +31,16 @@ modules:
   - type: Retry
     options:
       attempts: 2
+  - type: Cache
+    options:
+      ttl: 1000
+  - type: Bulkhead
+    options:
+      concurrentSize: 2
+      queueSize: 2
+      maxQueueWait: 100000
 config:
-  nbCycles: 10
+  nbCycles: 100
   nbCalls: 100
   duration: 30
       
