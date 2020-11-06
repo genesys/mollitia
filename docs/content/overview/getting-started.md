@@ -14,4 +14,4 @@ After that, install `Mollitia` on you project like this:
 npm install mollitia --save
 ```
 
-An start hacking. Happy coding!
+And start hacking. Happy coding!

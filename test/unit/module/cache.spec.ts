@@ -31,7 +31,7 @@ describe('Cache', () => {
     successAsync.mockClear();
     failureAsync.mockClear();
   });
-  it('should cache the previous response', async () => {
+  it('should cache the previous response by reference', async () => {
     const circuit = new Mollitia.Circuit({
       options: {
         modules: [

@@ -19,7 +19,7 @@ const circuit = new Circuit({
     modules: [
       // Creates a fallback module
       new Fallback({
-        cb (err) {
+        callback (err) {
           // Every time the method rejects, You can filter here
           if (err instanceof MyError) {
             // I know this error
@@ -47,7 +47,7 @@ circuit.fn(myFunction).execute()
 
 | Name | Description                                    | Default           |
 |:-----|:-----------------------------------------------|:------------------|
-| `cb` | The callback, called when the circuit rejects. | `Function(Error)` |
+| `callback` | The callback, called when the circuit rejects. | `Function(Error)` |
 
 ## Events
 

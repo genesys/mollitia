@@ -51,7 +51,6 @@ export class Circuit extends EventEmitter {
   // Public Attributes
   public name: string;
   public func: CircuitFunction;
-  public params: any[];
   public modules: Module[];
   // Private Attributes
   // Constructor
@@ -64,7 +63,6 @@ export class Circuit extends EventEmitter {
       }
     }
     this.func = factory?.func ? factory.func : undefinedFunc;
-    this.params = [];
     this.modules = factory?.options?.modules || [];
     circuits.push(this);
   }
@@ -81,7 +79,6 @@ export class Circuit extends EventEmitter {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (...params: any[]): Promise<T> {
-    this.params = params;
     this.emit('execute', this);
     if (this.modules.length) {
       if (this.modules.length > 1) {

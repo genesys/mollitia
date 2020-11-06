@@ -39,14 +39,14 @@ export class Cache extends Module {
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
     return new Promise((resolve, reject) => {
       this.emit('execute', circuit);
-      const cacheRes = this.cache.get(promise, ...circuit.params);
+      const cacheRes = this.cache.get(promise, ...params);
       if (cacheRes) {
         const now = Date.now();
         if (this.ttl !== Infinity && (cacheRes.ttl < now)) {
           promise(...params)
             .then((res: any) => {
               if (this.ttl > 0) {
-                this.cache.set(this.ttl, promise, ...circuit.params, res);
+                this.cache.set(this.ttl, promise, ...params, res);
               }
               resolve(res);
             })
@@ -62,7 +62,7 @@ export class Cache extends Module {
         promise(...params)
           .then((res: any) => {
             if (this.ttl > 0) {
-              this.cache.set(this.ttl, promise, ...circuit.params, res);
+              this.cache.set(this.ttl, promise, ...params, res);
             }
             resolve(res);
           })
