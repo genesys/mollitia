@@ -7,8 +7,11 @@ interface RateLimitOptions extends ModuleOptions {
 }
 
 export class RateLimitError extends Error {
-  constructor(message: string) {
+  public remainingTimeInRateLimit: number;
+
+  constructor(message: string, remainingTimeInRateLimit: number) {
     super(message);
+    this.remainingTimeInRateLimit = remainingTimeInRateLimit;
     Object.setPrototypeOf(this, RateLimitError.prototype);
   }
 }
@@ -38,14 +41,15 @@ export class RateLimit extends Module {
       this.requestsTime.push(now);
       return promise(...params);
     } else {
-      if (now - this.requestsTime[0] > this.limitPeriod) {
+      const deltaSinceFirstRequest = now - this.requestsTime[0];
+      if (deltaSinceFirstRequest > this.limitPeriod) {
         this.requestsTime.shift();
         this.requestsTime.push(now);
         return promise(...params);
       } else {
         this.logger?.debug(`${circuit.name}/${this.name} - Rate Limited`);
         this.emit('rateLimit', circuit);
-        return Promise.reject(new RateLimitError('Rate Limited'));
+        return Promise.reject(new RateLimitError('Rate Limited', (this.limitPeriod - deltaSinceFirstRequest)));
       }
     }
   }
