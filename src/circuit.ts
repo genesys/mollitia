@@ -79,7 +79,7 @@ export class Circuit extends EventEmitter {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (...params: any[]): Promise<T> {
-    this.emit('execute', this);
+    let _exec;
     if (this.modules.length) {
       if (this.modules.length > 1) {
         const args = [];
@@ -87,13 +87,15 @@ export class Circuit extends EventEmitter {
           args.push(this, this.modules[i].execute.bind(this.modules[i]));
         }
         args.push(this, this.func, ...params);
-        return this.modules[0].execute(this, this.modules[1].execute.bind(this.modules[1]), ...args);
+        _exec = this.modules[0].execute(this, this.modules[1].execute.bind(this.modules[1]), ...args);
       } else {
-        return this.modules[0].execute(this, this.func, ...params);
+        _exec = this.modules[0].execute(this, this.func, ...params);
       }
     } else {
-      return this.func(...params);
+      _exec = this.func(...params);
     }
+    this.emit('execute', this, _exec);
+    return _exec;
   }
   public dispose (): void {
     super.dispose();

@@ -30,8 +30,9 @@ export class Retry extends Module {
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
-    this.emit('execute', circuit);
-    return this._promiseRetry(circuit, this.attempts + 1, promise, ...params);
+    const _exec = this._promiseRetry<T>(circuit, this.attempts + 1, promise, ...params);
+    this.emit('execute', circuit, _exec);
+    return _exec;
   }
   // Private Methods
   private async _promiseRetry<T> (circuit: Circuit, attempts: number, promise: any, ...params: any[]): Promise<T> {

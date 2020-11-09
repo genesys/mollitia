@@ -63,9 +63,10 @@
 <!-- Template -->
 <template>
   <div class="madoc-page">
-    <Navbar v-if="article.navbar" :navbar="article.navbar"/>
+    <Navbar v-if="article.navbar && article.navbar.links" :navbar="article.navbar"/>
     <div class="madoc-container">
-      <Sidebar v-if="article.sidebar" :sidebar="article.sidebar"/>
+      <Metrics/>
+      <Sidebar v-if="article.sidebar && article.sidebar.links" :sidebar="article.sidebar"/>
       <div class="madoc-wrapper">
         <div class="madoc-content">
           <nuxt-content :document="article" />

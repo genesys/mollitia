@@ -70,3 +70,23 @@ timeoutRetries.fn(failureAsync).execute('dummy', 1000) // Exactly like before
 
 Because the [Timeout](/api/module/timeout) module is set before the [Retry](/api/module/retry) module, the timeout is global for all attempts.
 Therefore, the Circuit does have time to make a retry, it times out before.
+
+## Factory
+
+| Name      | Description                                               | Default          |
+|:----------|:----------------------------------------------------------|:-----------------|
+| `name`    | The Circuit name. (For logging purposes)                  | `Circuit{Index}` |
+| `func`    | The Circuit function. (Can be changed with `fn()` method) | `none`           |
+| `options` | The options, [more on that below.](#options).             | `none`           |
+
+## Options
+
+| Name      | Description                                  | Default |
+|:----------|:---------------------------------------------|:--------|
+| `modules` | An array of modules, applied to the circuit. | `none`  |
+
+## Events
+
+| Name       | Description                          | Params                                                   |
+|:-----------|:-------------------------------------|:---------------------------------------------------------|
+| `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit**, `Promise<T>` **promise** |

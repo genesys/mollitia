@@ -69,8 +69,9 @@ export class Bulkhead extends Module {
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
-    this.emit('execute', circuit);
-    return this._promiseBulkhead(circuit, promise, ...params);
+    const _exec = this._promiseBulkhead<T>(circuit, promise, ...params);
+    this.emit('execute', circuit, _exec);
+    return _exec;
   }
   // Private Methods
   private async _promiseBulkhead<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {

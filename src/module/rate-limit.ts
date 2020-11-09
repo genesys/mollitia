@@ -32,7 +32,12 @@ export class RateLimit extends Module {
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
-    this.emit('execute', circuit);
+    const _exec = this._promiseRatelimit<T>(circuit, promise, ...params);
+    this.emit('execute', circuit, _exec);
+    return _exec;
+  }
+  // Private Methods
+  private async _promiseRatelimit<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
     if (!this.limitPeriod) {
       return promise(...params);
     }

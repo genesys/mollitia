@@ -29,7 +29,8 @@ export class Module extends EventEmitter {
     modules.push(this);
   }
   public execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
-    this.emit('execute', circuit);
-    return promise(...params);
+    const _exec = promise(...params);
+    this.emit('execute', circuit, _exec);
+    return _exec;
   }
 }

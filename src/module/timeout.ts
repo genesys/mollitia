@@ -26,8 +26,9 @@ export class Timeout extends Module {
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
-    this.emit('execute', circuit);
-    return this._promiseTimeout(circuit, this.delay, promise, ...params);
+    const _exec = this._promiseTimeout<T>(circuit, this.delay, promise, ...params);
+    this.emit('execute', circuit, _exec);
+    return _exec;
   }
   // Private Methods
   private async _promiseTimeout<T> (circuit: Circuit, time: number, promise: any, ...params: any[]): Promise<T> {

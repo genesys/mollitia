@@ -37,8 +37,20 @@ export class Cache extends Module {
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
+    const _exec = this._promiseCache<T>(circuit, promise, ...params);
+    this.emit('execute', circuit, _exec);
+    return _exec;
+  }
+  public dispose (): void {
+    super.dispose();
+    if (this._cacheInterval) {
+      clearTimeout(this._cacheInterval);
+      this._cacheInterval = null;
+    }
+  }
+  // Private Methods
+  private async _promiseCache<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.emit('execute', circuit);
       const cacheRes = this.cache.get(promise, ...params);
       if (cacheRes) {
         const now = Date.now();
@@ -72,14 +84,6 @@ export class Cache extends Module {
       }
     });
   }
-  public dispose (): void {
-    super.dispose();
-    if (this._cacheInterval) {
-      clearTimeout(this._cacheInterval);
-      this._cacheInterval = null;
-    }
-  }
-  // Private Methods
   private _initializeInterval () {
     if (this._cacheInterval) {
       clearTimeout(this._cacheInterval);

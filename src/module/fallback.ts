@@ -21,8 +21,9 @@ export class Fallback extends Module {
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
-    this.emit('execute', circuit);
-    return this._promiseFallback(circuit, promise, ...params);
+    const _exec = this._promiseFallback<T>(circuit, promise, ...params);
+    this.emit('execute', circuit, _exec);
+    return _exec;
   }
   // Private Methods
   private async _promiseFallback<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
