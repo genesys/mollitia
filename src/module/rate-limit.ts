@@ -26,8 +26,8 @@ export class RateLimit extends Module {
   // Constructor
   constructor (options?: RateLimitOptions) {
     super(options);
-    this.limitPeriod = options?.limitPeriod || 0;
-    this.limitForPeriod = options?.limitForPeriod || Infinity;
+    this.limitPeriod = options?.limitPeriod ? options?.limitPeriod : 0;
+    this.limitForPeriod = options?.limitForPeriod ? options?.limitForPeriod : Infinity;
     this.requestsTime = [];
   }
   // Public Methods

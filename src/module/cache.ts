@@ -29,10 +29,10 @@ export class Cache extends Module {
   // Constructor
   constructor (options?: CacheOptions) {
     super(options);
-    this.ttl = options?.ttl || 6000; // 1 minute
+    this.ttl = options?.ttl ? options?.ttl : 6000; // 1 minute
     this._cacheInterval = null;
     this._cacheClearInterval = 0;
-    this.cacheClearInterval = options?.cacheClearInterval || 900000; // 15 minutes
+    this.cacheClearInterval = options?.cacheClearInterval ? options?.cacheClearInterval : 900000; // 15 minutes
     this.cache = new MapCache();
   }
   // Public Methods

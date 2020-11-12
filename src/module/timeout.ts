@@ -22,7 +22,7 @@ export class Timeout extends Module {
   // Constructor
   constructor (options?: TimeoutOptions) {
     super(options);
-    this.delay = options?.delay || 60000;
+    this.delay = options?.delay ? options?.delay : 60000;
   }
   // Public Methods
   public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {

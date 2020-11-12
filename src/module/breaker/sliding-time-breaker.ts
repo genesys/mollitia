@@ -15,7 +15,7 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
 
   constructor(options?: SlidingTimeBreakerOptions) {
     super(options);
-    this.slidingWindowSize = options?.slidingWindowSize || 60;
+    this.slidingWindowSize = options?.slidingWindowSize ? options?.slidingWindowSize : 60;
     this.slidingWindowSizeInSeconds = options?.slidingWindowSizeInSeconds || false;
 
     if (this.slidingWindowSizeInSeconds) {

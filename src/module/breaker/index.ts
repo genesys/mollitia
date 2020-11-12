@@ -64,12 +64,12 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
     } else if (this.state === BreakerState.HALF_OPENED) {
       this.setOpenDelay();
     }
-    this.slidingWindowSize                    = options?.slidingWindowSize || 10;
-    this.minimumNumberOfCalls                 = options?.minimumNumberOfCalls || 10;
-    this.failureRateThreshold                 = (options?.failureRateThreshold || 50);
-    this.slowCallDurationThreshold            = options?.slowCallDurationThreshold || 60000;
-    this.slowCallRateThreshold                = (options?.slowCallRateThreshold || 100);
-    this.permittedNumberOfCallsInHalfOpenState = options?.permittedNumberOfCallsInHalfOpenState || 2;
+    this.slidingWindowSize                    = options?.slidingWindowSize ? options?.slidingWindowSize : 10;
+    this.minimumNumberOfCalls                 = options?.minimumNumberOfCalls ? options?.minimumNumberOfCalls : 10;
+    this.failureRateThreshold                 = (options?.failureRateThreshold ? options?.failureRateThreshold : 50);
+    this.slowCallDurationThreshold            = options?.slowCallDurationThreshold ? options?.slowCallDurationThreshold : 60000;
+    this.slowCallRateThreshold                = (options?.slowCallRateThreshold ? options?.slowCallRateThreshold : 100);
+    this.permittedNumberOfCallsInHalfOpenState = options?.permittedNumberOfCallsInHalfOpenState ? options?.permittedNumberOfCallsInHalfOpenState : 2;
     this.nbCallsInHalfOpenedState = 0;
     this.callsInHalfOpenedState = [];
     this.callsInClosedState = [];
