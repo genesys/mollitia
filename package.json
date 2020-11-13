@@ -31,7 +31,10 @@
     "build:lib:tsc": "tsc --module commonjs",
     "build:lib:rollup": "rollup -c rollup.config.ts",
     "build:docs": "cd docs && npm run build",
-    "serve": "cd docs && npm run serve"
+    "serve": "cd docs && npm run serve",
+    "deploy": "run-s deploy:build deploy:push",
+    "deploy:build": "cd docs && docker build -t 135.39.47.16:5000/mollitia:latest .",
+    "deploy:push": "cd docs && docker push 135.39.47.16:5000/mollitia:latest"
   },
   "devDependencies": {
     "@types/jest": "26.0.14",

@@ -65,7 +65,6 @@
   <div class="madoc-page">
     <Navbar v-if="article.navbar && article.navbar.links" :navbar="article.navbar"/>
     <div class="madoc-container">
-      <Metrics/>
       <Sidebar v-if="article.sidebar && article.sidebar.links" :sidebar="article.sidebar"/>
       <div class="madoc-wrapper">
         <div class="madoc-content">

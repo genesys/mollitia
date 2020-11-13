@@ -26,11 +26,11 @@ links:
         path: /api/module/breaker/sliding/count
       - title: Time Breaker
         path: /api/module/breaker/sliding/time
-  - group: Core Plugins
-    links:
-      - title: Prometheus
-        # TODO link to prometheus static doc
-        path: /api/plugin/prometheus
+  # TODO
+  # - group: Core Plugins
+  #   links:
+  #     - title: Prometheus
+  #       path: /api/plugin/prometheus
   - group: Customization
     links:
       - title: Create a module

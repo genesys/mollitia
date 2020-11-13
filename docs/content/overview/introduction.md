@@ -16,7 +16,7 @@ You can then execute a asynchronous operation on the circuit, and the attached m
 * Modules provides a wide range of events to help monitoring and analyzing.
 * Modules can be shared by multiple circuits.
 <!-- TODO add playground examples, accessible with /api/playground#example-1 -->
-* The order of modules have importance, and you can do cool stuff with it, [more on that in the Playground examples.](/api/playground).
+<!-- * The order of modules have importance, and you can do cool stuff with it, [more on that in the Playground examples.](/api/playground). -->
 
 ## Core Modules
 
@@ -34,7 +34,7 @@ You can then execute a asynchronous operation on the circuit, and the attached m
 `Mollitia` has been designed to be customized.
 [Modules can be created](/api/create-module), and [plugins can be added](/api/create-plugin).
 
-### Core Plugins
+<!-- TODO -->
+<!-- ### Core Plugins -->
 
-<!-- TODO set prometheus static documentation link -->
-* **[Prometheus](/api/plugin/prometheus)**: Adds multiple metrics to your modules and circuits.
+<!-- * **[Prometheus](/api/plugin/prometheus)**: Adds multiple metrics to your modules and circuits. -->
