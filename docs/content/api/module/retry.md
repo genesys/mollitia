@@ -25,9 +25,9 @@ const circuit = new Circuit({
           if (err instanceof BrokenError) {
             return false; // Returning false will cancel the retry attempt
           } else if (err instanceof BusyError) {
-            return 1000; // Returing a number will modify the interval time, and wait for that time before retry
+            return 1000; // Returning a number will modify the interval time, and wait for that time before retry
           } else {
-            return true; // Returing true will retry, using the configured interval value
+            return true; // Returning true will retry, using the configured interval value
           }
         }
       })
