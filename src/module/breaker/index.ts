@@ -116,11 +116,19 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
 
   abstract executeInClosed<T1> (promise: any, ...params: any[]): Promise<T1>;
 
+  protected adjustedRequestResult(requestResult: SlidingWindowRequestResult, shouldReportFailure: boolean): SlidingWindowRequestResult {
+    if (!shouldReportFailure && requestResult === SlidingWindowRequestResult.FAILURE) {
+      return SlidingWindowRequestResult.SUCCESS;
+    }
+    return requestResult;
+  }
+
   protected async executeInHalfOpened<T1> (promise: any, ...params: any[]): Promise<T1> {
     if (this.nbCallsInHalfOpenedState < this.permittedNumberOfCallsInHalfOpenState) {
       this.nbCallsInHalfOpenedState++;
-      const {requestResult, response } = await this.executePromise(promise, ...params);
-      this.callsInHalfOpenedState.push(requestResult);
+      const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
+      this.callsInHalfOpenedState.push(this.adjustedRequestResult(requestResult, shouldReportFailure));
+    
       if (this.callsInHalfOpenedState.length == this.permittedNumberOfCallsInHalfOpenState) {
         this.checkCallRatesHalfOpen(this.open.bind(this), this.close.bind(this));
       }
@@ -134,7 +142,7 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
     }
   }
 
-  protected executePromise(promise: any, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any}> {
+  protected executePromise(promise: any, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any, shouldReportFailure: boolean}> {
     const beforeRequest = (new Date()).getTime();
     return promise(...params)
       .then((res: any) => {
@@ -148,9 +156,7 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
         return {requestResult: requestResp, response: res};
       })
       .catch((err: any) => {
-        const shouldReportFailure = this.onError(err);
-        const returnedValue = shouldReportFailure ? SlidingWindowRequestResult.FAILURE : SlidingWindowRequestResult.SUCCESS;
-        return {requestResult: returnedValue, response: err};
+        return {requestResult: SlidingWindowRequestResult.FAILURE, response: err, shouldReportFailure: this.onError(err)};
       });
   }
 

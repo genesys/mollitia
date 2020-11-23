@@ -42,9 +42,12 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
   }
 
   public async executeInClosed<T> (promise: any, ...params: any[]): Promise<T> {
-    const {requestResult, response } = await this.executePromise(promise, ...params);
+    const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
     this.filterCalls();
-    this.callsInClosedState.push({result: requestResult, timestamp: (new Date()).getTime()});
+    this.callsInClosedState.push({
+      result: this.adjustedRequestResult(requestResult, shouldReportFailure),
+      timestamp: (new Date()).getTime()
+    });
     if (this.callsInClosedState.length >= this.minimumNumberOfCalls) {
       this.checkCallRatesClosed(this.open.bind(this));
     }
