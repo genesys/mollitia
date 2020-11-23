@@ -1,6 +1,8 @@
 import { Module, ModuleOptions } from '..';
 import { Circuit } from '../../circuit';
 
+type ErrorCallback = (err: any) => boolean;
+
 export class BreakerError extends Error {
   constructor(message: string) {
     super(message);
@@ -30,6 +32,7 @@ export interface SlidingWindowBreakerOptions extends ModuleOptions {
   slowCallRateThreshold?:                  number;
   slowCallDurationThreshold?:              number;
   permittedNumberOfCallsInHalfOpenState?:  number;
+  onError?:                                ErrorCallback;
 }
 
 export enum SlidingWindowRequestResult {
@@ -53,6 +56,7 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
   private openTimeout = 0;
   private nbCallsInHalfOpenedState: number;
   private callsInHalfOpenedState: SlidingWindowRequestResult[];
+  public onError: ErrorCallback;
 
   constructor (options?: SlidingWindowBreakerOptions) {
     super(options);
@@ -73,6 +77,7 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
     this.nbCallsInHalfOpenedState = 0;
     this.callsInHalfOpenedState = [];
     this.callsInClosedState = [];
+    this.onError = options?.onError || (() => true);
   }
 
   private reinitializeCounters (): void {
@@ -143,7 +148,9 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
         return {requestResult: requestResp, response: res};
       })
       .catch((err: any) => {
-        return {requestResult: SlidingWindowRequestResult.FAILURE, response: err};
+        const shouldReportFailure = this.onError(err);
+        const returnedValue = shouldReportFailure ? SlidingWindowRequestResult.FAILURE : SlidingWindowRequestResult.SUCCESS;
+        return {requestResult: returnedValue, response: err};
       });
   }
 

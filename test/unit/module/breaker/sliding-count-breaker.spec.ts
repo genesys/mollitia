@@ -182,4 +182,33 @@ describe('Sliding Count Breaker', () => {
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
   });
+  it('No switch to Open when failures but failure reported as success', async () => {
+    const slidingCountBreaker = new Mollitia.SlidingCountBreaker({
+      slidingWindowSize: 2,
+      minimumNumberOfCalls: 2,
+      failureRateThreshold: 60,
+      openStateDelay: 20,
+      onError: (err) => {
+        if (err === 'credentials-issue') {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    });
+    const circuit = new Mollitia.Circuit({
+      options: {
+        modules: [
+          slidingCountBreaker
+        ]
+      }
+    });
+    await circuit.fn(failureAsync).execute('credentials-issue');
+    await circuit.fn(failureAsync).execute('credentials-issue');
+    expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
+    await circuit.fn(failureAsync).execute('real-issue').catch(()=>{ });
+    expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
+    await circuit.fn(failureAsync).execute('real-issue').catch(()=>{ });
+    expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
+  });
 });
