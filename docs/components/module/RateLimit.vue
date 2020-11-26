@@ -19,7 +19,7 @@
           <div class="circle" v-for="result in results" :key="result.id" :class="{'failure': result.value === false}"></div>
         </div>
         <div class="mollitia-module-rate-limit-duration">
-          <div class="mollitia-module-rate-limit-title">Rate Limit Duration</div>
+          <div class="mollitia-module-rate-limit-title">Ratelimit Duration</div>
           <div class="mollitia-module-rate-limit-progress" :style="style"></div>
         </div>
       </div>
@@ -30,16 +30,16 @@
 <script>
 var index = 0;
 export default {
-  name: 'RateLimit',
+  name: 'Ratelimit',
   props: {
     name: {
       type: String,
-      default: 'Rate Limit'
+      default: 'Ratelimit'
     }
   },
   data () {
     return {
-      rateLimit: null,
+      ratelimit: null,
       limitPeriod: 10000,
       limitForPeriod: 2,
       results: [],
@@ -57,8 +57,8 @@ export default {
   },
   methods: {
     update () {
-      this.rateLimit.limitPeriod = this.limitPeriod;
-      this.rateLimit.limitForPeriod = this.limitForPeriod;
+      this.ratelimit.limitPeriod = this.limitPeriod;
+      this.ratelimit.limitForPeriod = this.limitForPeriod;
     },
     onEnd () {
       if (this.requestInProgress) {
@@ -77,14 +77,14 @@ export default {
               this.percent = 0;
               return;
             }
-            const rateLimitRemainingDuration = this.limitPeriod - (this.timeForRequests[this.timeForRequests.length - 1] - this.timeForRequests[0]);
+            const ratelimitRemainingDuration = this.limitPeriod - (this.timeForRequests[this.timeForRequests.length - 1] - this.timeForRequests[0]);
             const currentSpentDuration = now - this.timeForRequests[this.timeForRequests.length - 1];
-            this.percent = (currentSpentDuration / rateLimitRemainingDuration) * 100;
+            this.percent = (currentSpentDuration / ratelimitRemainingDuration) * 100;
           }, 150);
         }
       }
     },
-    onRateLimit () {
+    onRatelimit () {
       if (this.requestInProgress) {
         this.requestInProgress = false;
         if (this.results.length === 10) {
@@ -98,12 +98,12 @@ export default {
     }
   },
   created () {
-    this.rateLimit = new this.$mollitia.RateLimit({
+    this.ratelimit = new this.$mollitia.Ratelimit({
       limitPeriod: this.limitPeriod,
       limitForPeriod: this.limitForPeriod
     });
-    this.rateLimit.on('rateLimit', this.onRateLimit);
-    this.rateLimit.on('execute', this.onExecute);
+    this.ratelimit.on('ratelimit', this.onRatelimit);
+    this.ratelimit.on('execute', this.onExecute);
   }
 }
 </script>

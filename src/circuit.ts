@@ -1,17 +1,20 @@
 import { EventEmitter } from './helpers/event';
 import { Module } from './module';
-import { plugins } from './plugin';
+import { addons } from './addon';
 
+/**
+ * Returned when a circuit has no function defined.
+ * @param message Circuit has no function set
+ */
 export class NoFuncError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor () {
+    super('Circuit has no function set');
     Object.setPrototypeOf(this, NoFuncError.prototype);
   }
 }
 
-// TODO
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CircuitFunction = (...params: any[]) => Promise<any>;
+export type CircuitFunction = (...params: any[]) => Promise<any>;
 
 export interface Logger {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,44 +25,69 @@ export interface Logger {
   warn(message?: any, ...optionalParams: any[]): void;
 }
 
-// TODO
+/**
+ * Properties that customizes the circuit behavior.
+ */
 export abstract class CircuitOptions {
+  /**
+   * Module list, by order of execution.
+   */
   modules?: Module[];
 }
 
-// TODO
+/**
+ * Properties that defines the circuit.
+ */
 export abstract class CircuitFactory {
+  /**
+   * The Circuit name.
+   */
   name?: string;
+  /**
+   * The Circuit function.
+   */
   func?: CircuitFunction;
+  /**
+   * The Circuit options.
+   */
   options?: CircuitOptions;
 }
 
-// TODO
 const undefinedFunc = async () => {
   return new Promise((resolve, reject) => {
-    reject(new NoFuncError('Circuit has no function set'));
+    reject(new NoFuncError());
   });
 };
 
-// TODO
+/**
+ * Array containing every circuit.
+ */
 export const circuits: Circuit[] = [];
 
 /**
- * TODO
+ * The Circuit Class, that may contain Modules to add resilience patterns.
  */
 export class Circuit extends EventEmitter {
   // Public Attributes
+  /**
+   * The Circuit name.
+   */
   public name: string;
+  /**
+   * The Circuit function.
+   */
   public func: CircuitFunction;
+  /**
+   * Module list, by order of execution.
+   */
   public modules: Module[];
-  // Private Attributes
   // Constructor
   constructor (factory?: CircuitFactory) {
     super();
     this.name = factory?.name ? factory.name : `Circuit${circuits.length}`;
-    for (const plugin of plugins) {
-      if (plugin.onCircuitCreate) {
-        plugin.onCircuitCreate(this, factory?.options);
+    for (const addon of addons) {
+      if (addon.onCircuitCreate) {
+        addon.onCircuitCreate(this, factory?.options);
       }
     }
     this.func = factory?.func ? factory.func : undefinedFunc;
@@ -68,14 +96,16 @@ export class Circuit extends EventEmitter {
   }
   // Public Methods
   /**
-   * TODO
+   * Modifies the Circuit function.
+   * @param {CircuitFunction} func The Circuit function.
    */
   public fn (func: CircuitFunction): Circuit {
     this.func = func;
     return this;
   }
   /**
-   * TODO
+   * Executes the Circuit function.
+   * @param params Eventual parameters to pass to the Circuit function.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (...params: any[]): Promise<T> {
@@ -97,6 +127,9 @@ export class Circuit extends EventEmitter {
     this.emit('execute', this, _exec);
     return _exec;
   }
+  /**
+   * Disposes the Circuit, to cleanup every interval and timeouts.
+   */
   public dispose (): void {
     super.dispose();
     if (this.modules) {

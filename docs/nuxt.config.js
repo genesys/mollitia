@@ -12,7 +12,8 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', type: 'text/css', href: '/roboto/font.css' }
+      { rel: 'stylesheet', type: 'text/css', href: '/roboto/font.css' },
+      { rel: 'stylesheet', type: 'text/css', href: '/material-icons/font.css' }
     ]
   },
 

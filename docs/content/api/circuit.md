@@ -7,7 +7,7 @@ The `Circuit` is the container of your **Resilience** logic.
 
 ## Usage
 
-``` javascript
+``` typescript
 // Imports the library
 const { Circuit } = require('mollitia');
 // Creates a circuit
@@ -15,10 +15,32 @@ const pgCircuit = new Circuit({
   name: 'PostgreSQL Operations'
 });
 // Call operations
-await circuit.fn(sqlRequest).execute('SELECT * FROM Mollitia;');
+const myString = await circuit.fn(sqlRequest).execute('SELECT * FROM Mollitia;');
+// With TypeScript, you can set the return result of the circuit (here it's a string)
+const myString = await circuit.fn(sqlRequest).execute<string>('SELECT * FROM Mollitia;');
 ```
 
-That is not really useful, as by default, the circuit just calls your method, with your arguments.
+### Function binding
+
+An important thing to remember is that if you attach a function that is attached to a javascript object, you'll have to bind the context, otherwise the `this` reference will be lost.
+
+``` javascript
+const serviceController = {
+  getUsers: function () {
+    return this.request('/get-users');
+  },
+  request: function (url) {
+    // Actual HTTP request call
+  }
+};
+const serviceCircuit = new Circuit({
+  name: 'Service - Get Users'
+});
+// Here, the getUsers function is called normally, but the "this" reference is lost, meaning "this.request" will throw an error
+await circuit.fn(serviceController.getUsers).execute();
+// This binding sets the "this" reference to "serviceController", resolving the above issue
+await circuit.fn(serviceController.getUsers.bind(serviceController)).execute();
+```
 
 ## Modules
 

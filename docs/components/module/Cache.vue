@@ -87,7 +87,6 @@ export default {
       if (!this.interval) {
         this.percent = 0;
         if (success) {
-          // TODO if this is from cache, do not do that
           this.cached = true;
           this.interval = setInterval(() => {
             this.percent += (100 * 100 / this.ttl);

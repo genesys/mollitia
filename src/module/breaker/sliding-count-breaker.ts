@@ -1,7 +1,10 @@
+import { CircuitFunction } from '../../circuit';
 import { SlidingWindowBreaker, SlidingWindowBreakerOptions, SlidingWindowRequestResult } from './index';
 
+/**
+ * The Sliding Count Breaker Module, that allows to break the circuit if it fails too often.
+ */
 export class SlidingCountBreaker extends SlidingWindowBreaker<SlidingWindowRequestResult> {
-
   constructor(options?: SlidingWindowBreakerOptions) {
     super(options);
     this.slidingWindowSize = options?.slidingWindowSize ? options?.slidingWindowSize : 10;
@@ -10,7 +13,8 @@ export class SlidingCountBreaker extends SlidingWindowBreaker<SlidingWindowReque
     }
   }
 
-  public async executeInClosed<T> (promise: any, ...params: any[]): Promise<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async executeInClosed<T> (promise: CircuitFunction, ...params: any[]): Promise<T> {
     const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
     this.callsInClosedState.push(this.adjustedRequestResult(requestResult, shouldReportFailure));
     const nbCalls = this.callsInClosedState.length;

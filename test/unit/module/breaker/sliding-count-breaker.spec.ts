@@ -127,7 +127,7 @@ describe('Sliding Count Breaker', () => {
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
     expect(circuit.fn(failureAsync).execute('dummy', 50)).rejects.toEqual('dummy');
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.HALF_OPENED);
-    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toThrow('Circuit is half opened and max allowed request in this state has been reached');
+    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toThrow('Max allowed requests reached');
   })
   it('Slow Requests', async () => {
     const slidingCountBreaker = new Mollitia.SlidingCountBreaker({

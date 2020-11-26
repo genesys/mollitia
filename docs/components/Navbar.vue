@@ -4,24 +4,30 @@
       <li
         v-for="(link, index) in navbar.links"
         :key="index">
-        <router-link :to="link.path">
+        <router-link v-if="!link.path.startsWith('http')" :to="link.path">
           {{ link.title }}
         </router-link>
+        <a v-else :href="link.path" target="_blank">
+          {{ link.title }}
+        </a>
       </li>
     </ul>
     <ul class="madoc-navbar-list right">
-      <!-- TODO -->
-      <!-- <li v-if="navbar.github" class="icon">
+      <li v-if="navbar.github" class="icon">
 				<a :href="navbar.github.link" target='_blank'>
-          <eva-icon name="github" animation="pulse" width="30" height="30"></eva-icon>
+          <Github/>
 				</a>
-			</li> -->
+			</li>
     </ul>
   </nav>
 </template>
 
 <script>
+import Github from './svg/Github';
 export default {
+  components: {
+    Github
+  },
   name: 'Navbar',
   props: {
     navbar: {

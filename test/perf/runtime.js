@@ -11,8 +11,8 @@ circuitConfig.modules.forEach(mod => {
     case 'SlidingCountBreaker':
       modules.push(new Mollitia.SlidingCountBreaker(mod.options));
       break;
-    case 'RateLimit':
-      modules.push(new Mollitia.RateLimit(mod.options));
+    case 'Ratelimit':
+      modules.push(new Mollitia.Ratelimit(mod.options));
       break;
     case 'Retry':
       modules.push(new Mollitia.Retry(mod.options));

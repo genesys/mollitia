@@ -7,9 +7,12 @@
           class="madoc-sidebar-list-item"
           v-for="link in group"
           :key="link.title">
-          <router-link :to="link.path">
+          <router-link v-if="!link.path.startsWith('http')" :to="link.path">
             {{ link.title }}
           </router-link>
+          <a v-else :href="link.path" target="_blank">
+            {{ link.title }}
+          </a>
         </li>
       </ul>
     </template>

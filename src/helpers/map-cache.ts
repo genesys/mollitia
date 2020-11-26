@@ -1,7 +1,7 @@
-class CacheItem {
+class CacheItem<T> {
   public ttl: number;
-  public res: any;
-  constructor (ttl: number, res: any) {
+  public res: T;
+  constructor (ttl: number, res: T) {
     this.ttl = ttl;
     this.res = res;
   }
@@ -15,16 +15,19 @@ export class MapCache {
     this.map = new Map();
   }
   // Public Methods
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public set (ttl: number, ...params: any[]): void {
     this._setLoopMap(this.map, ttl, ...params);
   }
-  public get (...params: any[]): any {
-    return this._getLoopMap(this.map, ...params);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public get<T> (...params: any[]): CacheItem<T>|null {
+    return this._getLoopMap<T>(this.map, ...params);
   }
   public clear (): void {
     this._clearLoopMap(this.map);
   }
   // Private Methods
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _setLoopMap (map: Map<any, any>, ttl: number, ...params: any[]): void {
     if (params.length === 2) {
       const ref = {
@@ -46,7 +49,8 @@ export class MapCache {
       }
     }
   }
-  private _getLoopMap (map: Map<any, any>, ...params: any[]): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private _getLoopMap<T> (map: Map<any, any>, ...params: any[]): CacheItem<T>|null {
     if (!map) {
       return null;
     } else {
@@ -62,7 +66,9 @@ export class MapCache {
       }
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _clearLoopMap (map: Map<any, any>): any {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     map.forEach((item: any) => {
       if (item.map) {
         this._clearLoopMap(item.map);

@@ -44,16 +44,28 @@ hr {
   background-color: var(--madoc-github-grey-10);
   border: 0;
 }
-// TODO should go for only text code elements
-// code {
-//   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-//   padding: .2em .4em;
-//   margin: 0;
-//   font-size: 85%;
-//   background-color: var(--madoc-github-grey-11);
-//   color: var(--madoc-github-red-code);
-//   border-radius: 3px;
-// }
+p {
+  > code {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: var(--madoc-github-grey-11);
+    color: var(--madoc-github-red-code);
+    border-radius: 3px;
+  }
+}
+table {
+  code {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+    padding: .2em .4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: var(--madoc-github-grey-11);
+    color: var(--madoc-github-red-code);
+    border-radius: 3px;
+  }
+}
 // Tables
 table {
   width: 100%;

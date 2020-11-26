@@ -24,7 +24,7 @@ You can then execute a asynchronous operation on the circuit, and the attached m
 * **[Cache](/api/module/cache)**: Cache a response, and provide fast for time, and performance optimization.
 * **[Retry](/api/module/retry)**: When something fails, it'll work next time.
 * **[Timeout](/api/module/timeout)**: If it takes too long, it maybe be already broken.
-* **[Rate Limiter](/api/module/rate-limit)**: Do not burst requests, limit yourself.
+* **[Ratelimit](/api/module/ratelimit)**: Do not burst requests, limit yourself.
 * **[Bulkhead](/api/module/bulkhead)**: Allows of certain amount of concurrent requests, and a queue for others.
 * **[Sliding Count Circuit Breaker](/api/module/breaker/sliding/count)**: Breaks when errors happens, with a circular array memory.
 * **[Sliding Time Circuit Breaker](/api/module/breaker/sliding/time)**: Breaks when errors happens, with a circular array memory, in a range of time.
@@ -32,9 +32,9 @@ You can then execute a asynchronous operation on the circuit, and the attached m
 ## Addons
 
 `Mollitia` has been designed to be customized.
-[Modules can be created](/api/create-module), and [plugins can be added](/api/create-plugin).
+[Modules can be created](/api/create-module), and [addons can be added](/api/create-addon).
 
 <!-- TODO -->
-<!-- ### Core Plugins -->
+<!-- ### Core Addons -->
 
 <!-- * **[Prometheus](/api/plugin/prometheus)**: Adds multiple metrics to your modules and circuits. -->

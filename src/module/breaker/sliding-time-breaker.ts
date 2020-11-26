@@ -1,26 +1,20 @@
+import { CircuitFunction } from '../../circuit';
 import { SlidingWindowBreaker, SlidingWindowBreakerOptions, SlidingWindowRequestResult } from './index';
 
-export interface SlidingTimeElem {
+interface SlidingTimeElem {
   result: SlidingWindowRequestResult,
   timestamp: number
 }
 
-interface SlidingTimeBreakerOptions extends SlidingWindowBreakerOptions {
-  slidingWindowSizeInSeconds?: boolean 
-}
-
+/**
+ * The Sliding Time Breaker Module, that allows to break the circuit if it often fails on a time window.
+ */
 export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
   private maxSize: number;
-  private slidingWindowSizeInSeconds: boolean;
 
-  constructor(options?: SlidingTimeBreakerOptions) {
+  constructor(options?: SlidingWindowBreakerOptions) {
     super(options);
     this.slidingWindowSize = options?.slidingWindowSize ? options?.slidingWindowSize : 60;
-    this.slidingWindowSizeInSeconds = options?.slidingWindowSizeInSeconds || false;
-
-    if (this.slidingWindowSizeInSeconds) {
-      this.slidingWindowSize = this.slidingWindowSize * 1000;
-    }
     this.maxSize = 1000;
   }
   
@@ -41,7 +35,8 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
     }
   }
 
-  public async executeInClosed<T> (promise: any, ...params: any[]): Promise<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async executeInClosed<T> (promise: CircuitFunction, ...params: any[]): Promise<T> {
     const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
     this.filterCalls();
     this.callsInClosedState.push({

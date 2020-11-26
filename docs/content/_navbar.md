@@ -2,7 +2,10 @@
 links:
   - title: Home
     path: /
-  # TODO
+  # TODO add playground
   # - title: Playground
   #   path: /playground
+# TODO change url
+github:
+  link: https://github.com/mollitia/mollitia
 ---

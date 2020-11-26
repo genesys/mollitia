@@ -1,23 +1,35 @@
 import { Module, ModuleOptions } from '.';
-import { Circuit } from '../circuit';
+import { Circuit, CircuitFunction } from '../circuit';
 
-export class TimeoutError extends Error {
-  constructor(message: string) {
-    super(message);
-    Object.setPrototypeOf(this, TimeoutError.prototype);
-  }
-}
-
-// TODO
-interface TimeoutOptions extends ModuleOptions {
+/**
+ * Properties that customizes the timeout behavior.
+ */
+export abstract class TimeoutOptions extends ModuleOptions {
+  /**
+   * The amount of time before a the promise is rejected.
+   */
   delay?: number;
 }
 
 /**
- * TODO
+ * Returned when a function times out.
+ * @param message Timed out
+ */
+export class TimeoutError extends Error {
+  constructor() {
+    super('Timed out');
+    Object.setPrototypeOf(this, TimeoutError.prototype);
+  }
+}
+
+/**
+ * The Timeout Module, that allows to ignore the result of the function if it takes too long.
  */
 export class Timeout extends Module {
   // Public Attributes
+  /**
+   * The amount of time before a the promise is rejected.
+   */
   public delay: number;
   // Constructor
   constructor (options?: TimeoutOptions) {
@@ -25,13 +37,13 @@ export class Timeout extends Module {
     this.delay = options?.delay ? options?.delay : 60000;
   }
   // Public Methods
-  public async execute<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
+  public async execute<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
     const _exec = this._promiseTimeout<T>(circuit, this.delay, promise, ...params);
     this.emit('execute', circuit, _exec);
     return _exec;
   }
   // Private Methods
-  private async _promiseTimeout<T> (circuit: Circuit, time: number, promise: any, ...params: any[]): Promise<T> {
+  private async _promiseTimeout<T> (circuit: Circuit, time: number, promise: CircuitFunction, ...params: any[]): Promise<T> {
     let timeout: number;
     if (time !== 0 && time !== Infinity) {
       return Promise.race([
@@ -39,7 +51,7 @@ export class Timeout extends Module {
         new Promise<T>((resolve, reject) => {
           timeout = <unknown>setTimeout(() => {
             this.emitTimeout(circuit);
-            reject(new TimeoutError('Timed out'));
+            reject(new TimeoutError());
           }, time) as number;
         })
       ])

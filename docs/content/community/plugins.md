@@ -1,5 +1,5 @@
 ---
-title: Mollitia - Community - Plugins
+title: Mollitia - Community - Addons
 ---
 
-Plugins
+<!-- TODO -->

@@ -18,30 +18,30 @@ links:
         path: /api/module/retry
       - title: Timeout
         path: /api/module/timeout
-      - title: Rate Limit
-        path: /api/module/rate-limit
+      - title: Ratelimit
+        path: /api/module/ratelimit
       - title: Bulkhead
         path: /api/module/bulkhead
       - title: Count Breaker
         path: /api/module/breaker/sliding/count
       - title: Time Breaker
         path: /api/module/breaker/sliding/time
-  # TODO
-  # - group: Core Plugins
-  #   links:
-  #     - title: Prometheus
-  #       path: /api/plugin/prometheus
+  - group: Core Addons
+    links:
+      - title: Prometheus
+        # TODO change link
+        path: http://135.39.45.156:8081
   - group: Customization
     links:
       - title: Create a module
         path: /api/create-module
-      - title: Create a plugin
-        path: /api/create-plugin
+      - title: Create a addon
+        path: /api/create-addon
   # TODO add when possible
   # - group: Community
   #   links:
   #     - title: Modules
   #       path: /community/modules
-  #     - title: Plugins
-  #       path: /community/plugins
+  #     - title: Addons
+  #       path: /community/addons
 ---

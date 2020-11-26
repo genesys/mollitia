@@ -1,12 +1,12 @@
 modules:
-  - type: RateLimit
+  - type: Ratelimit
     options: 
       limitPeriod: 100
       limitForPeriod: 5000
   - type: Timeout
     options:
       delay: 2000
-  - type: RateLimit
+  - type: Ratelimit
     options:
       limitPeriod: 2
       limitForPeriod: 1

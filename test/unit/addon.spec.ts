@@ -16,26 +16,26 @@ const failureAsync = jest.fn().mockImplementation((res: unknown = 'default', del
   });
 });
 
-describe('Plugin', () => {
+describe('Addon', () => {
   afterEach(() => {
     successAsync.mockClear();
     failureAsync.mockClear();
   });
   it('should call lifecycle methods', async () => {
-    const plugin: Mollitia.Plugin = {
+    const addon: Mollitia.Addon = {
       onCircuitCreate: jest.fn(),
       onModuleCreate: jest.fn()
     };
-    Mollitia.use(plugin);
+    Mollitia.use(addon);
     const circuitOptions = {
       modules: []
     };
     const circuit = new Mollitia.Circuit({ options: circuitOptions });
-    expect(plugin.onCircuitCreate).toHaveBeenCalledWith(circuit, circuitOptions);
+    expect(addon.onCircuitCreate).toHaveBeenCalledWith(circuit, circuitOptions);
     const timeoutOptions = {
       delay: 0
     };
     const timeout = new Mollitia.Timeout(timeoutOptions);
-    expect(plugin.onModuleCreate).toHaveBeenCalledWith(timeout, timeoutOptions);
+    expect(addon.onModuleCreate).toHaveBeenCalledWith(timeout, timeoutOptions);
   });
 });

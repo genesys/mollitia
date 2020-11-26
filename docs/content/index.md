@@ -66,4 +66,4 @@ It is very similar at what does [Resilience4j](https://github.com/resilience4j/r
 - Works on Node and on browser (even **Internet Explorer 11**, wow).
 - Implements a wide variety of Resilience patterns, [more on that here.](http://135.39.45.156:8080)
 - Has **Method Agnostic** circuits, meaning you don't have to create one circuit per function.
-- Supports plugins, [more on that here.](http://135.39.45.156:8080)
+- Supports addons, [more on that here.](http://135.39.45.156:8080)

@@ -1,19 +1,19 @@
 <template>
   <div class="mollitia-playground">
     <Circuit ref="c1" :modules="modules" @end="onCircuitEnd" :can-fail="false">
-      <RateLimit ref="rl1"></RateLimit>
+      <Ratelimit ref="rl1"></Ratelimit>
     </Circuit>
   </div>
 </template>
 
 <script>
 import Circuit from '../../Circuit';
-import RateLimit from '../../module/RateLimit';
+import Ratelimit from '../../module/Ratelimit';
 export default {
   name: 'pg-ratelimit',
   components: {
     Circuit,
-    RateLimit
+    Ratelimit
   },
   data () {
     return {
@@ -28,7 +28,7 @@ export default {
   },
   mounted () {
     this.circuit = this.$refs.c1.circuit;
-    this.modules.push(this.$refs.rl1.rateLimit);
+    this.modules.push(this.$refs.rl1.ratelimit);
   }
 }
 </script>

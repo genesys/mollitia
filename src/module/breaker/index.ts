@@ -1,38 +1,84 @@
 import { Module, ModuleOptions } from '..';
-import { Circuit } from '../../circuit';
+import { Circuit, CircuitFunction } from '../../circuit';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ErrorCallback = (err: any) => boolean;
 
+/**
+ * Returned when a breaker module is in open state.
+ * @param message Circuit is opened
+ */
 export class BreakerError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor() {
+    super('Circuit is opened');
     Object.setPrototypeOf(this, BreakerError.prototype);
   }
 }
 
+/**
+ * Returned when a breaker module is in half-open state and the maximum of requests has been sent.
+ * @param message Max allowed requests reached
+ */
+export class BreakerMaxAllowedRequestError extends Error {
+  constructor() {
+    super('Max allowed requests reached');
+    Object.setPrototypeOf(this, BreakerError.prototype);
+  }
+}
+
+/**
+ * Breaker states.
+ */
 export enum BreakerState {
   CLOSED = 'closed',
   HALF_OPENED = 'half-opened',
   OPENED = 'opened'
 }
 
-export interface BreakerNotification {
-  onOpened? (): void;
-  onHalfOpened? (): void;
-  onClosed? (): void;
-}
-
-export interface SlidingWindowBreakerOptions extends ModuleOptions {
-  state?:                                  BreakerState;
-  openStateDelay?:                         number;
-  halfOpenStateMaxDelay?:                  number;
-  slidingWindowSize?:                      number;
-  minimumNumberOfCalls?:                   number;
-  failureRateThreshold?:                   number;
-  slowCallRateThreshold?:                  number;
-  slowCallDurationThreshold?:              number;
-  permittedNumberOfCallsInHalfOpenState?:  number;
-  onError?:                                ErrorCallback;
+/**
+ * Properties that customizes the sliding window breaker behavior.
+ */
+export abstract class SlidingWindowBreakerOptions extends ModuleOptions {
+  /**
+   * Specifies the circuit state
+   */
+  state?: BreakerState;
+  /**
+   * Specifies the time (in ms) the circuit stay opened before switching to half-open
+   */
+  openStateDelay?: number;
+  /**
+   * Specifies the maximum wait (in ms) in Half Open State, before switching back to open. 0 deactivates this
+   */
+  halfOpenStateMaxDelay?: number;
+  /**
+   * Specifies the maximum number of calls used to calculate failure and slow call rate percentages
+   */
+  slidingWindowSize?: number;
+  /**
+   * Specifies the minimum number of calls rrequused to calculate failure and slow call rate percentages
+   */
+  minimumNumberOfCalls?: number;
+  /**
+   * Specifies the failure rate threshold in percentage
+   */
+  failureRateThreshold?: number;
+  /**
+   * Specifies the slow call rate threshold. A call is considered as slow when the call duration is greater than slowCallDurationThreshold
+   */
+  slowCallRateThreshold?: number;
+  /**
+   * Specifies the duration (in ms) threshold above which calls are considered as slow
+   */
+  slowCallDurationThreshold?: number;
+  /**
+   * Specifies the number of permitted calls when the circuit is half open
+   */
+  permittedNumberOfCallsInHalfOpenState?: number;
+  /**
+   * Allows filtering the error to report as a failure or not.
+   */
+  onError?: ErrorCallback;
 }
 
 export enum SlidingWindowRequestResult {
@@ -41,22 +87,54 @@ export enum SlidingWindowRequestResult {
   TIMEOUT =  2
 }
 
-export abstract class SlidingWindowBreaker<T> extends Module implements BreakerNotification {
+export abstract class SlidingWindowBreaker<T> extends Module {
+  // Public Attributes
+  /**
+   * Specifies the circuit state
+   */
   public state: BreakerState;
+  /**
+   * Specifies the time (in ms) the circuit stay opened before switching to half-open
+   */
   public openStateDelay: number;
+  /**
+   * Specifies the maximum wait (in ms) in Half Open State, before switching back to open. 0 deactivates this
+   */
   public halfOpenStateMaxDelay: number;
+  /**
+   * Specifies the maximum number of calls used to calculate failure and slow call rate percentages
+   */
   public slidingWindowSize: number;
+  /**
+   * Specifies the minimum number of calls rrequused to calculate failure and slow call rate percentages
+   */
   public minimumNumberOfCalls: number;
+  /**
+   * Specifies the failure rate threshold in percentage
+   */
   public failureRateThreshold: number;
+  /**
+   * Specifies the slow call rate threshold. A call is considered as slow when the call duration is greater than slowCallDurationThreshold
+   */
   public slowCallRateThreshold: number;
+  /**
+   * Specifies the duration (in ms) threshold above which calls are considered as slow
+   */
   public slowCallDurationThreshold: number;
+  /**
+   * Specifies the number of permitted calls when the circuit is half open
+   */
   public permittedNumberOfCallsInHalfOpenState: number;
-  public callsInClosedState: T[];
+  /**
+   * Allows filtering the error to report as a failure or not.
+   */
+  public onError: ErrorCallback;
+  // Private Attributes
+  protected callsInClosedState: T[];
   private halfOpenMaxDelayTimeout = 0;
   private openTimeout = 0;
   private nbCallsInHalfOpenedState: number;
   private callsInHalfOpenedState: SlidingWindowRequestResult[];
-  public onError: ErrorCallback;
 
   constructor (options?: SlidingWindowBreakerOptions) {
     super(options);
@@ -97,16 +175,18 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
     this.reinitializeCounters();
   }
 
-  public async execute<T1> (circuit: Circuit, promise: any, ...params: any[]): Promise<T1> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async execute<T1> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T1> {
     const _exec = this._promiseBreaker<T1>(circuit, promise, ...params);
     this.emit('execute', circuit, _exec);
     return _exec;
   }
-  private async _promiseBreaker<T> (circuit: Circuit, promise: any, ...params: any[]): Promise<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async _promiseBreaker<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
     switch (this.state) {
       case BreakerState.OPENED:
         this.logger?.debug(`${circuit.name}/${this.name} - Circuit is opened`);
-        return Promise.reject(new BreakerError('Circuit is opened'));
+        return Promise.reject(new BreakerError());
       case BreakerState.HALF_OPENED:
         return await this.executeInHalfOpened(promise, ...params);
       case BreakerState.CLOSED:
@@ -114,7 +194,8 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
     }
   } 
 
-  abstract executeInClosed<T1> (promise: any, ...params: any[]): Promise<T1>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  abstract executeInClosed<T1> (promise: CircuitFunction, ...params: any[]): Promise<T1>;
 
   protected adjustedRequestResult(requestResult: SlidingWindowRequestResult, shouldReportFailure: boolean): SlidingWindowRequestResult {
     if (!shouldReportFailure && requestResult === SlidingWindowRequestResult.FAILURE) {
@@ -123,7 +204,8 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
     return requestResult;
   }
 
-  protected async executeInHalfOpened<T1> (promise: any, ...params: any[]): Promise<T1> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected async executeInHalfOpened<T1> (promise: CircuitFunction, ...params: any[]): Promise<T1> {
     if (this.nbCallsInHalfOpenedState < this.permittedNumberOfCallsInHalfOpenState) {
       this.nbCallsInHalfOpenedState++;
       const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
@@ -138,10 +220,10 @@ export abstract class SlidingWindowBreaker<T> extends Module implements BreakerN
         return Promise.resolve(response);
       }
     } else {
-      return Promise.reject(new BreakerError('Circuit is half opened and max allowed request in this state has been reached'));
+      return Promise.reject(new BreakerMaxAllowedRequestError());
     }
   }
-
+  // TODO fix typing
   protected executePromise(promise: any, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any, shouldReportFailure: boolean}> {
     const beforeRequest = (new Date()).getTime();
     return promise(...params)

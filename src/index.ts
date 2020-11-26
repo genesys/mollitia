@@ -1,15 +1,15 @@
 import { circuits, Circuit, CircuitFactory, CircuitOptions, NoFuncError } from './circuit';
-import { use, Plugin } from './plugin';
+import { use, Addon } from './addon';
 import { modules, Module, ModuleOptions } from './module/index';
-import { Timeout, TimeoutError } from './module/timeout';
-import { Retry } from './module/retry';
-import { RateLimit, RateLimitError } from './module/rate-limit';
-import { Fallback } from './module/fallback';
-import { BreakerError, BreakerState } from './module/breaker';
-import { Cache } from './module/cache';
+import { Timeout, TimeoutError, TimeoutOptions } from './module/timeout';
+import { Retry, RetryOptions } from './module/retry';
+import { Ratelimit, RatelimitError } from './module/ratelimit';
+import { Fallback, FallbackOptions } from './module/fallback';
+import { BreakerError, BreakerMaxAllowedRequestError, BreakerState, SlidingWindowBreakerOptions } from './module/breaker';
+import { Cache, CacheOptions } from './module/cache';
 import { SlidingCountBreaker } from './module/breaker/sliding-count-breaker'; 
 import { SlidingTimeBreaker } from './module/breaker/sliding-time-breaker'; 
-import { Bulkhead, BulkheadOverloadError, BulkheadQueueWaitError } from './module/bulkhead';
+import { Bulkhead, BulkheadOptions, BulkheadOverloadError, BulkheadQueueWaitError } from './module/bulkhead';
 
 // Default Export
 export {
@@ -18,27 +18,42 @@ export {
   Circuit,
   CircuitFactory,
   CircuitOptions,
+  NoFuncError,
   // Module
   modules,
   Module,
   ModuleOptions,
+  // Timeout
   Timeout,
+  TimeoutOptions,
+  TimeoutError,
+  // Retry
   Retry,
+  RetryOptions,
+  // Fallback
   Fallback,
+  FallbackOptions,
+  // Cache
   Cache,
+  CacheOptions,
+  // Bulkhead
   Bulkhead,
+  BulkheadOptions,
   BulkheadOverloadError,
   BulkheadQueueWaitError,
-  // Plugin
-  use,
-  Plugin,
-  // Error
-  NoFuncError,
-  TimeoutError,
+  // Ratelimit
+  Ratelimit,
+  RatelimitError,
+  // Breaker
   BreakerError,
+  BreakerMaxAllowedRequestError,
   BreakerState,
-  RateLimit,
-  RateLimitError,
+  SlidingWindowBreakerOptions,
+  // Sliding Count Breaker
   SlidingCountBreaker,
-  SlidingTimeBreaker
+  // Sliding Time Breaker
+  SlidingTimeBreaker,
+  // Addon
+  use,
+  Addon
 };
