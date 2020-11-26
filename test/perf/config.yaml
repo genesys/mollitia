@@ -1,4 +1,26 @@
 modules:
+  - type: RateLimit
+    options: 
+      limitPeriod: 100
+      limitForPeriod: 5000
+  - type: Timeout
+    options:
+      delay: 2000
+  - type: RateLimit
+    options:
+      limitPeriod: 2
+      limitForPeriod: 1
+  - type: Retry
+    options:
+      attempts: 2
+  - type: Cache
+    options:
+      ttl: 1
+  - type: Bulkhead
+    options:
+      concurrentSize: 2
+      queueSize: 2
+      maxQueueWait: 100000
   - type: SlidingTimeBreaker
     options:
       failureRateThreshold: 50
@@ -17,30 +39,8 @@ modules:
       permittedNumberOfCallsInHalfOpenState: 1
       slowCallDurationThreshold: 50000
       slowCallRateThreshold: 50
-  - type: RateLimit
-    options: 
-      limitPeriod: 100
-      limitForPeriod: 5
-  - type: Timeout
-    options:
-      delay: 2000
-  - type: RateLimit
-    options:
-      limitPeriod: 20
-      limitForPeriod: 1
-  - type: Retry
-    options:
-      attempts: 2
-  - type: Cache
-    options:
-      ttl: 1000
-  - type: Bulkhead
-    options:
-      concurrentSize: 2
-      queueSize: 2
-      maxQueueWait: 100000
 config:
-  nbCycles: 100
+  nbCycles: 10
   nbCalls: 100
-  duration: 30
+  duration: 20
       
