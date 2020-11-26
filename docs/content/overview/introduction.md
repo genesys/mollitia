@@ -34,7 +34,6 @@ You can then execute a asynchronous operation on the circuit, and the attached m
 `Mollitia` has been designed to be customized.
 [Modules can be created](/api/create-module), and [addons can be added](/api/create-addon).
 
-<!-- TODO -->
-<!-- ### Core Addons -->
-
-<!-- * **[Prometheus](/api/plugin/prometheus)**: Adds multiple metrics to your modules and circuits. -->
+### Core Addons
+<!-- TODO change link -->
+* **[Prometheus](http://135.39.45.156:8081)**: Adds multiple metrics to your modules and circuits.

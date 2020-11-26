@@ -1,16 +1,16 @@
 ---
-title: Mollitia - API - Create a plugin
+title: Mollitia - API - Create an addon
 ---
-# Create a plugin
+# Create an addon
 
-Creating a plugin is similar as [creating a module](/api/create-module), you should implement the **Plugin** interface:
+Creating an addon is similar as [creating a module](/api/create-module), you should implement the **Addon** interface:
 
 ``` javascript
 // Imports the library
 const Mollitia = require('mollitia');
 
 // Creates a class
-class UselessPlugin implements Mollitia.Plugin {
+class UselessAddon implements Mollitia.Addon {
   // Called when a circuit is created
   onCircuitCreate (circuit, options) {
     // Feel free to modify the circuit behavior, and add properties to it
