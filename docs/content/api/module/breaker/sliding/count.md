@@ -31,9 +31,9 @@ For example, if the count window size is 10, the circular array has always 10 me
 | permittedNumberOfCallsInHalfOpenState | Specifies the number of permitted calls when the circuit is half open | `2` |
 | halfOpenStateMaxDelay | Specifies the maximum wait (in ms) in Half Open State, before switching back to open. 0 deactivates this | `0` |
 | slidingWindowSize | Specifies the maximum number of calls used to calculate failure and slow call rate percentages | `10` |
-| minimumNumberOfCalls | Specifies the minimum number of calls rrequused to calculate failure and slow call rate percentages | `10` |
+| minimumNumberOfCalls | Specifies the minimum number of calls used to calculate failure and slow call rate percentages | `10` |
 | openStateDelay | Specifies the time (in ms) the circuit stay opened before switching to half-open | `60000` |
-| onError | Allows filtering the error to report as a failure or not. | `None` |
+| onError | Allows filtering of the error to report as a failure or not. | `None` |
 
 ## Events
 

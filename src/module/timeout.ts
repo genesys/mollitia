@@ -6,7 +6,7 @@ import { Circuit, CircuitFunction } from '../circuit';
  */
 export abstract class TimeoutOptions extends ModuleOptions {
   /**
-   * The amount of time before a the promise is rejected.
+   * The amount of time before a promise is rejected.
    */
   delay?: number;
 }
@@ -28,7 +28,7 @@ export class TimeoutError extends Error {
 export class Timeout extends Module {
   // Public Attributes
   /**
-   * The amount of time before a the promise is rejected.
+   * The amount of time before a promise is rejected.
    */
   public delay: number;
   // Constructor

@@ -16,7 +16,7 @@ export class BreakerError extends Error {
 }
 
 /**
- * Returned when a breaker module is in half-open state and the maximum of requests has been sent.
+ * Returned when a breaker module is in half-open state and the maximum number of requests in half-open has been sent.
  * @param message Max allowed requests reached
  */
 export class BreakerMaxAllowedRequestError extends Error {
@@ -52,11 +52,11 @@ export abstract class SlidingWindowBreakerOptions extends ModuleOptions {
    */
   halfOpenStateMaxDelay?: number;
   /**
-   * Specifies the maximum number of calls used to calculate failure and slow call rate percentages
+   * Specifies the maximum number of calls (if count breaker is user), or the sliding duration (in ms, if time breaker is used) used to calculate failure and slow call rate percentages
    */
   slidingWindowSize?: number;
   /**
-   * Specifies the minimum number of calls rrequused to calculate failure and slow call rate percentages
+   * Specifies the minimum number of calls used to calculate failure and slow call rate percentages
    */
   minimumNumberOfCalls?: number;
   /**
@@ -76,7 +76,7 @@ export abstract class SlidingWindowBreakerOptions extends ModuleOptions {
    */
   permittedNumberOfCallsInHalfOpenState?: number;
   /**
-   * Allows filtering the error to report as a failure or not.
+   * Allows filtering of the error to report as a failure or not.
    */
   onError?: ErrorCallback;
 }
@@ -102,11 +102,11 @@ export abstract class SlidingWindowBreaker<T> extends Module {
    */
   public halfOpenStateMaxDelay: number;
   /**
-   * Specifies the maximum number of calls used to calculate failure and slow call rate percentages
+   * Specifies the maximum number of calls (if count breaker is user), or the sliding duration (in ms, if time breaker is used) used to calculate failure and slow call rate percentages
    */
   public slidingWindowSize: number;
   /**
-   * Specifies the minimum number of calls rrequused to calculate failure and slow call rate percentages
+   * Specifies the minimum number of calls used to calculate failure and slow call rate percentages
    */
   public minimumNumberOfCalls: number;
   /**
@@ -126,7 +126,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
    */
   public permittedNumberOfCallsInHalfOpenState: number;
   /**
-   * Allows filtering the error to report as a failure or not.
+   * Allows filtering of the error to report as a failure or not.
    */
   public onError: ErrorCallback;
   // Private Attributes
@@ -250,7 +250,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
   protected checkResult(nbSlow: number, nbFailure: number, nbCalls: number, callbackFailure: (() => void), callbackSuccess?: (() => void)): void {
     if (
       (this.slowCallRateThreshold < 100 && (((nbSlow / nbCalls) * 100) >= this.slowCallRateThreshold)) ||
-      (this.failureRateThreshold < 100 && (((nbFailure / nbCalls) * 100)>= this.failureRateThreshold))
+      (this.failureRateThreshold < 100 && (((nbFailure / nbCalls) * 100) >= this.failureRateThreshold))
     ) {
       callbackFailure();
     } else {

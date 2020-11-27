@@ -7,7 +7,7 @@ import { MapCache } from '../helpers/map-cache';
  */
 export abstract class CacheOptions extends ModuleOptions {
   /**
-   * The amount of time before a cached result is considered valid.
+   * The amount of time during which a cached result is considered valid.
    */
   ttl?: number;
   /**
@@ -22,7 +22,7 @@ export abstract class CacheOptions extends ModuleOptions {
 export class Cache extends Module {
   // Public Attributes
   /**
-   * The amount of time before a cached result is considered valid.
+   * The amount of time during which a cached result is considered valid.
    */
   public ttl: number;
   // Private Attributes
@@ -31,13 +31,13 @@ export class Cache extends Module {
   private _cacheInterval: number|null;
   // Computed Attributes
   /**
-   * The amount of time before the cache cleans itself up.
+   * Get the amount of time before the cache cleans itself up.
    */
   get cacheClearInterval (): number {
     return this._cacheClearInterval;
   }
   /**
-   * The amount of time before the cache cleans itself up.
+   * Set the amount of time before the cache cleans itself up.
    */
   set cacheClearInterval (interval: number) {
     this._cacheClearInterval = interval;
