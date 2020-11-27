@@ -223,11 +223,11 @@ export abstract class SlidingWindowBreaker<T> extends Module {
       return Promise.reject(new BreakerMaxAllowedRequestError());
     }
   }
-  // TODO fix typing
-  protected executePromise(promise: any, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any, shouldReportFailure: boolean}> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected executePromise(promise: CircuitFunction, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any, shouldReportFailure?: boolean}> {
     const beforeRequest = (new Date()).getTime();
     return promise(...params)
-      .then((res: any) => {
+      .then((res) => {
         const afterRequest = (new Date()).getTime();
         let requestResp = SlidingWindowRequestResult.SUCCESS;
         if (this.slowCallDurationThreshold !== 0 && this.slowCallDurationThreshold !== Infinity) {
@@ -237,7 +237,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
         }
         return {requestResult: requestResp, response: res};
       })
-      .catch((err: any) => {
+      .catch((err) => {
         return {requestResult: SlidingWindowRequestResult.FAILURE, response: err, shouldReportFailure: this.onError(err)};
       });
   }
