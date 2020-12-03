@@ -224,7 +224,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected executePromise(promise: CircuitFunction, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any, shouldReportFailure?: boolean}> {
+  protected executePromise(promise: CircuitFunction, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any, shouldReportFailure: boolean}> {
     const beforeRequest = (new Date()).getTime();
     return promise(...params)
       .then((res) => {
@@ -235,7 +235,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
             requestResp = SlidingWindowRequestResult.TIMEOUT;
           }
         }
-        return {requestResult: requestResp, response: res};
+        return {requestResult: requestResp, response: res, shouldReportFailure: false};
       })
       .catch((err) => {
         return {requestResult: SlidingWindowRequestResult.FAILURE, response: err, shouldReportFailure: this.onError(err)};
