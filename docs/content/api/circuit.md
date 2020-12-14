@@ -14,10 +14,10 @@ const { Circuit } = require('mollitia');
 const pgCircuit = new Circuit({
   name: 'PostgreSQL Operations'
 });
-// Call operations
-const myString = await circuit.fn(sqlRequest).execute('SELECT * FROM Mollitia;');
+// Call operations (here, sqlRequest is an async function)
+const myString = await pgCircuit.fn(sqlRequest).execute('SELECT * FROM Mollitia;');
 // With TypeScript, you can set the return result of the circuit (here it's a string)
-const myString = await circuit.fn(sqlRequest).execute<string>('SELECT * FROM Mollitia;');
+const myString = await pgCircuit.fn(sqlRequest).execute<string>('SELECT * FROM Mollitia;');
 ```
 
 ### Function binding
@@ -37,9 +37,9 @@ const serviceCircuit = new Circuit({
   name: 'Service - Get Users'
 });
 // Here, the getUsers function is called normally, but the "this" reference is lost, meaning "this.request" will throw an error
-await circuit.fn(serviceController.getUsers).execute();
+await serviceCircuit.fn(serviceController.getUsers).execute();
 // This binding sets the "this" reference to "serviceController", resolving the above issue
-await circuit.fn(serviceController.getUsers.bind(serviceController)).execute();
+await serviceCircuit.fn(serviceController.getUsers.bind(serviceController)).execute();
 ```
 
 ## Modules
