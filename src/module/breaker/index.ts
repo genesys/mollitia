@@ -146,11 +146,11 @@ export abstract class SlidingWindowBreaker<T> extends Module {
     } else if (this.state === BreakerState.HALF_OPENED) {
       this.setOpenDelay();
     }
-    this.slidingWindowSize                    = options?.slidingWindowSize ? options?.slidingWindowSize : 10;
-    this.minimumNumberOfCalls                 = options?.minimumNumberOfCalls ? options?.minimumNumberOfCalls : 10;
-    this.failureRateThreshold                 = (options?.failureRateThreshold ? options?.failureRateThreshold : 50);
-    this.slowCallDurationThreshold            = options?.slowCallDurationThreshold ? options?.slowCallDurationThreshold : 60000;
-    this.slowCallRateThreshold                = (options?.slowCallRateThreshold ? options?.slowCallRateThreshold : 100);
+    this.slidingWindowSize = options?.slidingWindowSize ? options?.slidingWindowSize : 10;
+    this.minimumNumberOfCalls = options?.minimumNumberOfCalls ? options?.minimumNumberOfCalls : 10;
+    this.failureRateThreshold = (options?.failureRateThreshold ? options?.failureRateThreshold : 50);
+    this.slowCallDurationThreshold = options?.slowCallDurationThreshold ? options?.slowCallDurationThreshold : 60000;
+    this.slowCallRateThreshold = (options?.slowCallRateThreshold ? options?.slowCallRateThreshold : 100);
     this.permittedNumberOfCallsInHalfOpenState = options?.permittedNumberOfCallsInHalfOpenState ? options?.permittedNumberOfCallsInHalfOpenState : 2;
     this.nbCallsInHalfOpenedState = 0;
     this.callsInHalfOpenedState = [];
@@ -290,7 +290,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
       this.state = BreakerState.OPENED;
       this.setHalfDelay();
       this.onOpened();
-      this.emit('stateChanged');
+      this.emit('state-changed', this.state);
     }
   }
   public halfOpen (): void {
@@ -299,7 +299,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
       this.state = BreakerState.HALF_OPENED;
       this.setOpenDelay();
       this.onHalfOpened();
-      this.emit('stateChanged');
+      this.emit('state-changed', this.state);
     }
   }
   public close (): void {
@@ -307,7 +307,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
       this.clearHalfOpenTimeout();
       this.state = BreakerState.CLOSED;
       this.onClosed();
-      this.emit('stateChanged');
+      this.emit('state-changed', this.state);
     }
   }
   private setHalfDelay (): void {

@@ -109,7 +109,7 @@ export class Circuit extends EventEmitter {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (...params: any[]): Promise<T> {
-    let _exec;
+    let _exec: Promise<T>;
     if (this.modules.length) {
       if (this.modules.length > 1) {
         const args = [];

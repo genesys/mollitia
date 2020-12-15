@@ -203,12 +203,12 @@ describe('Sliding Count Breaker', () => {
         ]
       }
     });
-    await circuit.fn(failureAsync).execute('credentials-issue').catch(()=>{ });
-    await circuit.fn(failureAsync).execute('credentials-issue').catch(()=>{ });
+    await circuit.fn(failureAsync).execute('credentials-issue').catch(()=>{ return; });
+    await circuit.fn(failureAsync).execute('credentials-issue').catch(()=>{ return; });
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
-    await circuit.fn(failureAsync).execute('real-issue').catch(()=>{ });
+    await circuit.fn(failureAsync).execute('real-issue').catch(()=>{ return; });
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
-    await circuit.fn(failureAsync).execute('real-issue').catch(()=>{ });
+    await circuit.fn(failureAsync).execute('real-issue').catch(()=>{ return; });
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
   });
 });

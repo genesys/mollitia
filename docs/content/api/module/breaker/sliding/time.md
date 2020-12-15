@@ -42,3 +42,4 @@ For example, if the count window size is 10000, the circular array stores the re
 | Name       | Description                          | Params                         |
 |:-----------|:-------------------------------------|:--------------- ---------------|
 | `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit** |
+| `state-changed`  | Called when the breaker state changes.  | `Mollitia.BreakerState` **state** |
