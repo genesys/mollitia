@@ -64,9 +64,6 @@ export default {
       this.cache.cacheClearInterval = this.clearanceInterval;
     },
     onExecute () {
-      if (this.percent === 100) {
-        this.percent = 0;
-      }
       // Time
       this.timePercent = 0;
       this.timeInterval = setInterval(() => {
@@ -76,14 +73,14 @@ export default {
         }
       }, 100);
     },
-    onEnd (success) {
+    onEnd (result) {
       this.failed = false;
       this.timePercent = 100;
       clearInterval(this.timeInterval);
       // Cache
       if (!this.interval) {
         this.percent = 0;
-        if (success) {
+        if (result.success && !result.res._mollitiaIsFromCache) {
           this.cached = true;
           this.interval = setInterval(() => {
             this.percent += (100 * 100 / this.ttl);
@@ -101,6 +98,7 @@ export default {
     this.cache = new this.$mollitia.Cache({
       ttl: this.ttl,
       cacheClearInterval: this.clearanceInterval,
+      getInformationFromCache: true,
       logger: {
         debug: this.$parent.log
       }

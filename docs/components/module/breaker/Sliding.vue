@@ -164,7 +164,10 @@ export default {
         slowCallRateThreshold: this.slowCallRateThreshold,
         permittedNumberOfCallsInHalfOpenState: this.permittedNumberOfCallsInHalfOpenState,
         openStateDelay: this.openStateDelay,
-        halfOpenStateMaxDelay: this.halfOpenStateMaxDelay
+        halfOpenStateMaxDelay: this.halfOpenStateMaxDelay,
+        logger: {
+          debug: this.$parent.log
+        }
       });
     } else {
       this.slidingWindowBreaker = new this.$mollitia.SlidingTimeBreaker({
@@ -175,10 +178,13 @@ export default {
         slowCallRateThreshold: this.slowCallRateThreshold,
         permittedNumberOfCallsInHalfOpenState: this.permittedNumberOfCallsInHalfOpenState,
         openStateDelay: this.openStateDelay,
-        halfOpenStateMaxDelay: this.halfOpenStateMaxDelay
+        halfOpenStateMaxDelay: this.halfOpenStateMaxDelay,
+        logger: {
+          debug: this.$parent.log
+        }
       });
     }
-    this.slidingWindowBreaker.on('stateChanged', this.onCircuitStateChanged);
+    this.slidingWindowBreaker.on('state-changed', this.onCircuitStateChanged);
   }
 };
 </script>

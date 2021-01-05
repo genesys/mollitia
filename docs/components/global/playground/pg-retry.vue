@@ -22,8 +22,8 @@ export default {
     };
   },
   methods: {
-    onCircuitEnd (success) {
-      this.$refs.r1.onEnd(success);
+    onCircuitEnd (result) {
+      this.$refs.r1.onEnd(result.success);
     }
   },
   mounted () {

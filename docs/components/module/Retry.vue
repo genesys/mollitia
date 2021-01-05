@@ -37,7 +37,7 @@ export default {
       checkStyleDelay: 100,
       intervals: [],
       requests: [],
-      isEnded: false
+      isEndedSuccess: false
     };
   },
   computed: {
@@ -78,14 +78,15 @@ export default {
       }, this.checkStyleDelay);
     },
     onEnd (success) {
-      this.isEnded = true;
       if (!success) {
         this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
       }
+      this.isEndedSuccess = success;
     },
     computeStyle (index) {
       if (index > 0) {
         for (let i = 0; i < index; i++) {
+          this.$refs[`progress-${i}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
           this.$refs[`progress-${i}`][0].style.width = '100%';
           clearInterval(this.intervals[i]);
         }
@@ -93,8 +94,10 @@ export default {
       if (this.requests[index] >= 100) {
         this.$refs[`progress-${index}`][0].style.width = '100%';
         clearInterval(this.intervals[index]);
-        if (this.isEnded) {
+        if (this.isEndedSuccess) {
           this.$refs[`progress-${index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
+        } else {
+          this.$refs[`progress-${index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
         }
       } else {
         this.$refs[`progress-${index}`][0].style.width = `${this.requests[index]}%`;

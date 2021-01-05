@@ -76,7 +76,7 @@ export default {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           if (this.shouldSucceed) {
-            resolve('Normal Success');
+            resolve({ message: 'Normal Success' });
           } else {
             reject(new Error('Normal Failure'));
           }
@@ -92,19 +92,20 @@ export default {
       this.active = true;
       this.circuit.fn(this.request).execute(this.time, this.successParams)
         .then((res) => {
-          this.logs += `<span>${res}</span><br/>`;
-          this.triggerUpdate(true);
+          this.logs += `<span>${res.message}</span><br/>`;
+          this.$emit('end', { success: true, res });
+          this.triggerUpdate();
         })
         .catch((err) => {
           this.logs += `<span>${err.message}</span><br/>`;
-          this.triggerUpdate(false);
+          this.$emit('end', { success: false, err });
+          this.triggerUpdate();
         })
         .finally(() => {
           this.active = false;
         });
     },
-    triggerUpdate (success) {
-      this.$emit('end', success);
+    triggerUpdate () {
       setTimeout(() => {
         if (this.$refs.logs) {
           this.$refs.logs.scrollTop = this.$refs.logs.scrollHeight;

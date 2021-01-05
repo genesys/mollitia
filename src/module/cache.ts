@@ -14,7 +14,15 @@ export abstract class CacheOptions extends ModuleOptions {
    * The amount of time before the cache cleans itself up.
    */
   cacheClearInterval?: number;
+  /**
+   * The attribute name indicating if data is retrieved from cache or not
+   */
+  getInformationFromCache? : boolean;
 }
+
+type CacheT<T extends unknown> = T & {
+    _mollitiaIsFromCache: boolean
+};
 
 /**
  * The Cache Module, that allows to cache result for an amount of time.
@@ -25,6 +33,10 @@ export class Cache extends Module {
    * The amount of time during which a cached result is considered valid.
    */
   public ttl: number;
+  /**
+   * The attribute name indicating if data is retrieved from cache or not
+   */
+  public getInformationFromCache: boolean;
   // Private Attributes
   private cache: MapCache;
   private _cacheClearInterval: number;
@@ -47,6 +59,7 @@ export class Cache extends Module {
   constructor (options?: CacheOptions) {
     super(options);
     this.ttl = options?.ttl ? options?.ttl : 6000; // 1 minute
+    this.getInformationFromCache = options?.getInformationFromCache ? options?.getInformationFromCache : false;
     this._cacheInterval = null;
     this._cacheClearInterval = 0;
     this.cacheClearInterval = options?.cacheClearInterval ? options?.cacheClearInterval : 900000; // 15 minutes
@@ -54,7 +67,7 @@ export class Cache extends Module {
   }
   // Public Methods
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async execute<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
+  public async execute<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T | CacheT<T>> {
     const _exec = this._promiseCache<T>(circuit, promise, ...params);
     this.emit('execute', circuit, _exec);
     return _exec;
@@ -68,16 +81,22 @@ export class Cache extends Module {
   }
   // Private Methods
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async _promiseCache<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
+  private async _promiseCache<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T | CacheT<T>> {
     return new Promise((resolve, reject) => {
-      const cacheRes = this.cache.get<T>(promise, ...params);
+      const cacheRes = this.cache.get<CacheT<T>>(promise, ...params);
       if (cacheRes) {
+        if (typeof cacheRes.res === 'object' && this.getInformationFromCache) {
+          cacheRes.res._mollitiaIsFromCache = true;
+        }
         const now = Date.now();
         if (this.ttl !== Infinity && (cacheRes.ttl < now)) {
           promise(...params)
-            .then((res: T) => {
+            .then((res: CacheT<T>) => {
               if (this.ttl > 0) {
                 this.cache.set(this.ttl, promise, ...params, res);
+              }
+              if (typeof res === 'object' && this.getInformationFromCache) {
+                res._mollitiaIsFromCache = false;
               }
               resolve(res);
             })
@@ -91,9 +110,12 @@ export class Cache extends Module {
         }
       } else {
         promise(...params)
-          .then((res: T) => {
+          .then((res: CacheT<T>) => {
             if (this.ttl > 0) {
               this.cache.set(this.ttl, promise, ...params, res);
+            }
+            if (typeof res === 'object' && this.getInformationFromCache) {
+              res._mollitiaIsFromCache = false;
             }
             resolve(res);
           })
