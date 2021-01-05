@@ -27,7 +27,6 @@ export default {
     }
   },
   mounted () {
-    this.time = this.$refs.c1.time;
     this.modules.push(this.$refs.r1.retry);
   }
 }

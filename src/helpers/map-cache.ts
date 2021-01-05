@@ -9,6 +9,7 @@ class CacheItem<T> {
 
 export class MapCache {
   // Private Attributes
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private map: Map<any, any>;
   // Constructor
   constructor () {

@@ -2,6 +2,7 @@ import { Module, ModuleOptions } from '.';
 import { Circuit, CircuitFunction } from '../circuit';
 import { delay } from '../helpers/time';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RetryCallback = (err: any) => boolean|number;
 
 /**
@@ -49,12 +50,14 @@ export class Retry extends Module {
     this.onRejection = options?.onRejection || (() => true);
   }
   // Public Methods
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
     const _exec = this._promiseRetry<T>(circuit, this.attempts + 1, promise, ...params);
     this.emit('execute', circuit, _exec);
     return _exec;
   }
   // Private Methods
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async _promiseRetry<T> (circuit: Circuit, attempts: number, promise: CircuitFunction, ...params: any[]): Promise<T> {
     if (attempts - 1 === 0) {
       this.emit('retry', circuit, this.attempts);
@@ -65,6 +68,7 @@ export class Retry extends Module {
       this.emit('retry', circuit, this.attempts - attempts + 1);
       this.logger?.debug(`${circuit.name}/${this.name} - Retry: (${this.attempts - attempts + 1}/${this.attempts})`);
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return promise(...params).catch(async (err: any) => {
       const shouldRetry = this.onRejection(err);
       const interval = (typeof shouldRetry === 'number') ? shouldRetry : this.interval;

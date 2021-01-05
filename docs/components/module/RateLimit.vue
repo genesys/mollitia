@@ -98,7 +98,6 @@ export default {
       limitForPeriod: this.limitForPeriod,
     });
     this.ratelimit.on('ratelimit', this.onRatelimit);
-    //this.ratelimit.on('execute', this.onExecute);
   }
 }
 </script>

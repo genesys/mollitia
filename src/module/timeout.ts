@@ -37,12 +37,14 @@ export class Timeout extends Module {
     this.delay = options?.delay ? options?.delay : 60000;
   }
   // Public Methods
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
     const _exec = this._promiseTimeout<T>(circuit, this.delay, promise, ...params);
     this.emit('execute', circuit, _exec);
     return _exec;
   }
   // Private Methods
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async _promiseTimeout<T> (circuit: Circuit, time: number, promise: CircuitFunction, ...params: any[]): Promise<T> {
     let timeout: number;
     if (time !== 0 && time !== Infinity) {

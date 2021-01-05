@@ -26,10 +26,6 @@ export default {
     name: {
       type: String,
       default: 'Retry'
-    },
-    time: {
-      type: Number,
-      default: 0
     }
   },
   data () {
@@ -38,20 +34,26 @@ export default {
       retries: 2,
       retryInterval: 0,
       index: 0,
-      interval: null,
-      requests: []
+      checkStyleDelay: 100,
+      intervals: [],
+      requests: [],
+      isEnded: false
     };
   },
   computed: {
     attempts () {
       return this.retries + 1;
+    },
+    time () {
+      return this.$parent.time;
     }
   },
   methods: {
     cleanup () {
       this.requests = new Array(this.retries).fill(0, 0, this.retries);
-      for (const ref in this.$refs) {
-        this.$refs[ref][0].style.width = 0;
+      this.intervals = new Array(this.retries);
+      for (let i=0;i<=this.retries;i++) {
+        this.$refs[`progress-${i}`][0].style.width = 0;
       }
     },
     update () {
@@ -61,34 +63,46 @@ export default {
     onExecute () {
       this.index = 0;
       this.cleanup();
-      this.interval = setInterval(() => {
-        this.requests[this.index] += (100 * 100 / this.time);
-        this.$refs[`progress-${this.index}`][0].style.width = `${this.requests[this.index]}%`;
-        this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
-        if (this.requests[this.index] >= 100) {
-          clearInterval(this.interval);
-        }
-      }, 100);
+      this.intervals[0] = setInterval(() => {
+        this.requests[0] += (100 * this.checkStyleDelay / this.time);
+        this.computeStyle(0);
+      }, this.checkStyleDelay);
     },
     onRetry () {
       this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
       this.index++;
       this.requests[this.index] = 0;
-      this.interval = setInterval(() => {
-        this.requests[this.index] += (100 * 100 / this.time);
-        this.$refs[`progress-${this.index}`][0].style.width = `${this.requests[this.index]}%`;
-        this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
-        if (this.requests[this.index] >= 100) {
-          clearInterval(this.interval);
-        }
-      }, 100);
+      this.intervals[this.index] = setInterval(() => {
+        this.requests[this.index] += (100 * this.checkStyleDelay / this.time);
+        this.computeStyle(this.index);
+      }, this.checkStyleDelay);
     },
     onEnd (success) {
+      this.isEnded = true;
       if (!success) {
         this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
       }
+    },
+    computeStyle (index) {
+      if (index > 0) {
+        for (let i = 0; i < index; i++) {
+          this.$refs[`progress-${i}`][0].style.width = '100%';
+          clearInterval(this.intervals[i]);
+        }
+      }
+      if (this.requests[index] >= 100) {
+        this.$refs[`progress-${index}`][0].style.width = '100%';
+        clearInterval(this.intervals[index]);
+        if (this.isEnded) {
+          this.$refs[`progress-${index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
+        }
+      } else {
+        this.$refs[`progress-${index}`][0].style.width = `${this.requests[index]}%`;
+        this.$refs[`progress-${index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
+      }
     }
   },
+
   created () {
     this.requests = new Array(this.attempts).fill(0, 0, this.attempts);
     this.retry = new this.$mollitia.Retry({
@@ -100,6 +114,7 @@ export default {
   },
   destroyed () {
     clearInterval(this.interval);
+    clearInterval(this.intervalRetry);
     this.retry.off('execute', this.onExecute);
     this.retry.off('retry', this.onRetry);
   }
