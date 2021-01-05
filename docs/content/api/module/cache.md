@@ -61,7 +61,7 @@ circuit.fn(myFirstFunction).execute(myObject)
 
 | Name                  | Description                                                    | Default    |
 |:----------------------|:---------------------------------------------------------------|:-----------|
-| `ttl`                 | The amount of time before a cached result is considered valid. | `6000`     |
+| `ttl`                 | The amount of time during which a cached result is considered valid. | `6000`     |
 | `cacheClearInterval`  | The amount of time before the cache cleans itself up.          | `900000`   |
 
 ## Events
