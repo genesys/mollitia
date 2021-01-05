@@ -61,8 +61,7 @@ export default {
       this.ratelimit.limitForPeriod = this.limitForPeriod;
     },
     onEnd () {
-      if (this.requestInProgress) {
-        this.requestInProgress = false;
+      if (!this.requestRateLimited) {
         if (this.results.length === 10) {
           this.results.shift();
         }
@@ -83,27 +82,23 @@ export default {
           }, 150);
         }
       }
+      this.requestRateLimited = false;
     },
     onRatelimit () {
-      if (this.requestInProgress) {
-        this.requestInProgress = false;
-        if (this.results.length === 10) {
-          this.results.shift();
-        }
-        this.results.push({id: index++, value: false});
+      this.requestRateLimited = true;
+      if (this.results.length === 10) {
+        this.results.shift();
       }
-    },
-    onExecute () {
-      this.requestInProgress = true;
+      this.results.push({id: index++, value: false});
     }
   },
   created () {
     this.ratelimit = new this.$mollitia.Ratelimit({
       limitPeriod: this.limitPeriod,
-      limitForPeriod: this.limitForPeriod
+      limitForPeriod: this.limitForPeriod,
     });
     this.ratelimit.on('ratelimit', this.onRatelimit);
-    this.ratelimit.on('execute', this.onExecute);
+    //this.ratelimit.on('execute', this.onExecute);
   }
 }
 </script>
