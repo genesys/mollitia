@@ -37,14 +37,11 @@ export default {
     };
   },
   computed: {
-    width () {
-      return;
-    },
     style () {
       return {
         'width': `${this.percent}%`,
         'background-color': this.failed ? 'var(--mollitia-error-color)' : 'var(--mollitia-info-color)'
-      }
+      };
     }
   },
   methods: {
@@ -92,7 +89,7 @@ export default {
     this.timeout.off('execute', this.onExecute);
     this.timeout.off('timeout', this.onTimeout);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

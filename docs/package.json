@@ -5,8 +5,8 @@
     "dev": "nuxt-ts",
     "build": "nuxt-ts build && nuxt-ts generate",
     "serve": "nuxt-ts start",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
+    "lint": "eslint --ext .js,.vue .",
+    "lint:fix": "eslint --ext .js,.vue . --fix",
     "test": "jest"
   },
   "dependencies": {

@@ -1,7 +1,7 @@
 <template>
   <div class="mollitia-playground">
     <Circuit ref="c1" :modules="modules">
-      <Sliding slidingType="count" ref="cb1"></Sliding>
+      <Sliding sliding-type="count" ref="cb1"></Sliding>
     </Circuit>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
     this.circuit = this.$refs.c1.circuit;
     this.modules.push(this.$refs.cb1.slidingWindowBreaker);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -28,7 +28,7 @@ export default {
   mounted () {
     this.modules.push(this.$refs.ca1.cache);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

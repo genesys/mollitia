@@ -1,0 +1,7 @@
+/.nuxt
+/coverage
+/dist
+/plugins/libs
+/static/sw.js
+/node_modules
+/.eslintrc.js

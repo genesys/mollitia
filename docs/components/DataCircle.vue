@@ -31,7 +31,7 @@ export default {
       return {
         'width': this.size,
         'height': this.size,
-        'background-color': this.color,
+        'background-color': this.color
       };
     },
     tooltipStyle () {
@@ -40,7 +40,7 @@ export default {
       };
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

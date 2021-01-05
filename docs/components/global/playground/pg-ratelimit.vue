@@ -30,7 +30,7 @@ export default {
     this.circuit = this.$refs.c1.circuit;
     this.modules.push(this.$refs.rl1.ratelimit);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

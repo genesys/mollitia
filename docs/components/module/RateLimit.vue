@@ -28,7 +28,7 @@
 </template>
 
 <script>
-var index = 0;
+let index = 0;
 export default {
   name: 'Ratelimit',
   props: {
@@ -52,7 +52,7 @@ export default {
       return {
         'width': `${this.percent}%`,
         'background-color': 'var(--mollitia-info-color)'
-      }
+      };
     }
   },
   methods: {
@@ -65,7 +65,7 @@ export default {
         if (this.results.length === 10) {
           this.results.shift();
         }
-        this.results.push({id: index++, value: true});
+        this.results.push({ id: index++, value: true });
         this.timeForRequests.push(new Date().getTime());
         if (!this.interval) {
           this.percent = 0;
@@ -89,17 +89,17 @@ export default {
       if (this.results.length === 10) {
         this.results.shift();
       }
-      this.results.push({id: index++, value: false});
+      this.results.push({ id: index++, value: false });
     }
   },
   created () {
     this.ratelimit = new this.$mollitia.Ratelimit({
       limitPeriod: this.limitPeriod,
-      limitForPeriod: this.limitForPeriod,
+      limitForPeriod: this.limitForPeriod
     });
     this.ratelimit.on('ratelimit', this.onRatelimit);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -107,12 +107,10 @@ export default {
   padding: 10px;
   border: 1px solid var(--madoc-grey-5);
 }
-
 .mollitia-module-rate-limit-header {
   padding: 10px;
   border-bottom: 1px solid var(--madoc-grey-5);
 }
-
 .mollitia-module-rate-limit-content {
   display: flex;
   .mollitia-module-rate-limit-config {
@@ -171,5 +169,5 @@ export default {
       }
     }
   }
-}  
+}
 </style>

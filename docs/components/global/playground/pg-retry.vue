@@ -29,7 +29,7 @@ export default {
   mounted () {
     this.modules.push(this.$refs.r1.retry);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

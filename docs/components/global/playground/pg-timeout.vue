@@ -28,7 +28,7 @@ export default {
   mounted () {
     this.modules.push(this.$refs.t1.timeout);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

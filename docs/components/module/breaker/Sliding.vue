@@ -6,7 +6,7 @@
     <div class="mollitia-module-sliding-window-breaker-content">
       <div class="mollitia-module-sliding-window-breaker-config">
         <div class="form-control">
-          <label for="windowSize">{{windowSizeName}}</label>
+          <label for="windowSize">{{ windowSizeName }}</label>
           <input v-model.number="slidingWindowSize" id="windowSize" @input="update" type="number"/>
         </div>
         <div class="form-control">
@@ -36,16 +36,16 @@
         <div class="form-control">
           <label for="halfOpenStateMaxDelay">Max Delay to stay in Half Open State (in ms)</label>
           <input v-model.number="halfOpenStateMaxDelay" id="halfOpenStateMaxDelay" @input="update" type="number"/>
-        </div>      
+        </div>
       </div>
       <div class="mollitia-module-sliding-window-breaker-visual">
         <div class="mollitia-module-sliding-window-breaker-result">
           <label for="circuitStatus">Circuit Status</label>
           <div id="circuitStatus" class="circle" :class="circuitStateClass"></div>
-          <div id="circuitStatusText">{{circuitStatusMessage}}</div>
+          <div id="circuitStatusText">{{ circuitStatusMessage }}</div>
         </div>
         <div class="mollitia-module-sliding-window-breaker-duration">
-          <div class="mollitia-module-sliding-window-breaker-title">{{circuitDuration}}</div>
+          <div class="mollitia-module-sliding-window-breaker-title">{{ circuitDuration }}</div>
           <div class="mollitia-module-sliding-window-breaker-progress" :style="style"></div>
         </div>
       </div>
@@ -82,14 +82,14 @@ export default {
       circuitStatusMessage: 'Closed',
       circuitDuration: '',
       percent: 0
-    }
+    };
   },
   computed: {
     style () {
       return {
         'width': `${this.percent}%`,
         'background-color': 'var(--mollitia-info-color)'
-      }
+      };
     }
   },
   methods: {
@@ -100,7 +100,7 @@ export default {
         this.percent = 0;
       }
       if (this.circuitStateClass === 'halfopened') {
-        this.circuitDuration = 'Half Opened Duration'; 
+        this.circuitDuration = 'Half Opened Duration';
         this.interval = setInterval(() => {
           const now = new Date().getTime();
           this.percent = ((now - this.timeStateChanged) / this.halfOpenStateMaxDelay) * 100;
@@ -120,7 +120,7 @@ export default {
       }
     },
     onCircuitStateChanged () {
-      switch(this.slidingWindowBreaker.state) {
+      switch (this.slidingWindowBreaker.state) {
         case this.$mollitia.BreakerState.HALF_OPENED:
           this.circuitStateClass = 'halfopened';
           this.circuitStatusMessage = 'Half Opened';
@@ -139,9 +139,9 @@ export default {
           this.timeStateChanged = new Date().getTime();
           this.updateStateProgress();
           break;
-      } 
+      }
     },
-    update() {
+    update () {
       if (this.slidingWindowBreaker) {
         this.slidingWindowBreaker.slidingWindowSize = this.slidingWindowSize;
         this.slidingWindowBreaker.minimumNumberOfCalls = this.minimumNumberOfCalls;
@@ -180,7 +180,7 @@ export default {
     }
     this.slidingWindowBreaker.on('stateChanged', this.onCircuitStateChanged);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -257,6 +257,6 @@ export default {
           background-color .25s ease;
       }
     }
-  }  
-}  
+  }
+}
 </style>

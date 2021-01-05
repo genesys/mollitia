@@ -26,17 +26,12 @@ export default {
       default: ''
     }
   },
-  data () {
-    return {
-      // value: false
-    };
-  },
   methods: {
     onInput () {
       this.$emit('input', !this.value);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

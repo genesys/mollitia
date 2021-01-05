@@ -57,11 +57,6 @@ export default {
       default: () => { return {}; }
     }
   },
-  computed: {
-    disabled () {
-      return !this.concurrent && this.active;
-    }
-  },
   data () {
     return {
       shouldSucceed: true,
@@ -71,8 +66,13 @@ export default {
       logs: ''
     };
   },
+  computed: {
+    disabled () {
+      return !this.concurrent && this.active;
+    }
+  },
   methods: {
-    async request (delay) {
+    request (delay) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           if (this.shouldSucceed) {
@@ -118,7 +118,7 @@ export default {
   updated () {
     this.circuit.modules = this.modules;
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

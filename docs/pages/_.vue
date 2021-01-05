@@ -1,22 +1,11 @@
 <!-- Prefetch -->
 <script>
   import Vue from 'vue';
-  const getInheritContent = async ($content, path, name) => {
-    return new Promise(async (resolve) => {
-      const loc = [name];
-      let _dir = '';
-      for (const dir of path.split('/')) {
-        _dir += `${dir}/`;
-        loc.push(`${_dir}${name}`);
-      }
-      loc.reverse();
-      for (const _loc of loc) {
-        const content = await $content(name).fetch().catch(() => {});
-        if (content) {
-          resolve(content);
-        }
-      }
-      resolve();
+  const getInheritContent = ($content, path, name) => {
+    return new Promise((resolve) => {
+      $content(name).fetch()
+        .then((data) => { resolve(data); })
+        .catch(() => { resolve(); });
     });
   };
   export default Vue.extend({
@@ -42,13 +31,14 @@
       const path = params.pathMatch || 'index';
       if (path !== '_') {
         const article = await $content(path).fetch().catch((err) => {
+          console.error(err);
           error({ statusCode: 404, message: 'Oops' });
         });
         if (article) {
-          if (!article.hasOwnProperty('navbar')) {
+          if (article.navbar === undefined) {
             article.navbar = await getInheritContent($content, path, '_navbar');
           }
-          if (!article.hasOwnProperty('sidebar')) {
+          if (article.sidebar === undefined) {
             article.sidebar = await getInheritContent($content, path, '_sidebar');
           }
         }

@@ -92,7 +92,7 @@ export default {
       maxQueueWait: this.maxQueueWait
     });
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

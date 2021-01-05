@@ -46,19 +46,16 @@ export default {
     time () {
       return this.$parent.time;
     },
-    width () {
-      return;
-    },
     timeStyle () {
       return {
         'width': `${this.timePercent}%`
-      }
+      };
     },
     style () {
       return {
         'width': `${this.percent}%`,
         'background-color': this.cached ? 'var(--mollitia-success-color)' : 'var(--mollitia-error-color)'
-      }
+      };
     }
   },
   methods: {
@@ -115,7 +112,7 @@ export default {
     clearInterval(this.interval);
     this.cache.off('execute', this.onExecute);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

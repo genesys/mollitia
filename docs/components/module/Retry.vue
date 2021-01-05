@@ -52,7 +52,7 @@ export default {
     cleanup () {
       this.requests = new Array(this.retries).fill(0, 0, this.retries);
       this.intervals = new Array(this.retries);
-      for (let i=0;i<=this.retries;i++) {
+      for (let i = 0; i <= this.retries; i++) {
         this.$refs[`progress-${i}`][0].style.width = 0;
       }
     },
@@ -102,7 +102,6 @@ export default {
       }
     }
   },
-
   created () {
     this.requests = new Array(this.attempts).fill(0, 0, this.attempts);
     this.retry = new this.$mollitia.Retry({
@@ -118,7 +117,7 @@ export default {
     this.retry.off('execute', this.onExecute);
     this.retry.off('retry', this.onRetry);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

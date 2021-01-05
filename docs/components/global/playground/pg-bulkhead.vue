@@ -1,6 +1,14 @@
 <template>
   <div class="mollitia-playground">
-    <Circuit ref="c1" @start="randomizeColor" :modules="modules" :concurrent="true" :success-params="successParams" :failure-params="failureParams" :init-time="4000" :can-fail="false">
+    <Circuit
+      ref="c1"
+      @start="randomizeColor"
+      :modules="modules"
+      :concurrent="true"
+      :success-params="successParams"
+      :failure-params="failureParams"
+      :init-time="4000"
+      :can-fail="false">
       <Bulkhead ref="b1"></Bulkhead>
     </Circuit>
   </div>
@@ -50,7 +58,7 @@ export default {
     this.circuit = this.$refs.c1.circuit;
     this.modules.push(this.$refs.b1.bulkhead);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

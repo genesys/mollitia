@@ -25,11 +25,8 @@ export default {
   props: {
     sidebar: {
       type: Object,
-      default: {}
+      default: () => { return {}; }
     }
-  },
-  data () {
-    return {};
   },
   computed: {
     groups () {

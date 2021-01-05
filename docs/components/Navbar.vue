@@ -14,9 +14,7 @@
     </ul>
     <ul class="madoc-navbar-list right">
       <li v-if="navbar.github" class="icon">
-				<a :href="navbar.github.link" target='_blank'>
-          <Github/>
-				</a>
+        <a :href="navbar.github.link" target="_blank"><Github/></a>
 			</li>
     </ul>
   </nav>
@@ -32,11 +30,8 @@ export default {
   props: {
     navbar: {
       type: Object,
-      default: {}
+      default: () => { return {}; }
     }
-  },
-  data () {
-    return {};
   }
 };
 </script>

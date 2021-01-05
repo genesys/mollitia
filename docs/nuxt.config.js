@@ -68,4 +68,4 @@ export default {
     ],
     fallback: true
   }
-}
+};
