@@ -68,7 +68,7 @@ export class MapCache {
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _clearLoopMap (map: Map<any, any>): boolean {
-    let hasDeleted = true;
+    let hasDeleted = false;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     map.forEach((item: any) => {
       if (item.map) {
