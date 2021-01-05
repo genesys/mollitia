@@ -62,8 +62,8 @@ export class Retry extends Module {
       return promise(...params);
     }
     if (attempts !== (this.attempts + 1)) {
-      this.emit('retry', circuit, attempts - 1);
-      this.logger?.debug(`${circuit.name}/${this.name} - Retry: (${attempts - 1}/${this.attempts})`);
+      this.emit('retry', circuit, this.attempts - attempts + 1);
+      this.logger?.debug(`${circuit.name}/${this.name} - Retry: (${this.attempts - attempts + 1}/${this.attempts})`);
     }
     return promise(...params).catch(async (err: any) => {
       const shouldRetry = this.onRejection(err);
