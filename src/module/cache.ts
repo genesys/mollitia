@@ -110,8 +110,10 @@ export class Cache extends Module {
     }
     if (this.cacheClearInterval !== 0 && this.cacheClearInterval !== Infinity) {
       this._cacheInterval = <unknown>setTimeout(() => {
-        this.logger?.debug(`${this.name} - Cache: Clear`);
-        this.cache.clear();
+        const hasDeleted = this.cache.clear();
+        if (hasDeleted) {
+          this.logger?.debug(`${this.name} - Cache: Clear`);
+        }
         this._initializeInterval();
       }, this.cacheClearInterval) as number;
     }

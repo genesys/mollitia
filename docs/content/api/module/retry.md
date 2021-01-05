@@ -50,3 +50,9 @@ const circuit = new Circuit({
 |:-----------|:-------------------------------------|:------------------------------------------------------------|
 | `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit**                              |
 | `retry`    | Called when retrying.                | `Mollitia.Circuit` **circuit**, `number` **currentAttempt** |
+
+## Methods
+
+| Name       | Description                          | Returns                         |
+|:-----------|:-------------------------------------|:-------------------------------|
+| `getExecParams`  | Returns the circuit function parameters.  | `any[]` **params** |

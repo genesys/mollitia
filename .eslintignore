@@ -2,5 +2,5 @@
 /dist
 /docs
 /node_modules
-/madoc.config.js
+/jest.config.js
 /vue.config.js

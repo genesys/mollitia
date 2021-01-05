@@ -94,6 +94,10 @@ export class Circuit extends EventEmitter {
     this.modules = factory?.options?.modules || [];
     circuits.push(this);
   }
+  // Computed
+  get activeModules (): Module[] {
+    return this.modules.filter((m) => m.active);
+  }
   // Public Methods
   /**
    * Modifies the Circuit function.
@@ -110,16 +114,16 @@ export class Circuit extends EventEmitter {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async execute<T> (...params: any[]): Promise<T> {
     let _exec: Promise<T>;
-    if (this.modules.length) {
-      if (this.modules.length > 1) {
+    if (this.activeModules.length) {
+      if (this.activeModules.length > 1) {
         const args = [];
-        for (let i = 2; i < this.modules.length; i++) {
-          args.push(this, this.modules[i].execute.bind(this.modules[i]));
+        for (let i = 2; i < this.activeModules.length; i++) {
+          args.push(this, this.activeModules[i].execute.bind(this.activeModules[i]));
         }
         args.push(this, this.func, ...params);
-        _exec = this.modules[0].execute(this, this.modules[1].execute.bind(this.modules[1]), ...args);
+        _exec = this.activeModules[0].execute(this, this.activeModules[1].execute.bind(this.activeModules[1]), ...args);
       } else {
-        _exec = this.modules[0].execute(this, this.func, ...params);
+        _exec = this.activeModules[0].execute(this, this.func, ...params);
       }
     } else {
       _exec = this.func(...params);

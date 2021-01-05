@@ -67,5 +67,11 @@ circuit.fn(myFirstFunction).execute(myObject)
 ## Events
 
 | Name       | Description                          | Params                         |
-|:-----------|:-------------------------------------|:--------------- ---------------|
+|:-----------|:-------------------------------------|:-------------------------------|
 | `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit** |
+
+## Methods
+
+| Name       | Description                          | Returns                         |
+|:-----------|:-------------------------------------|:-------------------------------|
+| `getExecParams`  | Returns the circuit function parameters.  | `any[]` **params** |

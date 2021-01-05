@@ -7,6 +7,7 @@ import { addons } from '../addon';
  */
 export abstract class ModuleOptions {
   name?: string;
+  active?: boolean;
   logger?: Logger;
 }
 
@@ -25,13 +26,18 @@ export class Module extends EventEmitter {
    */
   public name: string;
   /**
+   * Whether the Module is active or not.
+   */
+  public active: boolean;
+  /**
    * The Module logger, for monitoring.
    */
   public logger?: Logger;
   // Constructor
   constructor (options?: ModuleOptions) {
     super();
-    this.name = options?.name ? options.name : `Module${modules.length}`;
+    this.active = (options?.active !== undefined) ? options.active : true;
+    this.name = (options?.name !== undefined) ? options.name : `Module${modules.length}`;
     for (const addon of addons) {
       if (addon.onModuleCreate) {
         addon.onModuleCreate(this, options);
@@ -56,5 +62,18 @@ export class Module extends EventEmitter {
     const _exec = promise(...params);
     this.emit('execute', circuit, _exec);
     return _exec;
+  }
+  /**
+   * Returns params passed to the execute method.
+   * @param circuit The Circuit reference.
+   * @param params The Eventual parameters to use with the Circuit function.
+   * @example
+   * const _params = this.getExecParams(circuit, params);
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public getExecParams (circuit: Circuit, params: any[]): any[] {
+    const index = circuit.modules.findIndex((m) => m === this);
+    const keepIndex = params.length - ((circuit.modules.length - 1 - index) * 2);
+    return params.filter((p, i) => (params.length - i) <= keepIndex);
   }
 }

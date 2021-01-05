@@ -23,8 +23,8 @@ export class MapCache {
   public get<T> (...params: any[]): CacheItem<T>|null {
     return this._getLoopMap<T>(this.map, ...params);
   }
-  public clear (): void {
-    this._clearLoopMap(this.map);
+  public clear (): boolean {
+    return this._clearLoopMap(this.map);
   }
   // Private Methods
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,15 +67,21 @@ export class MapCache {
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _clearLoopMap (map: Map<any, any>): any {
+  private _clearLoopMap (map: Map<any, any>): boolean {
+    let hasDeleted = true;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     map.forEach((item: any) => {
       if (item.map) {
-        this._clearLoopMap(item.map);
+        const mapHasDeleted = this._clearLoopMap(item.map);
+        if (mapHasDeleted === true) {
+          hasDeleted = true;
+        }
       }
       if (item.cache && Date.now() > item.cache.ttl) {
         delete item.cache;
+        hasDeleted = true;
       }
     });
+    return hasDeleted;
   }
 }
