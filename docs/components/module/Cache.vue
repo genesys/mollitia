@@ -38,7 +38,8 @@ export default {
       timePercent: 0,
       percent: 0,
       timeInterval: null,
-      interval: null,
+      cacheClearInterval: null,
+      cacheTtlInterval: null,
       cached: false
     };
   },
@@ -62,6 +63,13 @@ export default {
     update () {
       this.cache.ttl = this.ttl;
       this.cache.cacheClearInterval = this.clearanceInterval;
+      clearInterval(this.cacheClearInterval);
+      this.cacheClearInterval = setInterval(() => {
+        if (!this.cacheTtlInterval) {
+          console.log('Clear stuff');
+          this.percent = 0;
+        }
+      }, this.clearanceInterval);
     },
     onExecute () {
       // Time
@@ -74,22 +82,23 @@ export default {
       }, 100);
     },
     onEnd (result) {
-      this.failed = false;
       this.timePercent = 100;
       clearInterval(this.timeInterval);
       // Cache
-      if (!this.interval) {
-        this.percent = 0;
+      if (!this.cacheTtlInterval) {
         if (result.success && !result.res._mollitiaIsFromCache) {
+          this.percent = 0;
           this.cached = true;
-          this.interval = setInterval(() => {
+          this.cacheTtlInterval = setInterval(() => {
             this.percent += (100 * 100 / this.ttl);
             if (this.percent >= 100) {
               this.cached = false;
-              clearInterval(this.interval);
-              this.interval = null;
+              clearInterval(this.cacheTtlInterval);
+              this.cacheTtlInterval = null;
             }
           }, 100);
+        } else if (!result.success) {
+          this.percent = 0;
         }
       }
     }
@@ -103,11 +112,17 @@ export default {
         debug: this.$parent.log
       }
     });
+    this.cacheClearInterval = setInterval(() => {
+      if (!this.cacheTtlInterval) {
+        this.percent = 0;
+      }
+    }, this.clearanceInterval);
     this.cache.on('execute', this.onExecute);
   },
   destroyed () {
     clearInterval(this.timeInterval);
-    clearInterval(this.interval);
+    clearInterval(this.cacheTtlInterval);
+    clearInterval(this.cacheClearInterval);
     this.cache.off('execute', this.onExecute);
   }
 };
