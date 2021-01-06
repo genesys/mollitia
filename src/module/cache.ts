@@ -20,7 +20,7 @@ export abstract class CacheOptions extends ModuleOptions {
   getInformationFromCache? : boolean;
 }
 
-type CacheT<T extends unknown> = T & {
+type CacheT<T> = T & {
     _mollitiaIsFromCache: boolean
 };
 

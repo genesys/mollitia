@@ -97,7 +97,7 @@ export default {
         this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
       }
     },
-    setErrorStyleForPreviousTry() {
+    setErrorStyleForPreviousTry () {
       for (let i = 0; i < this.index; i++) {
         this.$refs[`progress-${i}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
         this.$refs[`progress-${i}`][0].style.width = '100%';
