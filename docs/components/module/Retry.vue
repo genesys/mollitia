@@ -35,9 +35,9 @@ export default {
       retryInterval: 0,
       index: 0,
       checkStyleDelay: 100,
-      intervals: [],
-      requests: [],
-      isEndedSuccess: false
+      interval: null,
+      timeRequestStarted: 0,
+      isEnded: false
     };
   },
   computed: {
@@ -50,8 +50,8 @@ export default {
   },
   methods: {
     cleanup () {
-      this.requests = new Array(this.retries).fill(0, 0, this.retries);
-      this.intervals = new Array(this.retries);
+      this.index = 0;
+      this.isEnded = false;
       for (let i = 0; i <= this.retries; i++) {
         this.$refs[`progress-${i}`][0].style.width = 0;
       }
@@ -61,52 +61,50 @@ export default {
       this.retry.interval = this.retryInterval;
     },
     onExecute () {
-      this.index = 0;
+      this.timeRequestStarted = new Date().getTime();
       this.cleanup();
-      this.intervals[0] = setInterval(() => {
-        this.requests[0] += (100 * this.checkStyleDelay / this.time);
-        this.computeStyle(0);
+      this.interval = setInterval(() => {
+        this.computeStyle();
       }, this.checkStyleDelay);
     },
     onRetry () {
       this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
       this.index++;
-      this.requests[this.index] = 0;
-      this.intervals[this.index] = setInterval(() => {
-        this.requests[this.index] += (100 * this.checkStyleDelay / this.time);
-        this.computeStyle(this.index);
-      }, this.checkStyleDelay);
+      this.timeRequestStarted = new Date().getTime();
     },
     onEnd (success) {
-      if (!success) {
+      clearInterval(this.interval);
+      this.setErrorStyleForPreviousTry();
+      this.isEnded = true;
+      this.$refs[`progress-${this.index}`][0].style.width = '100%';
+      if (success) {
+        this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
+      } else {
         this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
       }
-      this.isEndedSuccess = success;
     },
-    computeStyle (index) {
-      if (index > 0) {
-        for (let i = 0; i < index; i++) {
-          this.$refs[`progress-${i}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
-          this.$refs[`progress-${i}`][0].style.width = '100%';
-          clearInterval(this.intervals[i]);
-        }
+    computeStyle () {
+      if (this.isEnded) {
+        return;
       }
-      if (this.requests[index] >= 100) {
-        this.$refs[`progress-${index}`][0].style.width = '100%';
-        clearInterval(this.intervals[index]);
-        if (this.isEndedSuccess) {
-          this.$refs[`progress-${index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
-        } else {
-          this.$refs[`progress-${index}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
-        }
+      this.setErrorStyleForPreviousTry();
+      const currentTime = new Date().getTime();
+      const progress = (100 * (currentTime - this.timeRequestStarted) / this.time);
+      if (progress >= 100) {
+        this.$refs[`progress-${this.index}`][0].style.width = '100%';
       } else {
-        this.$refs[`progress-${index}`][0].style.width = `${this.requests[index]}%`;
-        this.$refs[`progress-${index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
+        this.$refs[`progress-${this.index}`][0].style.width = `${progress}%`;
+        this.$refs[`progress-${this.index}`][0].style.backgroundColor = 'var(--mollitia-info-color)';
+      }
+    },
+    setErrorStyleForPreviousTry() {
+      for (let i = 0; i < this.index; i++) {
+        this.$refs[`progress-${i}`][0].style.backgroundColor = 'var(--mollitia-error-color)';
+        this.$refs[`progress-${i}`][0].style.width = '100%';
       }
     }
   },
   created () {
-    this.requests = new Array(this.attempts).fill(0, 0, this.attempts);
     this.retry = new this.$mollitia.Retry({
       attempts: this.retries,
       interval: this.retryInterval
@@ -116,7 +114,6 @@ export default {
   },
   destroyed () {
     clearInterval(this.interval);
-    clearInterval(this.intervalRetry);
     this.retry.off('execute', this.onExecute);
     this.retry.off('retry', this.onRetry);
   }
