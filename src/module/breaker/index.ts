@@ -138,20 +138,20 @@ export abstract class SlidingWindowBreaker<T> extends Module {
 
   constructor (options?: SlidingWindowBreakerOptions) {
     super(options);
-    this.state = options?.state || BreakerState.CLOSED;
-    this.openStateDelay = options?.openStateDelay || 60 * 1000;
-    this.halfOpenStateMaxDelay = options?.halfOpenStateMaxDelay || 0;
+    this.state = (options?.state !== undefined) ? options.state : BreakerState.CLOSED;
+    this.openStateDelay = (options?.openStateDelay !== undefined) ? options.openStateDelay : 60 * 1000;
+    this.halfOpenStateMaxDelay = (options?.halfOpenStateMaxDelay !== undefined) ? options.halfOpenStateMaxDelay : 0;
     if (this.state === BreakerState.OPENED) {
       this.setHalfDelay();
     } else if (this.state === BreakerState.HALF_OPENED) {
       this.setOpenDelay();
     }
-    this.slidingWindowSize = options?.slidingWindowSize ? options?.slidingWindowSize : 10;
-    this.minimumNumberOfCalls = options?.minimumNumberOfCalls ? options?.minimumNumberOfCalls : 10;
-    this.failureRateThreshold = (options?.failureRateThreshold ? options?.failureRateThreshold : 50);
-    this.slowCallDurationThreshold = options?.slowCallDurationThreshold ? options?.slowCallDurationThreshold : 60000;
-    this.slowCallRateThreshold = (options?.slowCallRateThreshold ? options?.slowCallRateThreshold : 100);
-    this.permittedNumberOfCallsInHalfOpenState = options?.permittedNumberOfCallsInHalfOpenState ? options?.permittedNumberOfCallsInHalfOpenState : 2;
+    this.slidingWindowSize = (options?.slidingWindowSize !== undefined) ? options.slidingWindowSize : 10;
+    this.minimumNumberOfCalls = (options?.minimumNumberOfCalls !== undefined) ? options.minimumNumberOfCalls : 10;
+    this.failureRateThreshold = (options?.failureRateThreshold !== undefined) ? options.failureRateThreshold : 50;
+    this.slowCallDurationThreshold = (options?.slowCallDurationThreshold !== undefined) ? options.slowCallDurationThreshold : 60000;
+    this.slowCallRateThreshold = (options?.slowCallRateThreshold !== undefined) ? options?.slowCallRateThreshold : 100;
+    this.permittedNumberOfCallsInHalfOpenState = (options?.permittedNumberOfCallsInHalfOpenState !== undefined) ? options.permittedNumberOfCallsInHalfOpenState : 2;
     this.nbCallsInHalfOpenedState = 0;
     this.callsInHalfOpenedState = [];
     this.callsInClosedState = [];

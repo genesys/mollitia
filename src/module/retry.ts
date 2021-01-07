@@ -45,8 +45,8 @@ export class Retry extends Module {
   // Constructor
   constructor (options?: RetryOptions) {
     super(options);
-    this.attempts = options?.attempts ? options?.attempts : 2;
-    this.interval = options?.interval ? options?.interval : 0;
+    this.attempts = (options?.attempts !== undefined) ? options.attempts : 2;
+    this.interval = (options?.interval !== undefined) ? options.interval : 0;
     this.onRejection = options?.onRejection || (() => true);
   }
   // Public Methods

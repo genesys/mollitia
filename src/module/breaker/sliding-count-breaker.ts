@@ -7,7 +7,7 @@ import { SlidingWindowBreaker, SlidingWindowBreakerOptions, SlidingWindowRequest
 export class SlidingCountBreaker extends SlidingWindowBreaker<SlidingWindowRequestResult> {
   constructor(options?: SlidingWindowBreakerOptions) {
     super(options);
-    this.slidingWindowSize = options?.slidingWindowSize ? options?.slidingWindowSize : 10;
+    this.slidingWindowSize = (options?.slidingWindowSize !== undefined) ? options.slidingWindowSize : 10;
     if (this.slidingWindowSize < this.minimumNumberOfCalls) {
       this.slidingWindowSize = this.minimumNumberOfCalls;
     }

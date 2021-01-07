@@ -34,7 +34,7 @@ export class Timeout extends Module {
   // Constructor
   constructor (options?: TimeoutOptions) {
     super(options);
-    this.delay = options?.delay ? options?.delay : 60000;
+    this.delay = (options?.delay !== undefined) ? options.delay : 60000;
   }
   // Public Methods
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

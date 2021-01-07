@@ -55,7 +55,7 @@ describe('Sliding Count Breaker', () => {
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
     expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
-    await expect(circuit.fn(failureAsync).execute('dummy', 100)).rejects.toEqual('dummy');
+    await expect(circuit.fn(failureAsync).execute('dummy', 150)).rejects.toEqual('dummy');
     expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
     expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
