@@ -16,18 +16,20 @@ jobs:
         node-version: '12.x'
         registry-url: 'https://registry.npmjs.org'
     - name: Cache node modules
+      id: myCacheStep
       uses: actions/cache@v2
       env:
         cache-name: cache-mollitia-node-modules
       with:
-        path: ~/.npm
+        path: '**/node_modules'
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: Install
-      run: npm ci
+      #if: steps.myCacheStep.outputs.cache-hit != 'true'
+      run: npm install
     - name: Lint
       run: npm run lint:lib
     - name: Test
