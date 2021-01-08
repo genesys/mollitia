@@ -62,3 +62,7 @@ It is very similar at what does [Resilience4j](https://github.com/resilience4j/r
 - Implements a wide variety of Resilience patterns, [more on that here.](http://135.39.45.156:8080)
 - Has **Method Agnostic** circuits, meaning you don't have to create one circuit per function.
 - Supports addons, [more on that here.](http://135.39.45.156:8080)
+## License
+
+- **[MIT license](http://opensource.org/licenses/mit-license.php)**
+- Copyright 2021 © [Genesys](https://www.genesys.com/).
