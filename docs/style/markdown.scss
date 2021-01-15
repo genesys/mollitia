@@ -87,3 +87,9 @@ table {
     }
   }
 }
+// Flex Row Image
+p.flex-center-row {
+  > img {
+    max-width: 100%;
+  }
+}

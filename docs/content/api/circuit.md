@@ -5,6 +5,8 @@ title: Mollitia - API - Circuit
 
 The `Circuit` is the container of your **Resilience** logic.
 
+<p class="flex-center-row" align="center"><img src="/img/circuit-architecture.png" alt="Circuit - Architecture"/></p>
+
 ## Usage
 
 ``` typescript

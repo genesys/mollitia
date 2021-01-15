@@ -20,6 +20,8 @@ When the circuit is closed, a sliding window is used to store the outcome of cal
 The count-based sliding window calculates the outcome of the last N calls, and decides if the circuit should be opened (if the failure or slow call rate thresholds are exceeded)
 For example, if the count window size is 10, the circular array has always 10 measurements.
 
+<p class="flex-center-row" align="center"><img src="/img/circuit-breaker-diagram.png" alt="Circuit Breaker - Diagram"/></p>
+
 ## Options
 
 | Name             | Description                                                        | Default |
