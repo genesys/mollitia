@@ -5,8 +5,6 @@ description: JavaScript Resilience Library
 
 <!-- TODO Badges -->
 
-# Mollitia
-
 `Mollitia` is a **JavaScript Resilience** library that works on Node and on browsers.
 The purpose of such kind of tool is to help organize **asynchronous operations** under a highly customizable circuit that helps managing error use cases.
 When everything is falling apart, it stops the classic flow and uses modules to manage failures.
@@ -14,7 +12,7 @@ When everything is falling apart, it stops the classic flow and uses modules to 
 ## Documentation
 
 <!-- TODO Change -->
-[Full documentation website can be find here.](http://135.39.47.16:8080)
+[Full documentation website can be find here.](http://135.39.45.156:8080)
 
 ## Installation
 
@@ -67,3 +65,22 @@ It is very similar at what does [Resilience4j](https://github.com/resilience4j/r
 - Implements a wide variety of Resilience patterns, [more on that here.](http://135.39.45.156:8080)
 - Has **Method Agnostic** circuits, meaning you don't have to create one circuit per function.
 - Supports addons, [more on that here.](http://135.39.45.156:8080)
+
+## Comparison with other libraries
+
+- [cockatiel](https://github.com/connor4312/cockatiel)
+  - Misses the **Cache** and **Ratelimit** modules.
+  - Cannot create **module** or **addons**.
+- [opossum](https://github.com/nodeshift/opossum)
+  - **Only support the Circuit Breaker module**
+  - Cannot have **Method Agnostic** circuits.
+  - Cannot create **module** or **addons**.
+- [brakes](https://github.com/awolden/brakes)
+  - **Only support the Circuit Breaker module**
+  - Cannot have **Method Agnostic** circuits.
+  - Cannot create **module** or **addons**.
+
+## License
+
+- **[MIT license](http://opensource.org/licenses/mit-license.php)**
+- Copyright 2021 © [Genesys](https://www.genesys.com/).

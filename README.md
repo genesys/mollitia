@@ -62,6 +62,21 @@ It is very similar at what does [Resilience4j](https://github.com/resilience4j/r
 - Implements a wide variety of Resilience patterns, [more on that here.](http://135.39.45.156:8080)
 - Has **Method Agnostic** circuits, meaning you don't have to create one circuit per function.
 - Supports addons, [more on that here.](http://135.39.45.156:8080)
+
+## Comparison with other libraries
+
+- [cockatiel](https://github.com/connor4312/cockatiel)
+  - Misses the **Cache** and **Ratelimit** modules.
+  - Cannot create **module** or **addons**.
+- [opossum](https://github.com/nodeshift/opossum)
+  - **Only support the Circuit Breaker module**
+  - Cannot have **Method Agnostic** circuits.
+  - Cannot create **module** or **addons**.
+- [brakes](https://github.com/awolden/brakes)
+  - **Only support the Circuit Breaker module**
+  - Cannot have **Method Agnostic** circuits.
+  - Cannot create **module** or **addons**.
+
 ## License
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
