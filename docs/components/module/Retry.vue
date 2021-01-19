@@ -5,8 +5,14 @@
     </div>
     <div class="mollitia-module-retry-content">
       <div class="mollitia-module-retry-config">
-        <div>Attempts: <input v-model.number="retries" @input="update" type="number"/></div>
-        <div>Interval (in ms): <input v-model.number="retryInterval" @input="update" type="number"/></div>
+        <div class="form-control">
+          <label>Attempts:</label>
+          <input v-model.number="retries" @input="update" type="number"/>
+        </div>
+        <div class="form-control">
+          <label>Interval (in ms):</label>
+          <input v-model.number="retryInterval" @input="update" type="number"/>
+        </div>
       </div>
       <div class="mollitia-module-retry-visual">
         <div v-for="i in attempts" :key="i" class="mollitia-module-retry-attempt">
@@ -132,6 +138,19 @@ div.mollitia-module-retry {
     > div.mollitia-module-retry-config {
       padding: 10px;
       border-right: 1px solid var(--madoc-grey-5);
+      > div.form-control {
+        display: flex;
+        flex-direction: row;
+        &:not(:last-child) {
+          margin-bottom: 5px;
+        }
+        > label {
+          margin-right: 10px;
+        }
+        > input {
+          margin-left: auto;
+        }
+      }
     }
     > div.mollitia-module-retry-visual {
       flex-grow: 1;

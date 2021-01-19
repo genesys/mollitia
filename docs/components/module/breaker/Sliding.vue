@@ -6,41 +6,41 @@
     <div class="mollitia-module-sliding-window-breaker-content">
       <div class="mollitia-module-sliding-window-breaker-config">
         <div class="form-control">
-          <label for="windowSize">{{ windowSizeName }}</label>
+          <label for="windowSize">{{ windowSizeName }}:</label>
           <input v-model.number="slidingWindowSize" id="windowSize" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="minNumberOfCalls">Min nb calls</label>
+          <label for="minNumberOfCalls">Min nb calls:</label>
           <input v-model.number="minimumNumberOfCalls" id="minNumberOfCalls" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="failureRateThreshold">Failure Rate Threshold</label>
+          <label for="failureRateThreshold">Failure Rate Threshold:</label>
           <input v-model.number="failureRateThreshold" id="failureRateThreshold" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="slowCallDurationThreshold">Slow Call Duration Threshold (in ms)</label>
+          <label for="slowCallDurationThreshold">Slow Call Duration Threshold (in ms):</label>
           <input v-model.number="slowCallDurationThreshold" id="slowCallDurationThreshold" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="slowCallRateThreshold">Slow Call Rate Threshold</label>
+          <label for="slowCallRateThreshold">Slow Call Rate Threshold:</label>
           <input v-model.number="slowCallRateThreshold" id="slowCallRateThreshold" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="permittedNumberOfCallsInHalfOpenState">Number Of Calls in Half Open State</label>
+          <label for="permittedNumberOfCallsInHalfOpenState">Number Of Calls in Half Open State:</label>
           <input v-model.number="permittedNumberOfCallsInHalfOpenState" id="permittedNumberOfCallsInHalfOpenState" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="openStateDelay">Delay to stay in Open State (in ms)</label>
+          <label for="openStateDelay">Delay to stay in Open State (in ms):</label>
           <input v-model.number="openStateDelay" id="openStateDelay" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="halfOpenStateMaxDelay">Max Delay to stay in Half Open State (in ms)</label>
+          <label for="halfOpenStateMaxDelay">Max Delay to stay in Half Open State (in ms):</label>
           <input v-model.number="halfOpenStateMaxDelay" id="halfOpenStateMaxDelay" @input="update" type="number"/>
         </div>
       </div>
       <div class="mollitia-module-sliding-window-breaker-visual">
         <div class="mollitia-module-sliding-window-breaker-result">
-          <label for="circuitStatus">Circuit Status</label>
+          <label for="circuitStatus">Circuit Status:</label>
           <div id="circuitStatus" class="circle" :class="circuitStateClass"></div>
           <div id="circuitStatusText">{{ circuitStatusMessage }}</div>
         </div>
@@ -191,28 +191,30 @@ export default {
 
 <style lang="scss" scoped>
 .mollitia-module-sliding-window-breaker {
-  padding: 10px;
-  border: 1px solid var(--madoc-heading-underline-color);
+  border: 1px solid var(--madoc-grey-5);
 }
 
 .mollitia-module-sliding-window-breaker-header {
   padding: 10px;
-  border-bottom: 1px solid var(--madoc-heading-underline-color);
+  border-bottom: 1px solid var(--madoc-grey-5);
 }
 
 .mollitia-module-sliding-window-breaker-content {
   display: flex;
   .mollitia-module-sliding-window-breaker-config {
     padding: 10px;
-    border-right: 1px solid var(--madoc-heading-underline-color);
-    .form-control {
+    border-right: 1px solid var(--madoc-grey-5);
+    > div.form-control {
       display: flex;
-      margin-bottom: 5px;
-      label {
-        width: 300px;
+      flex-direction: row;
+      &:not(:last-child) {
+        margin-bottom: 5px;
       }
-      input {
-        width: 200px;
+      > label {
+        margin-right: 10px;
+      }
+      > input {
+        margin-left: auto;
       }
     }
   }

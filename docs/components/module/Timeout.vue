@@ -5,7 +5,10 @@
     </div>
     <div class="mollitia-module-timeout-content">
       <div class="mollitia-module-timeout-config">
-        <div>Delay (in ms): <input v-model.number="delay" @input="update" type="number"/></div>
+        <div class="form-control">
+          <label>Delay (in ms):</label>
+          <input v-model.number="delay" @input="update" type="number"/>
+        </div>
       </div>
       <div class="mollitia-module-timeout-visual">
         <div class="mollitia-module-timeout-percentage">
@@ -37,6 +40,9 @@ export default {
     };
   },
   computed: {
+    time () {
+      return this.$parent.time;
+    },
     style () {
       return {
         'width': `${this.percent}%`,
@@ -54,7 +60,7 @@ export default {
       this.percent = 0;
       this.active = true;
       this.interval = setInterval(() => {
-        this.percent += (100 * 100 / this.delay);
+        this.percent += (100 * 100 / this.time);
         if (this.percent >= 100) {
           clearInterval(this.interval);
         }
@@ -62,6 +68,7 @@ export default {
     },
     onEnd () {
       if (!this.hasRes) {
+        this.percent = 100;
         this.hasRes = true;
         this.failed = false;
         this.active = false;
@@ -104,6 +111,19 @@ div.mollitia-module-timeout {
     > div.mollitia-module-timeout-config {
       padding: 10px;
       border-right: 1px solid var(--madoc-grey-5);
+      > div.form-control {
+        display: flex;
+        flex-direction: row;
+        &:not(:last-child) {
+          margin-bottom: 5px;
+        }
+        > label {
+          margin-right: 10px;
+        }
+        > input {
+          margin-left: auto;
+        }
+      }
     }
     > div.mollitia-module-timeout-visual {
       flex-grow: 1;

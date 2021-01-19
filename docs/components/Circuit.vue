@@ -7,8 +7,8 @@
       <slot/>
     </div>
     <div class="mollitia-circuit-request">
-      <div>Simulate Request</div>
-      <div>Time (in ms): <input v-model.number="time" type="number"/></div>
+      <div class="form-control"><label>Simulate Request</label></div>
+      <div class="form-control"><label>Time (in ms):</label><input v-model.number="time" type="number"/></div>
       <div>
         <button @click="triggerRequest" :disabled="disabled">Send Request</button>
         <Toggle v-if="canFail" pre-label="Failure" post-label="Success" v-model="shouldSucceed"/>
@@ -137,10 +137,17 @@ div.mollitia-circuit {
   > div.mollitia-circuit-request {
     padding: 10px;
     border-bottom: 1px solid var(--madoc-grey-5);
+    > div.form-control {
+      > label {
+        margin-right: 10px;
+      }
+    }
   }
   > div.mollitia-circuit-logs {
-    height: 4em;
-    max-height: 4em;
+    padding: 10px;
+    min-height: 4em;
+    max-height: 14em;
+    resize: vertical;
     overflow: auto;
   }
 }

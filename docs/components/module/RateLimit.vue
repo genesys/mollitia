@@ -6,11 +6,11 @@
     <div class="mollitia-module-rate-limit-content">
       <div class="mollitia-module-rate-limit-config">
         <div class="form-control">
-          <label for="limitPeriod">Limit Period (in ms)</label>
+          <label for="limitPeriod">Limit Period (in ms):</label>
           <input v-model.number="limitPeriod" id="limitPeriod" @input="update" type="number"/>
         </div>
         <div class="form-control">
-          <label for="limitForPeriod">Limit For Period</label>
+          <label for="limitForPeriod">Limit For Period:</label>
           <input v-model.number="limitForPeriod" id="limitForPeriod" @input="update" type="number"/>
         </div>
       </div>
@@ -104,7 +104,6 @@ export default {
 
 <style lang="scss" scoped>
 .mollitia-module-rate-limit {
-  padding: 10px;
   border: 1px solid var(--madoc-grey-5);
 }
 .mollitia-module-rate-limit-header {
@@ -116,14 +115,17 @@ export default {
   .mollitia-module-rate-limit-config {
     padding: 10px;
     border-right: 1px solid var(--madoc-grey-5);
-    .form-control {
+    > div.form-control {
       display: flex;
-      margin-bottom: 5px;
-      label {
-        width: 150px;
+      flex-direction: row;
+      &:not(:last-child) {
+        margin-bottom: 5px;
       }
-      input {
-        width: 200px;
+      > label {
+        margin-right: 10px;
+      }
+      > input {
+        margin-left: auto;
       }
     }
   }
@@ -135,8 +137,7 @@ export default {
     .mollitia-module-rate-limit-result {
       height: 50%;
       display: flex;
-      margin-top: 10px;
-
+      align-items: center;
       .circle {
         width: 20px;
         height: 20px;
@@ -149,6 +150,7 @@ export default {
       }
     }
     .mollitia-module-rate-limit-duration {
+      border-top: 1px solid var(--madoc-grey-5);
       height: 50%;
       position: relative;
       .mollitia-module-rate-limit-title {

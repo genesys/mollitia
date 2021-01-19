@@ -5,8 +5,14 @@
     </div>
     <div class="mollitia-module-cache-content">
       <div class="mollitia-module-cache-config">
-        <div>TTL (in ms): <input v-model.number="ttl" @input="update" type="number"/></div>
-        <div>Clear Interval (in ms): <input v-model.number="clearanceInterval" @input="update" type="number"/></div>
+        <div class="form-control">
+          <label>TTL (in ms):</label>
+          <input v-model.number="ttl" @input="update" type="number"/>
+        </div>
+        <div class="form-control">
+          <label>Clear Interval (in ms):</label>
+          <input v-model.number="clearanceInterval" @input="update" type="number"/>
+        </div>
       </div>
       <div class="mollitia-module-cache-visual">
         <div class="mollitia-module-cache-time">
@@ -140,6 +146,19 @@ div.mollitia-module-cache {
     > div.mollitia-module-cache-config {
       padding: 10px;
       border-right: 1px solid var(--madoc-grey-5);
+      > div.form-control {
+        display: flex;
+        flex-direction: row;
+        &:not(:last-child) {
+          margin-bottom: 5px;
+        }
+        > label {
+          margin-right: 10px;
+        }
+        > input {
+          margin-left: auto;
+        }
+      }
     }
     > div.mollitia-module-cache-visual {
       flex-grow: 1;
@@ -159,6 +178,7 @@ div.mollitia-module-cache {
       > div.mollitia-module-cache-percentage {
         position: relative;
         height: 50%;
+        border-top: 1px solid var(--madoc-grey-5);
         > div.mollitia-module-cache-title {
           position: absolute;
           top: 0;

@@ -5,9 +5,18 @@
     </div>
     <div class="mollitia-module-bulkhead-content">
       <div class="mollitia-module-bulkhead-config">
-        <div>Concurrent Requests: <input v-model.number="concurrentSize" @input="update" type="number"/></div>
-        <div>Queue Size: <input v-model.number="queueSize" @input="update" type="number"/></div>
-        <div>Max Queue Wait (in ms): <input v-model.number="maxQueueWait" @input="update" type="number"/></div>
+        <div class="form-control">
+          <label>Concurrent Requests:</label>
+          <input v-model.number="concurrentSize" @input="update" type="number"/>
+        </div>
+        <div class="form-control">
+          <label>Queue Size:</label>
+          <input v-model.number="queueSize" @input="update" type="number"/>
+        </div>
+        <div class="form-control">
+          <label>Max Queue Wait (in ms):</label>
+          <input v-model.number="maxQueueWait" @input="update" type="number"/>
+        </div>
       </div>
       <div class="mollitia-module-bulkhead-visual">
         <div class="mollitia-module-bulkhead-visual-concurrent-container">
@@ -107,6 +116,19 @@ div.mollitia-module-bulkhead {
     > div.mollitia-module-bulkhead-config {
       padding: 10px;
       border-right: 1px solid var(--madoc-grey-5);
+      > div.form-control {
+        display: flex;
+        flex-direction: row;
+        &:not(:last-child) {
+          margin-bottom: 5px;
+        }
+        > label {
+          margin-right: 10px;
+        }
+        > input {
+          margin-left: auto;
+        }
+      }
     }
     > div.mollitia-module-bulkhead-visual {
       flex-grow: 1;
@@ -115,6 +137,8 @@ div.mollitia-module-bulkhead {
         width: 100%;
         display: flex;
         align-items: center;
+        padding: 0 10px;
+        box-sizing: border-box;
         > div.title {
           align-items: center;
           display: flex;
@@ -122,10 +146,13 @@ div.mollitia-module-bulkhead {
         }
       }
       > div.mollitia-module-bulkhead-visual-queue-container {
+        border-top: 1px solid var(--madoc-grey-5);
         height: 50%;
         width: 100%;
         display: flex;
         align-items: center;
+        padding: 0 10px;
+        box-sizing: border-box;
         > div.title {
           align-items: center;
           display: flex;
