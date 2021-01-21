@@ -34,7 +34,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
     - name: Install
-      run: npm install
+      run: npm install && cd docs && npm install
     - name: Lint
       run: npm run lint
     - name: Build
