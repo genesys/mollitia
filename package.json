@@ -9,6 +9,32 @@
     "dist"
   ],
   "author": "Jérémie Pichon <jeremie.pichon@genesys.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genesys/mollitia"
+  },
+  "bugs": {
+    "url": "https://github.com/genesys/mollitia/issues"
+  },
+  "keywords": [
+    "mollitia",
+    "resiliency",
+    "resilience",
+    "polly",
+    "node",
+    "nodejs",
+    "javascript",
+    "typescript",
+    "circuit-breaker",
+    "fallback",
+    "cache",
+    "retry",
+    "timeout",
+    "ratelimit",
+    "bulkhead",
+    "fault-handling"
+  ],
   "scripts": {
     "install": "cd docs && npm install",
     "dev": "npm run build:lib && run-p dev:lib dev:docs",
