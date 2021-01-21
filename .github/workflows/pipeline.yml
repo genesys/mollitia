@@ -18,51 +18,47 @@ jobs:
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
         fetch-depth: 0
-    - name: gitlog
-      run: git --no-pager log
-    - name: changelog
-      run: npx auto-changelog --hide-credit --package --commit-limit false --unreleased --template ./devops/changelog/keep.hbs --stdout
-    # - uses: actions/setup-node@v1
-    #   with:
-    #     node-version: '12.x'
-    #     registry-url: 'https://registry.npmjs.org'
-    # - name: Cache node modules
-    #   uses: actions/cache@v2
-    #   env:
-    #     cache-name: cache-mollitia-node-modules
-    #   with:
-    #     path: '**/node_modules'
-    #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-build-${{ env.cache-name }}-
-    #       ${{ runner.os }}-build-
-    #       ${{ runner.os }}-
-    # - name: Install
-    #   run: npm install
-    # - name: Lint
-    #   run: npm run lint
-    # - name: Build
-    #   run: npm run build
-    # - name: Test
-    #   run: npm run test
-    # - name: Env
-    #   id: env
-    #   run: |
-    #     LATEST=`npm view . version`
-    #     CURRENT=`cat package.json | jq -r .version`
-    #     if [ "$LATEST" != "$CURRENT" ]
-    #     then
-    #       echo ::set-output name=VERSION::$CURRENT
-    #       echo ::set-output name=SHOULD_RELEASE::true
-    #       echo current version is $CURRENT
-    #     fi
-    # - name: Release
-    #   if: github.event_name == 'push' && steps.env.outputs.SHOULD_RELEASE == 'true'
-    #   run: npx release-it --ci --verbose --disable-metrics --increment=${{steps.env.outputs.VERSION}}
-    #   env:
-    #     GIT_AUTHOR_NAME: Github Action
-    #     GIT_AUTHOR_EMAIL: action@github.com
-    #     GIT_COMMITTER_NAME: Github Action
-    #     GIT_COMMITTER_EMAIL: action@github.com
-    #     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-    #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+        registry-url: 'https://registry.npmjs.org'
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-mollitia-node-modules
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Install
+      run: npm install
+    - name: Lint
+      run: npm run lint
+    - name: Build
+      run: npm run build
+    - name: Test
+      run: npm run test
+    - name: Env
+      id: env
+      run: |
+        LATEST=`npm view . version`
+        CURRENT=`cat package.json | jq -r .version`
+        if [ "$LATEST" != "$CURRENT" ]
+        then
+          echo ::set-output name=VERSION::$CURRENT
+          echo ::set-output name=SHOULD_RELEASE::true
+          echo current version is $CURRENT
+        fi
+    - name: Release
+      if: github.event_name == 'push' && steps.env.outputs.SHOULD_RELEASE == 'true'
+      run: npx release-it --ci --verbose --disable-metrics --increment=${{steps.env.outputs.VERSION}}
+      env:
+        GIT_AUTHOR_NAME: Github Action
+        GIT_AUTHOR_EMAIL: action@github.com
+        GIT_COMMITTER_NAME: Github Action
+        GIT_COMMITTER_EMAIL: action@github.com
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
