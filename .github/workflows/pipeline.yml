@@ -20,6 +20,8 @@ jobs:
         fetch-depth: 0
     - name: gitlog
       run: git --no-pager log
+    - name: changelog
+      run: npx auto-changelog --hide-credit --package --commit-limit false --unreleased --template ./devops/changelog/keep.hbs --stdout
     # - uses: actions/setup-node@v1
     #   with:
     #     node-version: '12.x'
