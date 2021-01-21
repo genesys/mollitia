@@ -1,8 +1,16 @@
 # Changelog
 
-## [0.0.2](https://github.com/genesys/mollitia/compare/0.0.1...0.0.2)
+## [0.0.3](https://github.com/genesys/mollitia/compare/0.0.2...0.0.3)
+
+- fix typo in package.json [`#1`](https://github.com/genesys/mollitia/pull/1)
+- update package.json and pipeline [`6ec8ffa`](https://github.com/genesys/mollitia/commit/6ec8ffa851cd34d1ad8015e2acbae1e006918fb6)
+- update version [`125a2e3`](https://github.com/genesys/mollitia/commit/125a2e34a30c544a33490e78ed637fa30137023a)
+- update package.json [`1f57488`](https://github.com/genesys/mollitia/commit/1f57488282836515093295cb9d1316e4db37fcc8)
+
+## [0.0.2](https://github.com/genesys/mollitia/compare/0.0.1...0.0.2) (2021-01-21)
 
 - fix pipeline [`db03c7d`](https://github.com/genesys/mollitia/commit/db03c7dccf016909be8e7244925289041860f4f8)
+- Release mollitia@0.0.2 [`0f7ae49`](https://github.com/genesys/mollitia/commit/0f7ae49c4fa27a812049ab547809a801abab6764)
 - update pipeline to check changelog [`a3c3927`](https://github.com/genesys/mollitia/commit/a3c3927728978ed9a94128f7fc7ffc7b39927752)
 - update pipeline to add changelog [`1590c80`](https://github.com/genesys/mollitia/commit/1590c809d1f8e7f8353df9e8f71659ca00974f5c)
 
