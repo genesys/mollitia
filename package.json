@@ -36,7 +36,6 @@
     "fault-handling"
   ],
   "scripts": {
-    "install": "cd docs && npm install",
     "dev": "npm run build:lib && run-p dev:lib dev:docs",
     "dev:lib": "run-p dev:lib:tsc dev:lib:rollup",
     "dev:lib:tsc": "tsc --watch --module commonjs",
