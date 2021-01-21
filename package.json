@@ -1,7 +1,7 @@
 {
   "name": "mollitia",
   "version": "0.0.2",
-  "description": "JavaScript Circuit Breaker Library",
+  "description": "JavaScript Resilience Library",
   "main": "dist/mollitia.umd.js",
   "module": "dist/mollitia.es5.js",
   "typings": "dist/types/index.d.ts",
