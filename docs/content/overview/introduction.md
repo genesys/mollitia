@@ -46,5 +46,5 @@ If you want to create your own, [find out how here](/api/create-addon).
 A list of official `addons` can be found *just below*.
 
 ### Core Addons
-<!-- TODO change link -->
-* **[Prometheus](http://135.39.45.156:8081)**: Adds multiple metrics to your modules and circuits.
+<!-- TODO add prometheus link -->
+<!-- * **[Prometheus](http://135.39.45.156:8081)**: Adds multiple metrics to your modules and circuits. -->
