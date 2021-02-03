@@ -6,11 +6,6 @@
 The purpose of such kind of tool is to help organize **asynchronous operations** under a highly customizable circuit that helps managing error use cases.
 When everything is falling apart, it stops the classic flow and uses modules to manage failures.
 
-## Documentation
-
-<!-- TODO Change -->
-[Full documentation website can be find here.](http://135.39.45.156:8080)
-
 ## Installation
 
 ### With Node or any web UI Framework
