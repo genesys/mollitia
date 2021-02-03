@@ -20,5 +20,5 @@ export default {
       return this.$router.options.base.slice(0, -1);
     }
   }
-}
+};
 </script>
