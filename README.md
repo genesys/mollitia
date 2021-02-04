@@ -2,7 +2,7 @@
 
 <!-- TODO Badges -->
 
-`Mollitia` is a **JavaScript Resilience** library that works on Node and on browsers.
+`Mollitia` is a **JavaScript Resilience** library working on Node and on browsers.
 The purpose of such kind of tool is to help organize **asynchronous operations** under a highly customizable circuit that helps managing error use cases.
 When everything is falling apart, it stops the classic flow and uses modules to manage failures.
 
