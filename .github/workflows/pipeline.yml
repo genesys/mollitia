@@ -52,6 +52,12 @@ jobs:
           echo ::set-output name=SHOULD_RELEASE::true
           echo current version is $CURRENT
         fi
+    - name: Documentation
+      if: github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        personal_token: ${{ secrets.ACCESS_TOKEN }}
+        publish_dir: ./docs/dist
     - name: Release
       if: github.event_name == 'push' && steps.env.outputs.SHOULD_RELEASE == 'true'
       run: npx release-it --ci --verbose --disable-metrics --increment=${{steps.env.outputs.VERSION}}

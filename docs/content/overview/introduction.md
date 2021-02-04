@@ -18,6 +18,14 @@ You can then execute a asynchronous operation on the circuit, and the attached m
 <!-- TODO add playground examples, accessible with /api/playground#example-1 -->
 <!-- * The order of modules have importance, and you can do cool stuff with it, [more on that in the Playground examples.](/api/playground). -->
 
+## Modules
+
+`Modules` can be attached to your circuit, you should take a look at [the circuit documentation](/api/circuit) before looking at them.
+
+You can modify your circuit behavior by adding `modules`, some basic resiliency patterns are already available directly in the library, find the list *just below*.
+
+If your application need a more specific behavior, you can create your own module, [folowing this documentation](/api/create-module).
+
 ## Core Modules
 
 * **[Fallback](/api/module/fallback)**: Allows filtering and planning when errors are happening.
@@ -31,9 +39,12 @@ You can then execute a asynchronous operation on the circuit, and the attached m
 
 ## Addons
 
-`Mollitia` has been designed to be customized.
-[Modules can be created](/api/create-module), and [addons can be added](/api/create-addon).
+`Addons` can modify or add features of `Mollitia`, for example, it can be useful to create an addon in order to modify the behavior of all modules.
+
+If you want to create your own, [find out how here](/api/create-addon).
+
+A list of official `addons` can be found *just below*.
 
 ### Core Addons
-<!-- TODO change link -->
-* **[Prometheus](http://135.39.45.156:8081)**: Adds multiple metrics to your modules and circuits.
+<!-- TODO add prometheus link -->
+<!-- * **[Prometheus](http://135.39.45.156:8081)**: Adds multiple metrics to your modules and circuits. -->

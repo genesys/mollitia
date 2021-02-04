@@ -26,11 +26,11 @@ links:
         path: /api/module/breaker/sliding/count
       - title: Time Breaker
         path: /api/module/breaker/sliding/time
-  - group: Core Addons
-    links:
-      - title: Prometheus
-        # TODO change link
-        path: http://135.39.45.156:8081
+  # TODO add when possible
+  # - group: Core Addons
+  #   links:
+  #     - title: Prometheus
+  #       path: http://135.39.45.156:8081
   - group: Customization
     links:
       - title: Create a module

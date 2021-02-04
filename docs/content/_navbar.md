@@ -7,5 +7,5 @@ links:
   #   path: /playground
 # TODO change url
 github:
-  link: https://github.com/mollitia/mollitia
+  link: https://github.com/genesys/mollitia
 ---

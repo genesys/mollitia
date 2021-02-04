@@ -1,3 +1,6 @@
+const dev = process.env.NODE_ENV === 'development';
+const publicPath = dev ? '' : '/mollitia/';
+
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
@@ -11,9 +14,9 @@ export default {
       { hid: 'description', name: 'description', content: 'JavaScript Resilience Library' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', type: 'text/css', href: '/roboto/font.css' },
-      { rel: 'stylesheet', type: 'text/css', href: '/material-icons/font.css' }
+      { rel: 'icon', type: 'image/x-icon', href: `${publicPath}favicon.ico` },
+      { rel: 'stylesheet', type: 'text/css', href: `${publicPath}roboto/font.css` },
+      { rel: 'stylesheet', type: 'text/css', href: `${publicPath}material-icons/font.css` }
     ]
   },
 
@@ -58,9 +61,12 @@ export default {
       }
     }
   },
-
+  router: {
+    base: publicPath
+  },
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
+    publicPath: dev ? '/_nuxt/' : './_nuxt/'
   },
   generate: {
     routes: [

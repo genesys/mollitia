@@ -11,8 +11,7 @@ When everything is falling apart, it stops the classic flow and uses modules to 
 
 ## Documentation
 
-<!-- TODO Change -->
-[Full documentation website can be find here.](http://135.39.45.156:8080)
+[Full documentation website can be find here.](https://genesys.github.io/mollitia/)
 
 ## Installation
 
@@ -59,12 +58,10 @@ await circuit.fn(yourFunction).execute('dummy');
 The point of `Mollitia` is to get every **Resilience patterns** into one library.
 It is very similar at what does [Resilience4j](https://github.com/resilience4j/resilience4j) on **Java**, but on **Node**.
 
-<!-- TODO change links -->
-
 - Works on Node and on browser (even **Internet Explorer 11**, wow).
-- Implements a wide variety of Resilience patterns, [more on that here.](http://135.39.45.156:8080)
+- Implements a wide variety of Resilience patterns.
 - Has **Method Agnostic** circuits, meaning you don't have to create one circuit per function.
-- Supports addons, [more on that here.](http://135.39.45.156:8080)
+- Supports addons.
 
 ## Comparison with other libraries
 

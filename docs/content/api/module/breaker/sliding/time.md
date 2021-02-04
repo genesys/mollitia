@@ -20,7 +20,7 @@ When the circuit is closed, a sliding window is used to store the outcome of cal
 The time-based sliding window calculates the outcome of the last calls receiving during the last N milliseconds, and decides if the circuit should be opened (if the failure or slow call rate thresholds are exceeded)
 For example, if the count window size is 10000, the circular array stores the requests that occurred during the last 10s (with a maximum of 1000 elements in the array)
 
-<p class="flex-center-row" align="center"><img src="/img/circuit-breaker-diagram.png" alt="Circuit Breaker - Diagram"/></p>
+<p class="flex-center-row" align="center"><pg-img src="/img/circuit-breaker-diagram.png" alt="Circuit Breaker - Diagram"></pg-img></p>
 
 ## Options
 
