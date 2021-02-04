@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        token: ${{ secrets.ACCESS_TOKEN }}
+        token: ${{((github.event_name == 'push') && secrets.ACCESS_TOKEN) || ((github.event_name != 'push') && secrets.GITHUB_TOKEN)}}
         fetch-depth: 0
     - uses: actions/setup-node@v1
       with:
