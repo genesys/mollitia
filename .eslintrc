@@ -1,6 +1,14 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["./tsconfig.eslint.json"]
+      }
+    }
+  ],
   "plugins": [
     "@typescript-eslint"
   ],
@@ -8,5 +16,12 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
-  ]
+  ],
+  "rules": {
+    "max-len": [2, { "code": 160 }],
+    "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true }],
+    "no-return-await": [2],
+    "@typescript-eslint/await-thenable": [2],
+    "@typescript-eslint/no-unused-vars": [2]
+  }
 }

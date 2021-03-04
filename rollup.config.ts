@@ -16,7 +16,6 @@ export default {
     { file: pkg.module, format: 'es', sourcemap: true },
     { file: docsPackage, format: 'es', sourcemap: true }
   ],
-  external: [],
   watch: {
     include: 'src/**'
   },

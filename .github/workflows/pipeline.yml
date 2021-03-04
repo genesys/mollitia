@@ -52,6 +52,19 @@ jobs:
           echo ::set-output name=SHOULD_RELEASE::true
           echo current version is $CURRENT
         fi
+    - name: Fix Coverage Paths
+      working-directory: ./coverage
+      run: |
+        sed -i 's/\/home\/runner\/work\/mollitia\/mollitia\//\/github\/workspace\//g' lcov.info
+        sed -i 's/\/home\/runner\/work\/mollitia\/mollitia\//\/github\/workspace\//g' clover.xml
+    - name: Sonar
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectVersion=${{steps.env.outputs.VERSION}}
     - name: Documentation
       if: github.event_name == 'push'
       uses: peaceiris/actions-gh-pages@v3

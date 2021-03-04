@@ -21,7 +21,7 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
   private filterCalls(): void {
     let nbCalls = this.callsInClosedState.length;
     if (nbCalls >= this.maxSize) {
-      this.callsInClosedState.shift;
+      this.callsInClosedState.shift();
       nbCalls--;
     }
     let stillOk = true;

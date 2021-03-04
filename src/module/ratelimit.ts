@@ -29,7 +29,7 @@ export class RatelimitError extends Error {
   }
 }
 /**
- * TODO
+ * The Ratelimit module can be used to avoid sending too many requests during a configurable period of time.
  */
 export class Ratelimit extends Module {
   // Public Attributes

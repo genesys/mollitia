@@ -54,9 +54,7 @@ export abstract class CircuitFactory {
 }
 
 const undefinedFunc = async () => {
-  return new Promise((resolve, reject) => {
-    reject(new NoFuncError());
-  });
+  return Promise.reject(new NoFuncError());
 };
 
 /**

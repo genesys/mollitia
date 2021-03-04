@@ -26,11 +26,10 @@ links:
         path: /api/module/breaker/sliding/count
       - title: Time Breaker
         path: /api/module/breaker/sliding/time
-  # TODO add when possible
-  # - group: Core Addons
-  #   links:
-  #     - title: Prometheus
-  #       path: http://135.39.45.156:8081
+  - group: Core Addons
+    links:
+      - title: Prometheus
+        path: https://genesys.github.io/mollitia-prometheus/
   - group: Customization
     links:
       - title: Create a module

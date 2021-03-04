@@ -4,6 +4,13 @@ import { Circuit, CircuitFunction } from '../../circuit';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ErrorCallback = (err: any) => boolean;
 
+type BreakerResultResponse = {
+  requestResult: SlidingWindowRequestResult;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  response: any;
+  shouldReportFailure: boolean;
+}
+
 /**
  * Returned when a breaker module is in open state.
  * @param message Circuit is opened
@@ -52,7 +59,8 @@ export abstract class SlidingWindowBreakerOptions extends ModuleOptions {
    */
   halfOpenStateMaxDelay?: number;
   /**
-   * Specifies the maximum number of calls (if count breaker is user), or the sliding duration (in ms, if time breaker is used) used to calculate failure and slow call rate percentages
+   * Specifies the maximum number of calls (if count breaker is user),
+   * or the sliding duration (in ms, if time breaker is used) used to calculate failure and slow call rate percentages
    */
   slidingWindowSize?: number;
   /**
@@ -102,7 +110,8 @@ export abstract class SlidingWindowBreaker<T> extends Module {
    */
   public halfOpenStateMaxDelay: number;
   /**
-   * Specifies the maximum number of calls (if count breaker is user), or the sliding duration (in ms, if time breaker is used) used to calculate failure and slow call rate percentages
+   * Specifies the maximum number of calls (if count breaker is user),
+   * or the sliding duration (in ms, if time breaker is used) used to calculate failure and slow call rate percentages
    */
   public slidingWindowSize: number;
   /**
@@ -151,7 +160,8 @@ export abstract class SlidingWindowBreaker<T> extends Module {
     this.failureRateThreshold = (options?.failureRateThreshold !== undefined) ? options.failureRateThreshold : 50;
     this.slowCallDurationThreshold = (options?.slowCallDurationThreshold !== undefined) ? options.slowCallDurationThreshold : 60000;
     this.slowCallRateThreshold = (options?.slowCallRateThreshold !== undefined) ? options?.slowCallRateThreshold : 100;
-    this.permittedNumberOfCallsInHalfOpenState = (options?.permittedNumberOfCallsInHalfOpenState !== undefined) ? options.permittedNumberOfCallsInHalfOpenState : 2;
+    this.permittedNumberOfCallsInHalfOpenState =
+      (options?.permittedNumberOfCallsInHalfOpenState !== undefined) ? options.permittedNumberOfCallsInHalfOpenState : 2;
     this.nbCallsInHalfOpenedState = 0;
     this.callsInHalfOpenedState = [];
     this.callsInClosedState = [];
@@ -182,15 +192,15 @@ export abstract class SlidingWindowBreaker<T> extends Module {
     return _exec;
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async _promiseBreaker<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
+  private async _promiseBreaker<T1> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T1> {
     switch (this.state) {
       case BreakerState.OPENED:
         this.logger?.debug(`${circuit.name}/${this.name} - Circuit is opened`);
         return Promise.reject(new BreakerError());
       case BreakerState.HALF_OPENED:
-        return await this.executeInHalfOpened(promise, ...params);
+        return this.executeInHalfOpened(promise, ...params);
       case BreakerState.CLOSED:
-        return await this.executeInClosed(promise, ...params);
+        return this.executeInClosed(promise, ...params);
     }
   } 
 
@@ -224,7 +234,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected executePromise(promise: CircuitFunction, ...params: any[]): Promise<{requestResult: SlidingWindowRequestResult, response: any, shouldReportFailure: boolean}> {
+  protected executePromise(promise: CircuitFunction, ...params: any[]): Promise<BreakerResultResponse> {
     const beforeRequest = (new Date()).getTime();
     return promise(...params)
       .then((res) => {

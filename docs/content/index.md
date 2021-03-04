@@ -3,7 +3,11 @@ title: Mollitia
 description: JavaScript Resilience Library
 ---
 
-<!-- TODO Badges -->
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=genesys_mollitia&metric=alert_status)](https://sonarcloud.io/dashboard?id=genesys_mollitia)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=genesys_mollitia&metric=coverage)](https://sonarcloud.io/dashboard?id=genesys_mollitia)
+[![Version](https://img.shields.io/npm/v/mollitia)](https://www.npmjs.com/package/mollitia)
+[![Downloads](https://img.shields.io/npm/dt/mollitia)](https://www.npmjs.com/package/mollitia)
+[![License](https://img.shields.io/npm/l/mollitia)](https://github.com/cadgerfeast/mollitia/blob/master/LICENSE)
 
 `Mollitia` is a **JavaScript Resilience** library that works on Node and on browsers.
 The purpose of such kind of tool is to help organize **asynchronous operations** under a highly customizable circuit that helps managing error use cases.
@@ -11,7 +15,7 @@ When everything is falling apart, it stops the classic flow and uses modules to 
 
 ## Documentation
 
-[Full documentation website can be find here.](https://genesys.github.io/mollitia/)
+[Full documentation website can be found here.](https://genesys.github.io/mollitia/)
 
 ## Installation
 
