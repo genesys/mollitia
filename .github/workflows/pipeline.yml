@@ -53,11 +53,13 @@ jobs:
           echo current version is $CURRENT
         fi
     - name: Fix Coverage Paths
+      if: github.event_name == 'push'
       working-directory: ./coverage
       run: |
         sed -i 's/\/home\/runner\/work\/mollitia\/mollitia\//\/github\/workspace\//g' lcov.info
         sed -i 's/\/home\/runner\/work\/mollitia\/mollitia\//\/github\/workspace\//g' clover.xml
     - name: Sonar
+      if: github.event_name == 'push'
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
