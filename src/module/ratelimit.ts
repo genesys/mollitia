@@ -22,8 +22,9 @@ export abstract class RatelimitOptions extends ModuleOptions {
  */
 export class RatelimitError extends Error {
   public remainingTimeInRatelimit: number;
-  constructor(remainingTimeInRatelimit: number) {
+  constructor(remainingTimeInRatelimit: number, name: string) {
     super('Ratelimited');
+    this.name = name;
     this.remainingTimeInRatelimit = remainingTimeInRatelimit;
     Object.setPrototypeOf(this, RatelimitError.prototype);
   }
@@ -76,7 +77,7 @@ export class Ratelimit extends Module {
       } else {
         this.logger?.debug(`${circuit.name}/${this.name} - Ratelimited`);
         this.emit('ratelimit', circuit);
-        return Promise.reject(new RatelimitError(this.limitPeriod - deltaSinceFirstRequest));
+        return Promise.reject(new RatelimitError(this.limitPeriod - deltaSinceFirstRequest, this.name));
       }
     }
   }
