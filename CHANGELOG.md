@@ -1,8 +1,24 @@
 # Changelog
 
-## [0.0.3](https://github.com/genesys/mollitia/compare/0.0.2...0.0.3)
+## [0.0.4](https://github.com/genesys/mollitia/compare/0.0.3...0.0.4)
+
+- enhancement name rateLimit [`#5`](https://github.com/genesys/mollitia/pull/5)
+- bump version 0.0.4, remove sonar from pr, [`3b6a7a7`](https://github.com/genesys/mollitia/commit/3b6a7a7544fe1bca78eab02e4cd77c244a19500e)
+- add readme badges, sonar fixes [`3dfc7f5`](https://github.com/genesys/mollitia/commit/3dfc7f5a2c9bb0965c723aca41a19bafb7bd962e)
+- upgrade typescript related dev dependencies [`3b19d92`](https://github.com/genesys/mollitia/commit/3b19d92e3d0d631f6290ed7a6c3b7003aba940cc)
+- fix pipeline [`7b66d56`](https://github.com/genesys/mollitia/commit/7b66d5691d5dddb8ec0405decbe73704aa44bbde)
+- fix nuxt relative path issue [`3c1bba6`](https://github.com/genesys/mollitia/commit/3c1bba6b6a6f0b9d7da16cccd9927ffbe6e26407)
+- better module and addon creation docs [`f03864e`](https://github.com/genesys/mollitia/commit/f03864ea203a2738992d3bd3228dfeffbfdb9ce6)
+- add gh-pages in pipeline [`5777e02`](https://github.com/genesys/mollitia/commit/5777e0284184b36ca49c80809a66c53dc22141b6)
+- fix pipeline for Pull Request [`2ed721d`](https://github.com/genesys/mollitia/commit/2ed721d7f199a6fd98fdba72d3a1363a1fc5645b)
+- fix github link issue [`18cbadd`](https://github.com/genesys/mollitia/commit/18cbaddcd97d279bb6c8ea85ced664c7db07a534)
+- fix lint issue [`b3fe322`](https://github.com/genesys/mollitia/commit/b3fe3227e37da37a8975f894708cf30ca4a6c8f1)
+- update package.json to install in docs [`db084ae`](https://github.com/genesys/mollitia/commit/db084ae0ccabfe0982aee66b287419c5fc9d0ff0)
+
+## [0.0.3](https://github.com/genesys/mollitia/compare/0.0.2...0.0.3) (2021-01-21)
 
 - fix typo in package.json [`#1`](https://github.com/genesys/mollitia/pull/1)
+- Release mollitia@0.0.3 [`2792059`](https://github.com/genesys/mollitia/commit/2792059511bb5ca4aa72a8c0dfd22f6fe34bfdfd)
 - update package.json and pipeline [`6ec8ffa`](https://github.com/genesys/mollitia/commit/6ec8ffa851cd34d1ad8015e2acbae1e006918fb6)
 - update version [`125a2e3`](https://github.com/genesys/mollitia/commit/125a2e34a30c544a33490e78ed637fa30137023a)
 - update package.json [`1f57488`](https://github.com/genesys/mollitia/commit/1f57488282836515093295cb9d1316e4db37fcc8)
