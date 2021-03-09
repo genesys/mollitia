@@ -49,7 +49,7 @@ describe('Ratelimit', () => {
     await delay(100);
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');//t0 + 1200ms: Ok (600, 1000, 1200)
     await delay(300);
-    let result = await expect(circuit.fn(successAsync).execute('dummy')).rejects;  //t0 + 1500: Nok
+    const result = expect(circuit.fn(successAsync).execute('dummy')).rejects;  //t0 + 1500: Nok
     result.toBeInstanceOf(Mollitia.RatelimitError);
     result.toHaveProperty('name', 'name_ratelimit');
     await delay(200);
