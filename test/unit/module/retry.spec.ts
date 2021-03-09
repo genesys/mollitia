@@ -68,6 +68,7 @@ describe('Retry', () => {
     expect(onEvent).toHaveBeenNthCalledWith(6, circuit); // Timeout
   });
   it('should retry every 100ms', async () => {
+    expect.assertions(5);
     const retry = new Mollitia.Retry({
       attempts: 2,
       interval: 500
@@ -93,6 +94,7 @@ describe('Retry', () => {
     expect(onRetry).toHaveBeenNthCalledWith(2, circuit, 2);
   });
   it('should allow to filter for rejections and set retry interval', async () => {
+    expect.assertions(7);
     const retry = new Mollitia.Retry({
       attempts: 2,
       interval: 500,

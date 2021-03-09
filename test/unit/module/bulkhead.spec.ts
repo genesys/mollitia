@@ -23,6 +23,7 @@ describe('Bulkhead', () => {
     failureAsync.mockClear();
   });
   it('should add to concurrent buffer', async () => {
+    expect.assertions(6);
     const bulkhead = new Mollitia.Bulkhead({
       concurrentSize: 2,
       queueSize: 2,

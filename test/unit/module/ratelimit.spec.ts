@@ -23,6 +23,7 @@ describe('Ratelimit', () => {
     failureAsync.mockClear();
   });
   it('With a single ratelimit', async () => {
+    expect.assertions(13);
     const ratelimit = new Mollitia.Ratelimit({
       limitPeriod: 1000,
       limitForPeriod: 3,
