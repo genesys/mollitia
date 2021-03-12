@@ -199,8 +199,8 @@ export abstract class SlidingWindowBreaker<T> extends Module {
         return Promise.reject(new BreakerError());
       case BreakerState.HALF_OPENED:
         return this.executeInHalfOpened(promise, ...params);
-      default:
       case BreakerState.CLOSED:
+        default:
         return this.executeInClosed(promise, ...params);
     }
   } 

@@ -23,6 +23,7 @@
     "no-return-await": [2],
     "consistent-return": [2],
     "semi": [2, "always"],
+    "default-case-last": [2],
     "@typescript-eslint/await-thenable": [2],
     "@typescript-eslint/no-unused-vars": [2]
   }
