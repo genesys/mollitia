@@ -66,34 +66,34 @@ describe('Ratelimit', () => {
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy'); // t0 + 2201: Ok (1700, 2200, 2201)
   });
   it('With two ratelimits', async () => {
-    const ratelimit = new Mollitia.Ratelimit({
-      limitPeriod: 1000,
+    const ratelimit1 = new Mollitia.Ratelimit({
+      limitPeriod: 1500,
       limitForPeriod: 3
     });
     const ratelimit2 = new Mollitia.Ratelimit({
-      limitPeriod: 200,
+      limitPeriod: 500,
       limitForPeriod: 1
     });
     const circuit = new Mollitia.Circuit({
       options: {
         modules: [
           ratelimit2,
-          ratelimit
+          ratelimit1
         ]
       }
     });
-    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');//t0
-    await delay(100);
-    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.RatelimitError);//t0 + 100: Nok (ratelimit2)
-    await delay(100);
-    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');//t0 + 200: Ok (0, 200)
+    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy'); // t0
+    await delay(250);
+    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.RatelimitError); // t0 + 250: Nok (ratelimit2)
+    await delay(350);
+    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');// t0 + 600: Ok
     await delay(500);
-    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');//t0 + 700: Ok (0, 200, 700)
+    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy'); // t0 + 1100: Ok
     await delay(200);
-    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.RatelimitError);//t0 + 900ms: Nok (0,200,700)
+    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.RatelimitError); // t0 + 1300ms: Nok (ratelimit1)
     await delay(400);
-    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');//t0 + 1300ms: Ok (200, 700, 1300)
+    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy'); // t0 + 1600ms: Ok
     await delay(1);
-    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.RatelimitError);//t0 + 1301: NOk (ratelimit2)
+    await expect(circuit.fn(successAsync).execute('dummy')).rejects.toBeInstanceOf(Mollitia.RatelimitError);//t0 + 1601: Nok (ratelimit2)
   });
 });
