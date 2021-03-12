@@ -64,7 +64,7 @@ export class Timeout extends Module {
       .catch((result) => {
         clearTimeout(timeout);
         return Promise.reject(result);
-      })
+      });
     } else {
       return promise(...params);
     }

@@ -128,7 +128,7 @@ describe('Sliding Count Breaker', () => {
     expect(circuit.fn(failureAsync).execute('dummy', 50)).rejects.toEqual('dummy');
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.HALF_OPENED);
     await expect(circuit.fn(successAsync).execute('dummy')).rejects.toThrow('Max allowed requests reached');
-  })
+  });
   it('Slow Requests', async () => {
     const slidingCountBreaker = new Mollitia.SlidingCountBreaker({
       failureRateThreshold: 50,

@@ -6,6 +6,8 @@
 [![Downloads](https://img.shields.io/npm/dt/mollitia)](https://www.npmjs.com/package/mollitia)
 [![License](https://img.shields.io/npm/l/mollitia)](https://github.com/cadgerfeast/mollitia/blob/master/LICENSE)
 
+<p align="center"><br/><img width="200" src="https://genesys.github.io/mollitia/icon.svg" alt="Mollitia Icon"/><br/><br/></p>
+
 `Mollitia` is a **JavaScript Resilience** library that works on Node and on browsers.
 The purpose of such kind of tool is to help organize **asynchronous operations** under a highly customizable circuit that helps managing error use cases.
 When everything is falling apart, it stops the classic flow and uses modules to manage failures.

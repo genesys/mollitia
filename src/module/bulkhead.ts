@@ -127,7 +127,7 @@ export class Bulkhead extends Module {
           this.queueBuffer.splice(this.queueBuffer.indexOf(ref), 1);
           resolveDisposable.dispose();
           rejectDisposable.dispose();
-          reject(new BulkheadQueueWaitError())
+          reject(new BulkheadQueueWaitError());
         }, this.maxQueueWait);
         const executeDisposable = ref.on('execute', () => {
           executeDisposable.dispose();
