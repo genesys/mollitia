@@ -12,6 +12,7 @@ module.exports = {
     "/node_modules",
     "/test"
   ],
+  forceExit: true,
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.ts",
