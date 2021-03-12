@@ -1,0 +1,10 @@
+{
+  "name": "mollitia-docs",
+  "short_name": "mollitia-docs",
+  "icons": [],
+  "start_url": "/mollitia/?standalone=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "black",
+  "lang": "en"
+}
