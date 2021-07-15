@@ -66,6 +66,100 @@ describe('Cache', () => {
     expect(logger.debug).not.toHaveBeenNthCalledWith(3, 'circuit-cache/module-cache - Cache: Hit');
     circuit.dispose();
   });
+
+  it('With multiple modules - Cache module in the middle of the modules - Cache the previous response by reference', async () => {
+    const moduleRetry = new Mollitia.Retry({
+      attempts: 2
+    });
+    const moduleCache = new Mollitia.Cache({
+      name: 'module-cache',
+      logger,
+      ttl: 100
+    });
+    const moduleRateLimit = new Mollitia.Ratelimit({
+      limitPeriod: 1000,
+      limitForPeriod: 3,
+      name: 'dummy-name'
+    });
+
+    const circuit = new Mollitia.Circuit({
+      name: 'circuit-cache',
+      options: {
+        modules: [ moduleRetry, moduleCache, moduleRateLimit ]
+      }
+    });
+    const objRef = {
+      dummy: 'value1',
+      dummy2: 'value2'
+    };
+    await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+    await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+    expect(logger.debug).toHaveBeenNthCalledWith(1, 'circuit-cache/module-cache - Cache: Hit');
+    circuit.dispose();
+  });
+
+  it('With multiple modules - Cache module is the first module - Cache the previous response by reference', async () => {
+    const moduleRetry = new Mollitia.Retry({
+      attempts: 2
+    });
+    const moduleCache = new Mollitia.Cache({
+      name: 'module-cache',
+      logger,
+      ttl: 100
+    });
+    const moduleRateLimit = new Mollitia.Ratelimit({
+      limitPeriod: 1000,
+      limitForPeriod: 3,
+      name: 'dummy-name'
+    });
+
+    const circuit = new Mollitia.Circuit({
+      name: 'circuit-cache',
+      options: {
+        modules: [ moduleCache, moduleRetry, moduleRateLimit ]
+      }
+    });
+    const objRef = {
+      dummy: 'value1',
+      dummy2: 'value2'
+    };
+    await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+    await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+    expect(logger.debug).toHaveBeenNthCalledWith(1, 'circuit-cache/module-cache - Cache: Hit');
+    circuit.dispose();
+  });
+
+  it('With multiple modules - Cache module is the last module - Cache the previous response by reference', async () => {
+    const moduleRetry = new Mollitia.Retry({
+      attempts: 2
+    });
+    const moduleCache = new Mollitia.Cache({
+      name: 'module-cache',
+      logger,
+      ttl: 100
+    });
+    const moduleRateLimit = new Mollitia.Ratelimit({
+      limitPeriod: 1000,
+      limitForPeriod: 3,
+      name: 'dummy-name'
+    });
+
+    const circuit = new Mollitia.Circuit({
+      name: 'circuit-cache',
+      options: {
+        modules: [ moduleRetry, moduleRateLimit, moduleCache ]
+      }
+    });
+    const objRef = {
+      dummy: 'value1',
+      dummy2: 'value2'
+    };
+    await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+    await expect(circuit.fn(successAsync).execute(objRef)).resolves.toEqual(objRef);
+    expect(logger.debug).toHaveBeenNthCalledWith(1, 'circuit-cache/module-cache - Cache: Hit');
+    circuit.dispose();
+  });
+
   it('should have a cache interval', async () => {
     let shouldFail = false;
     const requestAsync = jest.fn().mockImplementation((res: unknown = 'default', delay = 1) => {

@@ -83,7 +83,8 @@ export class Cache extends Module {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async _promiseCache<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T | CacheT<T>> {
     return new Promise((resolve, reject) => {
-      const cacheRes = this.cache.get<CacheT<T>>(promise, ...params);
+      const cacheParams = this.getExecParams(circuit, params);
+      const cacheRes = this.cache.get<CacheT<T>>(circuit.func, ...cacheParams);
       if (cacheRes) {
         if (typeof cacheRes.res === 'object' && this.getInformationFromCache) {
           cacheRes.res._mollitiaIsFromCache = true;
@@ -93,7 +94,7 @@ export class Cache extends Module {
           promise(...params)
             .then((res: CacheT<T>) => {
               if (this.ttl > 0) {
-                this.cache.set(this.ttl, promise, ...params, res);
+                this.cache.set(this.ttl, circuit.func, ...cacheParams, res);
               }
               if (typeof res === 'object' && this.getInformationFromCache) {
                 res._mollitiaIsFromCache = false;
@@ -112,7 +113,7 @@ export class Cache extends Module {
         promise(...params)
           .then((res: CacheT<T>) => {
             if (this.ttl > 0) {
-              this.cache.set(this.ttl, promise, ...params, res);
+              this.cache.set(this.ttl, circuit.func, ...cacheParams, res);
             }
             if (typeof res === 'object' && this.getInformationFromCache) {
               res._mollitiaIsFromCache = false;
