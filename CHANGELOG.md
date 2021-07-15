@@ -1,11 +1,26 @@
 # Changelog
 
-## [0.0.4](https://github.com/genesys/mollitia/compare/0.0.3...0.0.4)
+## [0.0.5](https://github.com/genesys/mollitia/compare/0.0.4...0.0.5)
+
+- fix security issues with dependencies [`9405cdd`](https://github.com/genesys/mollitia/commit/9405cdd035c0d04511795416fcecf851ec4edbe4)
+- Doc: add code snippet for Sliding Count Breaker and Sliding Time Breaker [`851e9ca`](https://github.com/genesys/mollitia/commit/851e9cafbf5a6866bc154f87bdf8d54463f3d1ec)
+- fix issue with cache module [`55fe62d`](https://github.com/genesys/mollitia/commit/55fe62db59b51905cc2cbb28a5ee439c1afd53cc)
+- increase ratelimit delays [`fa8e157`](https://github.com/genesys/mollitia/commit/fa8e1572a25429890c78767f4fcd14b0384ffb42)
+- add mollitia icon, add eslint rules [`e6fca45`](https://github.com/genesys/mollitia/commit/e6fca4576d0b8d98002f18872ec03068f29a1c2e)
+- add assertions count on async tests [`c994cf8`](https://github.com/genesys/mollitia/commit/c994cf810108b909d4d3e0a1ece297cdffe0f2a3)
+- add default-case-last rule, fix sonar issue [`bf115d4`](https://github.com/genesys/mollitia/commit/bf115d497a0acdd40217c5cba6b12dba57523516)
+- bump version 0.0.5 [`932da50`](https://github.com/genesys/mollitia/commit/932da50c85a34e39a84c76237f70ec60a69c6d58)
+- fix for release-it [`90755d5`](https://github.com/genesys/mollitia/commit/90755d58f06c8ccfd06d509d9b187b512e6ae407)
+- fix icon path in static docs [`7d4ceac`](https://github.com/genesys/mollitia/commit/7d4ceac22e8c138baf018c6dd9dd888fc77046b2)
+- temporary force exit tests [`19e3f28`](https://github.com/genesys/mollitia/commit/19e3f2802f01a8e8ac8ea63f51e9fc3c3c33259f)
+
+## [0.0.4](https://github.com/genesys/mollitia/compare/0.0.3...0.0.4) (2021-03-09)
 
 - enhancement name rateLimit [`#5`](https://github.com/genesys/mollitia/pull/5)
 - bump version 0.0.4, remove sonar from pr, [`3b6a7a7`](https://github.com/genesys/mollitia/commit/3b6a7a7544fe1bca78eab02e4cd77c244a19500e)
 - add readme badges, sonar fixes [`3dfc7f5`](https://github.com/genesys/mollitia/commit/3dfc7f5a2c9bb0965c723aca41a19bafb7bd962e)
 - upgrade typescript related dev dependencies [`3b19d92`](https://github.com/genesys/mollitia/commit/3b19d92e3d0d631f6290ed7a6c3b7003aba940cc)
+- Release mollitia@0.0.4 [`ff17b47`](https://github.com/genesys/mollitia/commit/ff17b4757699e62ad0f2006fc7caa7ed53340b0d)
 - fix pipeline [`7b66d56`](https://github.com/genesys/mollitia/commit/7b66d5691d5dddb8ec0405decbe73704aa44bbde)
 - fix nuxt relative path issue [`3c1bba6`](https://github.com/genesys/mollitia/commit/3c1bba6b6a6f0b9d7da16cccd9927ffbe6e26407)
 - better module and addon creation docs [`f03864e`](https://github.com/genesys/mollitia/commit/f03864ea203a2738992d3bd3228dfeffbfdb9ce6)
