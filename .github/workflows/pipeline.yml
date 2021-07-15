@@ -75,7 +75,7 @@ jobs:
         publish_dir: ./docs/dist
     - name: Release
       if: github.event_name == 'push' && steps.env.outputs.SHOULD_RELEASE == 'true'
-      run: npx release-it --ci --verbose --disable-metrics --increment=${{steps.env.outputs.VERSION}}
+      run: npx release-it@14.6.2 --ci --verbose --disable-metrics --increment=${{steps.env.outputs.VERSION}}
       env:
         GIT_AUTHOR_NAME: Github Action
         GIT_AUTHOR_EMAIL: action@github.com
