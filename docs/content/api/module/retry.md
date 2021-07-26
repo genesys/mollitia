@@ -21,7 +21,12 @@ const circuit = new Circuit({
       new Retry({
         attempts: 2, // Will retry two times
         interval: 500, // Will wait 500ms between attempts
-        onRejection: (err) => { // Can help filtering error and modifying the retry behavior
+        onRejection: (err, attempt) => { // Can help filtering error and modifying the retry behavior
+          // Second parameter represent the current attempt
+          // In this example, onRejection will be called 3 times
+          // attempt = 0: first failure
+          // attempt = 1: first retry failure
+          // attempt = 2: second retry failure
           if (err instanceof BrokenError) {
             return false; // Returning false will cancel the retry attempt
           } else if (err instanceof BusyError) {
@@ -46,13 +51,17 @@ const circuit = new Circuit({
 
 ## Events
 
-| Name       | Description                          | Params                                                      |
-|:-----------|:-------------------------------------|:------------------------------------------------------------|
-| `execute`  | Called when the module is executed.  | `Mollitia.Circuit` **circuit**                              |
-| `retry`    | Called when retrying.                | `Mollitia.Circuit` **circuit**, `number` **currentAttempt** |
+| Name                    | Description                                            | Params                                                      |
+|:------------------------|:-------------------------------------------------------|:------------------------------------------------------------|
+| `execute`               | Called when the module is executed.                    | `Mollitia.Circuit` **circuit**                              |
+| `retry`                 | Called when retrying.                                  | `Mollitia.Circuit` **circuit**, `number` **currentAttempt** |
+| `success-without-retry` | Called the module execution succeeds without retrying. | `Mollitia.Circuit` **circuit**                              |
+| `success-with-retry`    | Called the module execution succeeds after retrying.   | `Mollitia.Circuit` **circuit**, `number` **attempts**       |
+| `failure-without-retry` | Called the module execution fails without retrying.    | `Mollitia.Circuit` **circuit**                              |
+| `failure-with-retry`    | Called the module execution fails after retrying.      | `Mollitia.Circuit` **circuit**, `number` **attempts**       |
 
 ## Methods
 
-| Name       | Description                          | Returns                         |
-|:-----------|:-------------------------------------|:-------------------------------|
-| `getExecParams`  | Returns the circuit function parameters.  | `any[]` **params** |
+| Name             | Description                              | Returns                       |
+|:-----------------|:-----------------------------------------|:------------------------------|
+| `getExecParams`  | Returns the circuit function parameters. | `any[]` **params**            |
