@@ -60,8 +60,8 @@ export class Retry extends Module {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async _promiseRetry<T> (circuit: Circuit, attempts: number, promise: CircuitFunction, ...params: any[]): Promise<T> {
     if (attempts - 1 === 0) {
-      this.emit('retry', circuit, this.attempts);
       if (this.attempts) {
+        this.emit('retry', circuit, this.attempts);
         this.logger?.debug(`${circuit.name}/${this.name} - Retry: (${this.attempts}/${this.attempts})`);
       }
       return promise(...params)
