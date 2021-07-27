@@ -1,11 +1,16 @@
 # Changelog
 
-## [0.0.5](https://github.com/genesys/mollitia/compare/0.0.4...0.0.5)
+## [0.0.6](https://github.com/genesys/mollitia/compare/0.0.5...0.0.6)
+
+- better eslint, new retry events [`#6`](https://github.com/genesys/mollitia/pull/6)
+
+## [0.0.5](https://github.com/genesys/mollitia/compare/0.0.4...0.0.5) (2021-07-15)
 
 - fix security issues with dependencies [`9405cdd`](https://github.com/genesys/mollitia/commit/9405cdd035c0d04511795416fcecf851ec4edbe4)
 - Doc: add code snippet for Sliding Count Breaker and Sliding Time Breaker [`851e9ca`](https://github.com/genesys/mollitia/commit/851e9cafbf5a6866bc154f87bdf8d54463f3d1ec)
 - fix issue with cache module [`55fe62d`](https://github.com/genesys/mollitia/commit/55fe62db59b51905cc2cbb28a5ee439c1afd53cc)
 - increase ratelimit delays [`fa8e157`](https://github.com/genesys/mollitia/commit/fa8e1572a25429890c78767f4fcd14b0384ffb42)
+- Release mollitia@0.0.5 [`4a7dd4b`](https://github.com/genesys/mollitia/commit/4a7dd4bc1e984036f8bc0dd91ac22a1da48048fc)
 - add mollitia icon, add eslint rules [`e6fca45`](https://github.com/genesys/mollitia/commit/e6fca4576d0b8d98002f18872ec03068f29a1c2e)
 - add assertions count on async tests [`c994cf8`](https://github.com/genesys/mollitia/commit/c994cf810108b909d4d3e0a1ece297cdffe0f2a3)
 - add default-case-last rule, fix sonar issue [`bf115d4`](https://github.com/genesys/mollitia/commit/bf115d497a0acdd40217c5cba6b12dba57523516)
