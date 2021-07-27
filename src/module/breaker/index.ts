@@ -9,7 +9,7 @@ type BreakerResultResponse = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   response: any;
   shouldReportFailure: boolean;
-}
+};
 
 /**
  * Returned when a breaker module is in open state.
@@ -203,7 +203,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
         default:
         return this.executeInClosed(promise, ...params);
     }
-  } 
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract executeInClosed<T1> (promise: CircuitFunction, ...params: any[]): Promise<T1>;
@@ -221,7 +221,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
       this.nbCallsInHalfOpenedState++;
       const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
       this.callsInHalfOpenedState.push(this.adjustedRequestResult(requestResult, shouldReportFailure));
-    
+
       if (this.callsInHalfOpenedState.length == this.permittedNumberOfCallsInHalfOpenState) {
         this.checkCallRatesHalfOpen(this.open.bind(this), this.close.bind(this));
       }

@@ -1,6 +1,6 @@
 {
   "name": "mollitia",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "JavaScript Resilience Library",
   "main": "dist/mollitia.umd.js",
   "module": "dist/mollitia.es5.js",
@@ -36,6 +36,7 @@
     "fault-handling"
   ],
   "scripts": {
+    "install:all": "npm i && cd ./docs && npm i",
     "dev": "npm run build:lib && run-p dev:lib dev:docs",
     "dev:lib": "run-p dev:lib:tsc dev:lib:rollup",
     "dev:lib:tsc": "tsc --watch --module commonjs",

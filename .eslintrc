@@ -22,9 +22,10 @@
     "no-unused-expressions": [2, { "allowShortCircuit": true, "allowTernary": true }],
     "no-return-await": [2],
     "consistent-return": [2],
-    "semi": [2, "always"],
     "default-case-last": [2],
     "@typescript-eslint/await-thenable": [2],
-    "@typescript-eslint/no-unused-vars": [2]
+    "@typescript-eslint/no-unused-vars": [2],
+    "semi": "off",
+    "@typescript-eslint/semi": [2]
   }
 }

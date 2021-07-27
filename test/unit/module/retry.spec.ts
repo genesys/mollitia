@@ -136,4 +136,154 @@ describe('Retry', () => {
     await delay(1000);
     expect(onRetry).toHaveBeenNthCalledWith(2, circuit, 2);
   });
+  it('should emit success-without-retry events for retries', async () => {
+    const retry = new Mollitia.Retry({
+      attempts: 0,
+      interval: 100
+    });
+    const onSuccessWithoutRetry = jest.fn();
+    retry.on('success-without-retry', onSuccessWithoutRetry);
+    const onSuccessWithRetry = jest.fn();
+    retry.on('success-with-retry', onSuccessWithRetry);
+    const onFailuresWithoutRetry = jest.fn();
+    retry.on('failure-without-retry', onFailuresWithoutRetry);
+    const onFailuresWithRetry = jest.fn();
+    retry.on('failure-with-retry', onFailuresWithRetry);
+    const circuit = new Mollitia.Circuit({
+      options: {
+        modules: [
+          retry
+        ]
+      }
+    });
+    // Success Without Retries
+    await circuit.fn(successAsync).execute('dummy', 100);
+    expect(onSuccessWithoutRetry).toHaveBeenNthCalledWith(1, circuit);
+    retry.attempts = 1;
+    await circuit.fn(successAsync).execute('dummy', 100);
+    retry.attempts = 2;
+    await circuit.fn(successAsync).execute('dummy', 100);
+    expect(onSuccessWithoutRetry).toHaveBeenNthCalledWith(1, circuit);
+    expect(onSuccessWithoutRetry).toHaveBeenNthCalledWith(2, circuit);
+    expect(onSuccessWithoutRetry).toHaveBeenNthCalledWith(3, circuit);
+    expect(onSuccessWithRetry).not.toHaveBeenCalled();
+    expect(onFailuresWithoutRetry).not.toHaveBeenCalled();
+    expect(onFailuresWithRetry).not.toHaveBeenCalled();
+  });
+  it('should emit success-with-retry events for retries', async () => {
+    let currentAttempts = 0;
+    const successAsyncAfterNth = jest.fn().mockImplementation((attempts, res: unknown = 'default', delay = 1) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (currentAttempts !== attempts) {
+            currentAttempts++;
+            reject(res);
+          } else {
+            currentAttempts = 0;
+            resolve(res);
+          }
+        }, delay);
+      });
+    });
+    const retry = new Mollitia.Retry({
+      attempts: 1,
+      interval: 100
+    });
+    const onSuccessWithoutRetry = jest.fn();
+    retry.on('success-without-retry', onSuccessWithoutRetry);
+    const onSuccessWithRetry = jest.fn();
+    retry.on('success-with-retry', onSuccessWithRetry);
+    const onFailuresWithoutRetry = jest.fn();
+    retry.on('failure-without-retry', onFailuresWithoutRetry);
+    const onFailuresWithRetry = jest.fn();
+    retry.on('failure-with-retry', onFailuresWithRetry);
+    const circuit = new Mollitia.Circuit({
+      options: {
+        modules: [
+          retry
+        ]
+      }
+    });
+    // Success With Retries
+    await circuit.fn(successAsyncAfterNth).execute(1, 'dummy', 100);
+    expect(onSuccessWithRetry).toHaveBeenNthCalledWith(1, circuit, 1);
+    retry.attempts = 2;
+    await circuit.fn(successAsyncAfterNth).execute(1, 'dummy', 100);
+    expect(onSuccessWithRetry).toHaveBeenNthCalledWith(1, circuit, 1);
+    expect(onSuccessWithRetry).toHaveBeenNthCalledWith(2, circuit, 1);
+    expect(onSuccessWithoutRetry).not.toHaveBeenCalled();
+    expect(onFailuresWithoutRetry).not.toHaveBeenCalled();
+    expect(onFailuresWithRetry).not.toHaveBeenCalled();
+  });
+  it('should emit failure-without-retry events for retries', async () => {
+    const retry = new Mollitia.Retry({
+      attempts: 0,
+      interval: 100
+    });
+    const onSuccessWithoutRetry = jest.fn();
+    retry.on('success-without-retry', onSuccessWithoutRetry);
+    const onSuccessWithRetry = jest.fn();
+    retry.on('success-with-retry', onSuccessWithRetry);
+    const onFailuresWithoutRetry = jest.fn();
+    retry.on('failure-without-retry', onFailuresWithoutRetry);
+    const onFailuresWithRetry = jest.fn();
+    retry.on('failure-with-retry', onFailuresWithRetry);
+    const circuit = new Mollitia.Circuit({
+      options: {
+        modules: [
+          retry
+        ]
+      }
+    });
+    // Failure Without Retries
+    retry.attempts = 0;
+    await expect(circuit.fn(failureAsync).execute('dummy', 100)).rejects.toEqual('dummy');
+    expect(onFailuresWithoutRetry).toHaveBeenNthCalledWith(1, circuit);
+    retry.attempts = 1;
+    retry.onRejection = () => false;
+    await expect(circuit.fn(failureAsync).execute('dummy', 100)).rejects.toEqual('dummy');
+    retry.attempts = 2;
+    await expect(circuit.fn(failureAsync).execute('dummy', 100)).rejects.toEqual('dummy');
+    expect(onFailuresWithoutRetry).toHaveBeenNthCalledWith(1, circuit);
+    expect(onFailuresWithoutRetry).toHaveBeenNthCalledWith(2, circuit);
+    expect(onFailuresWithoutRetry).toHaveBeenNthCalledWith(3, circuit);
+    expect(onSuccessWithoutRetry).not.toHaveBeenCalled();
+    expect(onSuccessWithRetry).not.toHaveBeenCalled();
+    expect(onFailuresWithRetry).not.toHaveBeenCalled();
+  });
+  it('should emit failure-with-retry events for retries', async () => {
+    const retry = new Mollitia.Retry({
+      attempts: 1,
+      interval: 100
+    });
+    const onSuccessWithoutRetry = jest.fn();
+    retry.on('success-without-retry', onSuccessWithoutRetry);
+    const onSuccessWithRetry = jest.fn();
+    retry.on('success-with-retry', onSuccessWithRetry);
+    const onFailuresWithoutRetry = jest.fn();
+    retry.on('failure-without-retry', onFailuresWithoutRetry);
+    const onFailuresWithRetry = jest.fn();
+    retry.on('failure-with-retry', onFailuresWithRetry);
+    const circuit = new Mollitia.Circuit({
+      options: {
+        modules: [
+          retry
+        ]
+      }
+    });
+    // Failure With Retries
+    retry.onRejection = () => true;
+    await expect(circuit.fn(failureAsync).execute('dummy', 100)).rejects.toEqual('dummy');
+    expect(onFailuresWithRetry).toHaveBeenNthCalledWith(1, circuit, 1);
+    retry.attempts = 2;
+    retry.onRejection = (err, attempt) => {
+      // Only cancel rejection on second attempt
+      return (attempt === 1) ? false : true;
+    };
+    await expect(circuit.fn(failureAsync).execute('dummy', 100)).rejects.toEqual('dummy');
+    expect(onFailuresWithRetry).toHaveBeenNthCalledWith(2, circuit, 1);
+    expect(onSuccessWithoutRetry).not.toHaveBeenCalled();
+    expect(onSuccessWithRetry).not.toHaveBeenCalled();
+    expect(onFailuresWithoutRetry).not.toHaveBeenCalled();
+  });
 });
