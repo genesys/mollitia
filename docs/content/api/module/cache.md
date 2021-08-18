@@ -64,6 +64,7 @@ circuit.fn(myFirstFunction).execute(myObject)
 | `ttl`                 | The amount of time during which a cached result is considered valid. | `6000`     |
 | `cacheClearInterval`  | The amount of time before the cache cleans itself up.          | `900000`   |
 | `getInformationFromCache`  | Specifies if the async response contains information if the data is retrieved from Cache (in this case, the information is available in _mollitiaIsFromCache property)         | false   |
+| `adjustCacheParams`   | A filtering callback, to modify the parameters used for Cache Key. | `none`  |
 
 
 ## Events

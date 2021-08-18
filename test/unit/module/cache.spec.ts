@@ -23,6 +23,14 @@ const failureAsync = jest.fn().mockImplementation((res: unknown = 'default', del
   });
 });
 
+const successAsync2 = jest.fn().mockImplementation((res: unknown = 'default', res2: unknown = 'default', delay = 1) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({res, res2});
+    }, delay);
+  });
+});
+
 describe('Cache', () => {
   afterEach(() => {
     logger.debug.mockClear();
@@ -64,6 +72,46 @@ describe('Cache', () => {
     await delay(150);
     await expect(circuit.fn(successAsync).execute()).resolves.toEqual('default');
     expect(logger.debug).not.toHaveBeenNthCalledWith(3, 'circuit-cache/module-cache - Cache: Hit');
+    circuit.dispose();
+  });
+
+  it('should cache the previous response - using onCache parameter', async () => {
+    const cacheModule = new Mollitia.Cache({
+      name: 'module-cache',
+      logger,
+      ttl: 100
+    });
+    const circuit = new Mollitia.Circuit({
+      name: 'circuit-cache',
+      options: {
+        modules: [ cacheModule ]
+      }
+    });
+    const objRef = { dummy: 'value1' };
+    const objRef2 = { dummy2: 'value2' };
+    const objRef3 = { dummy3: 'value3' };
+    await expect(circuit.fn(successAsync2).execute(objRef, objRef2)).resolves.toEqual({res: objRef, res2: objRef2});
+    await expect(circuit.fn(successAsync2).execute(objRef, objRef3)).resolves.toEqual({res: objRef, res2: objRef3});
+    expect(logger.debug).not.toHaveBeenNthCalledWith(1, 'circuit-cache/module-cache - Cache: Hit');
+
+    await delay(150);
+    cacheModule.adjustCacheParams = (circuitFunction: Mollitia.CircuitFunction, ...params) => {
+      return params.slice(1);
+    };
+    await expect(circuit.fn(successAsync2).execute(objRef, objRef2)).resolves.toEqual({res: objRef, res2: objRef2});
+    await expect(circuit.fn(successAsync2).execute(objRef, objRef3)).resolves.toEqual({res: objRef, res2: objRef3});
+    expect(logger.debug).not.toHaveBeenNthCalledWith(1, 'circuit-cache/module-cache - Cache: Hit');
+    await expect(circuit.fn(successAsync2).execute(objRef2, objRef)).resolves.toEqual({res: objRef2, res2: objRef});
+    await expect(circuit.fn(successAsync2).execute(objRef3, objRef)).resolves.toEqual({res: objRef2, res2: objRef});
+    expect(logger.debug).toHaveBeenNthCalledWith(1, 'circuit-cache/module-cache - Cache: Hit');
+
+    await delay(150);
+    cacheModule.adjustCacheParams = (circuitFunction: Mollitia.CircuitFunction, ...params) => {
+      return params.slice(0,1);
+    };
+    await expect(circuit.fn(successAsync2).execute(objRef, objRef2)).resolves.toEqual({res: objRef, res2: objRef2});
+    await expect(circuit.fn(successAsync2).execute(objRef, objRef3)).resolves.toEqual({res: objRef, res2: objRef2});
+    expect(logger.debug).toHaveBeenNthCalledWith(2, 'circuit-cache/module-cache - Cache: Hit');
     circuit.dispose();
   });
 

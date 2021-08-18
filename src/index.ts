@@ -1,4 +1,4 @@
-import { circuits, Circuit, CircuitFactory, CircuitOptions, NoFuncError } from './circuit';
+import { circuits, Circuit, CircuitFactory, CircuitFunction, CircuitOptions, NoFuncError } from './circuit';
 import { use, Addon } from './addon';
 import { modules, Module, ModuleOptions } from './module/index';
 import { Timeout, TimeoutError, TimeoutOptions } from './module/timeout';
@@ -17,6 +17,7 @@ export {
   circuits,
   Circuit,
   CircuitFactory,
+  CircuitFunction,
   CircuitOptions,
   NoFuncError,
   // Module
