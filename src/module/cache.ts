@@ -2,6 +2,9 @@ import { Module, ModuleOptions } from '.';
 import { Circuit, CircuitFunction } from '../circuit';
 import { MapCache } from '../helpers/map-cache';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AdjustCacheParamsCallback = (func: CircuitFunction, ...params: any[]) => any;
+
 /**
  * Properties that customizes the cache behavior.
  */
@@ -18,6 +21,12 @@ export abstract class CacheOptions extends ModuleOptions {
    * The attribute name indicating if data is retrieved from cache or not
    */
   getInformationFromCache? : boolean;
+
+  /**
+   * A filtering callback, to modify the parameters used for Cache Key.
+   * @returns The modified parameters
+   */
+   adjustCacheParams?: AdjustCacheParamsCallback;
 }
 
 type CacheT<T> = T & {
@@ -37,6 +46,11 @@ export class Cache extends Module {
    * The attribute name indicating if data is retrieved from cache or not
    */
   public getInformationFromCache: boolean;
+
+  /**
+   * A filtering callback, to modify the parameters used for Cache Key.
+   */
+  public adjustCacheParams: AdjustCacheParamsCallback|null;
   // Private Attributes
   private cache: MapCache;
   private _cacheClearInterval: number;
@@ -60,6 +74,7 @@ export class Cache extends Module {
     super(options);
     this.ttl = (options?.ttl !== undefined) ? options.ttl : 6000; // 1 minute
     this.getInformationFromCache = (options?.getInformationFromCache !== undefined) ? options.getInformationFromCache : false;
+    this.adjustCacheParams = options?.adjustCacheParams || null;
     this._cacheInterval = null;
     this._cacheClearInterval = 0;
     this.cacheClearInterval = (options?.cacheClearInterval !== undefined) ? options.cacheClearInterval : 900000; // 15 minutes
@@ -84,7 +99,11 @@ export class Cache extends Module {
   private async _promiseCache<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T | CacheT<T>> {
     return new Promise((resolve, reject) => {
       const cacheParams = this.getExecParams(circuit, params);
-      const cacheRes = this.cache.get<CacheT<T>>(circuit.func, ...cacheParams);
+      let cacheKey = cacheParams;
+      if (this.adjustCacheParams) {
+        cacheKey = this.adjustCacheParams(circuit.func, ...cacheParams);
+      }
+      const cacheRes = this.cache.get<CacheT<T>>(circuit.func, ...cacheKey);
       if (cacheRes) {
         if (typeof cacheRes.res === 'object' && this.getInformationFromCache) {
           cacheRes.res._mollitiaIsFromCache = true;
@@ -94,7 +113,7 @@ export class Cache extends Module {
           promise(...params)
             .then((res: CacheT<T>) => {
               if (this.ttl > 0) {
-                this.cache.set(this.ttl, circuit.func, ...cacheParams, res);
+                this.cache.set(this.ttl, circuit.func, ...cacheKey, res);
               }
               if (typeof res === 'object' && this.getInformationFromCache) {
                 res._mollitiaIsFromCache = false;
@@ -113,7 +132,7 @@ export class Cache extends Module {
         promise(...params)
           .then((res: CacheT<T>) => {
             if (this.ttl > 0) {
-              this.cache.set(this.ttl, circuit.func, ...cacheParams, res);
+              this.cache.set(this.ttl, circuit.func, ...cacheKey, res);
             }
             if (typeof res === 'object' && this.getInformationFromCache) {
               res._mollitiaIsFromCache = false;
