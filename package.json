@@ -1,6 +1,6 @@
 {
   "name": "mollitia",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "JavaScript Resilience Library",
   "main": "dist/mollitia.umd.js",
   "module": "dist/mollitia.es5.js",
