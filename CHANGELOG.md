@@ -1,8 +1,14 @@
 # Changelog
 
-## [0.0.6](https://github.com/genesys/mollitia/compare/0.0.5...0.0.6)
+## [0.0.7](https://github.com/genesys/mollitia/compare/0.0.6...0.0.7)
+
+- Cache improvement [`#7`](https://github.com/genesys/mollitia/pull/7)
+- bump version 0.0.7 [`a428ec4`](https://github.com/genesys/mollitia/commit/a428ec4ac2ad3fb494042fbcc2755d9c495320a9)
+
+## [0.0.6](https://github.com/genesys/mollitia/compare/0.0.5...0.0.6) (2021-07-27)
 
 - better eslint, new retry events [`#6`](https://github.com/genesys/mollitia/pull/6)
+- Release mollitia@0.0.6 [`5e7b233`](https://github.com/genesys/mollitia/commit/5e7b233983a8e048da4786e0d8b7f2a005811d83)
 
 ## [0.0.5](https://github.com/genesys/mollitia/compare/0.0.4...0.0.5) (2021-07-15)
 
