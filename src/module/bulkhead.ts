@@ -2,6 +2,8 @@ import { Module, ModuleOptions } from '.';
 import { Circuit, CircuitFunction } from '../circuit';
 import { EventEmitter } from '../helpers/event';
 
+const MAX_TIMEOUT = 2147483647;
+
 /**
  * Properties that customizes the bulkhead behavior.
  */
@@ -123,12 +125,15 @@ export class Bulkhead extends Module {
         this.concurrentBuffer.push(ref);
       } else if (this.queueBuffer.length < this.queueSize) {
         this.queueBuffer.push(ref);
-        const timeout = setTimeout(() => {
-          this.queueBuffer.splice(this.queueBuffer.indexOf(ref), 1);
-          resolveDisposable.dispose();
-          rejectDisposable.dispose();
-          reject(new BulkheadQueueWaitError());
-        }, this.maxQueueWait);
+        let timeout: number;
+        if (this.maxQueueWait <= MAX_TIMEOUT) {
+          timeout = <unknown>setTimeout(() => {
+            this.queueBuffer.splice(this.queueBuffer.indexOf(ref), 1);
+            resolveDisposable.dispose();
+            rejectDisposable.dispose();
+            reject(new BulkheadQueueWaitError());
+          }, this.maxQueueWait) as number;
+        }
         const executeDisposable = ref.on('execute', () => {
           executeDisposable.dispose();
           clearTimeout(timeout);

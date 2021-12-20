@@ -52,7 +52,7 @@ export class EventEmitter {
   public off (eventName: string, cb: EventCallback): void {
     const listeners = this.listeners[eventName];
     if (listeners) {
-      for (let i = listeners.length; i > 0; i--) {
+      for (let i = listeners.length - 1; i > 0; i--) {
         if (listeners[i] === cb) {
           listeners.splice(i, 1);
           break;
