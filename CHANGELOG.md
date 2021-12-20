@@ -1,8 +1,13 @@
 # Changelog
 
-## [0.0.7](https://github.com/genesys/mollitia/compare/0.0.6...0.0.7)
+## [0.0.8](https://github.com/genesys/mollitia/compare/0.0.7...0.0.8)
+
+- fix bulkhead max wait time, update dependencies, bump v0.0.8 [`4ea3272`](https://github.com/genesys/mollitia/commit/4ea32724368fe3025617c80e3d6358fd51bb8dc3)
+
+## [0.0.7](https://github.com/genesys/mollitia/compare/0.0.6...0.0.7) (2021-08-24)
 
 - Cache improvement [`#7`](https://github.com/genesys/mollitia/pull/7)
+- Release mollitia@0.0.7 [`2788582`](https://github.com/genesys/mollitia/commit/278858240173fc9621c360e96e65d82a9fc2bdb9)
 - bump version 0.0.7 [`a428ec4`](https://github.com/genesys/mollitia/commit/a428ec4ac2ad3fb494042fbcc2755d9c495320a9)
 
 ## [0.0.6](https://github.com/genesys/mollitia/compare/0.0.5...0.0.6) (2021-07-27)
