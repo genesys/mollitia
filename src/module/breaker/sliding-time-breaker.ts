@@ -17,7 +17,7 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
     this.slidingWindowSize = (options?.slidingWindowSize !== undefined) ? options.slidingWindowSize : 60;
     this.maxSize = 1000;
   }
-  
+
   private filterCalls(): void {
     let nbCalls = this.callsInClosedState.length;
     if (nbCalls >= this.maxSize) {
@@ -39,11 +39,12 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
   public async executeInClosed<T> (promise: CircuitFunction, ...params: any[]): Promise<T> {
     const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
     this.filterCalls();
+    const adjustedRequestResult = this.adjustRequestResult(requestResult, shouldReportFailure);
     this.callsInClosedState.push({
-      result: this.adjustedRequestResult(requestResult, shouldReportFailure),
+      result: adjustedRequestResult,
       timestamp: (new Date()).getTime()
     });
-    if (this.callsInClosedState.length >= this.minimumNumberOfCalls) {
+    if (this.callsInClosedState.length >= this.minimumNumberOfCalls && adjustedRequestResult !== SlidingWindowRequestResult.SUCCESS) {
       this.checkCallRatesClosed(this.open.bind(this));
     }
     if (requestResult === SlidingWindowRequestResult.FAILURE) {

@@ -16,13 +16,16 @@ export class SlidingCountBreaker extends SlidingWindowBreaker<SlidingWindowReque
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async executeInClosed<T> (promise: CircuitFunction, ...params: any[]): Promise<T> {
     const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
-    this.callsInClosedState.push(this.adjustedRequestResult(requestResult, shouldReportFailure));
+    const adjustedRequestResult = this.adjustRequestResult(requestResult, shouldReportFailure);
+    this.callsInClosedState.push(adjustedRequestResult);
     const nbCalls = this.callsInClosedState.length;
     if (nbCalls >= this.minimumNumberOfCalls) {
       if (nbCalls > this.slidingWindowSize) {
         this.callsInClosedState.splice(0,(nbCalls - this.slidingWindowSize));
       }
-      this.checkCallRatesClosed(this.open.bind(this));
+      if (adjustedRequestResult !== SlidingWindowRequestResult.SUCCESS) {
+        this.checkCallRatesClosed(this.open.bind(this));
+      }
     }
     if (requestResult === SlidingWindowRequestResult.FAILURE) {
       return Promise.reject(response);

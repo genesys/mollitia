@@ -208,7 +208,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   abstract executeInClosed<T1> (promise: CircuitFunction, ...params: any[]): Promise<T1>;
 
-  protected adjustedRequestResult(requestResult: SlidingWindowRequestResult, shouldReportFailure: boolean): SlidingWindowRequestResult {
+  protected adjustRequestResult(requestResult: SlidingWindowRequestResult, shouldReportFailure: boolean): SlidingWindowRequestResult {
     if (!shouldReportFailure && requestResult === SlidingWindowRequestResult.FAILURE) {
       return SlidingWindowRequestResult.SUCCESS;
     }
@@ -220,7 +220,7 @@ export abstract class SlidingWindowBreaker<T> extends Module {
     if (this.nbCallsInHalfOpenedState < this.permittedNumberOfCallsInHalfOpenState) {
       this.nbCallsInHalfOpenedState++;
       const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
-      this.callsInHalfOpenedState.push(this.adjustedRequestResult(requestResult, shouldReportFailure));
+      this.callsInHalfOpenedState.push(this.adjustRequestResult(requestResult, shouldReportFailure));
 
       if (this.callsInHalfOpenedState.length == this.permittedNumberOfCallsInHalfOpenState) {
         this.checkCallRatesHalfOpen(this.open.bind(this), this.close.bind(this));

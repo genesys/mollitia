@@ -41,7 +41,7 @@ describe('Sliding Count Breaker', () => {
   it('Switch to Open when failure rate exceeded', async () => {
     const slidingCountBreaker = new Mollitia.SlidingCountBreaker({
       slidingWindowSize: 10,
-      minimumNumberOfCalls: 2,
+      minimumNumberOfCalls: 3,
       failureRateThreshold: 60,
       openStateDelay: 20
     });
@@ -52,8 +52,10 @@ describe('Sliding Count Breaker', () => {
         ]
       }
     });
-    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
+    await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
+    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
+    // Even if 66% of failed requests, circuit is kept closed as last request is success
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
@@ -148,6 +150,9 @@ describe('Sliding Count Breaker', () => {
     });
     await expect(circuit.fn(successAsync).execute('dummy', 150)).resolves.toEqual('dummy');
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
+    // Even if 50% of slow requests, circuit is kept closed as last request is success
+    expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
+    await expect(circuit.fn(successAsync).execute('dummy', 150)).resolves.toEqual('dummy');
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
     await delay(10);
     await expect(circuit.fn(successAsync).execute('dummy', 150)).resolves.toEqual('dummy');
