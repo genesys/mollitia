@@ -1,8 +1,15 @@
 # Changelog
 
-## [0.0.8](https://github.com/genesys/mollitia/compare/0.0.7...0.0.8)
+## [0.0.9](https://github.com/genesys/mollitia/compare/0.0.8...0.0.9)
+
+- Fix package-lock security issue with ansi-regex [`#11`](https://github.com/genesys/mollitia/pull/11)
+- Circuit Breaker adjustment to avoid opening the circuit if last request is a success [`#10`](https://github.com/genesys/mollitia/pull/10)
+- bump v0.0.9 [`dd96810`](https://github.com/genesys/mollitia/commit/dd968107d86c0b69dc009a5531049ef18f8a68b7)
+
+## [0.0.8](https://github.com/genesys/mollitia/compare/0.0.7...0.0.8) (2021-12-20)
 
 - fix bulkhead max wait time, update dependencies, bump v0.0.8 [`4ea3272`](https://github.com/genesys/mollitia/commit/4ea32724368fe3025617c80e3d6358fd51bb8dc3)
+- Release mollitia@0.0.8 [`3955467`](https://github.com/genesys/mollitia/commit/3955467b2ca503e6223397d56594e23afc312ecc)
 
 ## [0.0.7](https://github.com/genesys/mollitia/compare/0.0.6...0.0.7) (2021-08-24)
 
