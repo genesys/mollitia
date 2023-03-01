@@ -90,6 +90,9 @@ min(interval + (iteration * factor * interval), maxInterval)
 
 For example, with factor=3 and interval=100, the retry delay will be 100, 400, 700, 1000, 1300, ...
 
+<p class="flex-center-row" align="center"><pg-img src="/img/retry-linear-mode.png" alt="Retry - Linear Mode"></pg-img></p>
+
+
 > As retry delay can grow fast, it's possible to configure maxInterval option to specify the maximum allowed delay.
 >
 > For example, with factor=3, interval=100, maxInterval=800, the retry delay will be 100, 400, 700, 800, 800, ...  
@@ -105,6 +108,9 @@ min(interval * (factor ** iteration), maxInterval)
 ```
 
 For example, with factor=2 and interval=100, the retry delay will be 100, 200, 400, 800, 1600, ...
+
+<p class="flex-center-row" align="center"><pg-img src="/img/retry-exponential-mode.png" alt="Retry - Exponential Mode"></pg-img></p>
+
 
 > As retry delay can grow fast, it's possible to configure maxInterval option to specify the maximum allowed delay.
 >
@@ -135,6 +141,13 @@ With
 * jitterAdjustment=0.1
 
 the retry delay for 1st retry will be a random value between 90 and 110, for 2nd retry a random value between 180 and 220, a random value between 360 and 440, ...
+
+<p class="flex-center-row" align="center"><pg-img src="/img/retry-jitter-mode-adjust0.1.png" alt="Retry - Jitter Mode"></pg-img></p>
+
+<p class="flex-center-row" align="center"><pg-img src="/img/retry-jitter-mode-adjust0.5.png" alt="Retry - Jitter Mode"></pg-img></p>
+
+<p class="flex-center-row" align="center"><pg-img src="/img/retry-jitter-mode-adjust1.png" alt="Retry - Jitter Mode"></pg-img></p>
+
 
 > As retry delay can grow fast, it's possible to configure maxInterval option to specify the maximum allowed delay used for the random value as maximum boundary.
 >
