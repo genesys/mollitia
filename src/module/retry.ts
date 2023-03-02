@@ -104,10 +104,7 @@ export class Retry extends Module {
   }
 
   private adjustJitterValue(val: number): number {
-    if (val < 0 || val > 1) {
-      return 0.1;
-    }
-    return val;
+    return Math.min(1, Math.max(0, val));
   }
 
   // Constructor

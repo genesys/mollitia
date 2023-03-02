@@ -42,7 +42,7 @@ describe('Retry', () => {
     expect(retryLinear.maxInterval).toBe(Infinity);
     expect(retryLinear.fastFirst).toBe(true);
     expect(retryLinear.factor).toBe(1);
-    expect(retryLinear.jitterAdjustment).toBe(0.1);
+    expect(retryLinear.jitterAdjustment).toBe(1);
     const retryExponential = new Mollitia.Retry({
       attempts: 2,
       mode: Mollitia.RetryMode.EXPONENTIAL,
@@ -54,7 +54,7 @@ describe('Retry', () => {
     expect(retryExponential.maxInterval).toBe(1223);
     expect(retryExponential.fastFirst).toBe(false);
     expect(retryExponential.factor).toBe(2);
-    expect(retryExponential.jitterAdjustment).toBe(0.1);
+    expect(retryExponential.jitterAdjustment).toBe(0);
     const retryJitter = new Mollitia.Retry({
       attempts: 3,
       mode: Mollitia.RetryMode.JITTER,

@@ -18,10 +18,9 @@ You can configure:
   * CONSTANT: The interval between each retry is always the one configured with the interval option
   * LINEAR: The interval between each retry grows linearly, based on interval and factor configuration
   * EXPONENTIAL: The interval between each retry grows exponentially, based on interval and factor configuration
-  * JITTER: The interval between each retry uses a Jitter calculation to distribute the retries randomly and avoid peaks of retries. See [Jitter description here](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+  * JITTER: The interval between each retry uses a Jitter calculation to distribute the retries randomly and avoid peaks of retries. See [Jitter Mode](#jitter-mode)
 * the jitter adjustment value (if jitter mode is used)
 * if retry should be done, depending on the error
-
 
 ``` javascript
 // Imports needed components
@@ -30,7 +29,7 @@ const { Circuit, Retry } = require('mollitia');
 const circuit = new Circuit({
   options: {
     modules: [
-      // Creates a bulkhead module
+      // Creates a retry module
       new Retry({
         attempts: 2, // Will retry two times
         interval: 500,
@@ -55,6 +54,7 @@ const circuit = new Circuit({
   }
 });
 ```
+
 ## Options
 
 | Name               | Description                                                                    | Default   |
@@ -65,7 +65,7 @@ const circuit = new Circuit({
 | `mode`             | The mode for the retry                                                         | `CONSTANT`|
 | `factor`           | The factor to be used for the retry (used only if retry `mode` is LINEAR, EXPONENTIAL OR JITTER) | `1` if mode is LINEAR, `2` if mode is EXPONENTIAL or JITTER |
 | `maxInterval`      | The maximum interval between each retry.                                       | `INFINITY`  |
-| `jitterAdjustment` | The percentage to adjust delay randomly based on jitter retry duration         | `0.1` (Should be between `0` and `1`. If set to value greater than `1` or lower than `0`, then default value is used)      |
+| `jitterAdjustment` | The percentage to adjust delay randomly based on jitter retry duration         | `0.1` (Should be between `0` and `1`. If set to value greater than `1`, `1` is used. If set to value lower than `0`, then `0` is used)      |
 | `onRejection`      | A filtering callback, to modify the retry behavior.                            | `none`    |
 
 ### Retry mode
@@ -92,7 +92,6 @@ For example, with factor=3 and interval=100, the retry delay will be 100, 400, 7
 
 <p class="flex-center-row" align="center"><pg-img src="/img/retry-linear-mode.png" alt="Retry - Linear Mode"></pg-img></p>
 
-
 > As retry delay can grow fast, it's possible to configure maxInterval option to specify the maximum allowed delay.
 >
 > For example, with factor=3, interval=100, maxInterval=800, the retry delay will be 100, 400, 700, 800, 800, ...  
@@ -111,7 +110,6 @@ For example, with factor=2 and interval=100, the retry delay will be 100, 200, 4
 
 <p class="flex-center-row" align="center"><pg-img src="/img/retry-exponential-mode.png" alt="Retry - Exponential Mode"></pg-img></p>
 
-
 > As retry delay can grow fast, it's possible to configure maxInterval option to specify the maximum allowed delay.
 >
 > For example, with factor=3, interval=100, maxInterval=1000, the retry delay will be 100, 300, 900, 1000, 1000, ...
@@ -122,9 +120,9 @@ This mode is very close to the exponential mode, the formula is nearly the same.
 
 The retry delay is calculated based on the exponential retry delay, with some delta around it, based on the configuration of the jitterAdjustment
 
-Let's call iteration the number of retry attemps already done. The jitter delay calculation formula is: 
+Let's call iteration the number of retry attemps already done. The jitter delay calculation formula is:
 
-(`interval x factor^iteration`) - ((`interval x factor^iteration`) * jitterAdjustment) + (random(0, ((`interval x factor^iteration`) * jitterAdjustment) * 2))
+(`interval x factor^iteration`) - ((`interval x factor^iteration`) *jitterAdjustment) + (random(0, ((`interval x factor^iteration`)* jitterAdjustment) * 2))
 
 To be more precise, as there is a potential maxInterval duration, the exact calculation is:
 
@@ -135,7 +133,9 @@ waitDelay = Math.random(0, (maxValue - minValue)) + minValue
 ```
 
 ##### Example
+
 With
+
 * factor=2
 * interval=100
 * jitterAdjustment=0.1
@@ -148,14 +148,13 @@ the retry delay for 1st retry will be a random value between 90 and 110, for 2nd
 
 <p class="flex-center-row" align="center"><pg-img src="/img/retry-jitter-mode-adjust1.png" alt="Retry - Jitter Mode"></pg-img></p>
 
-
 > As retry delay can grow fast, it's possible to configure maxInterval option to specify the maximum allowed delay used for the random value as maximum boundary.
 >
 > In this case, the value is calculated between MaxValue - (jitterAdjustment * MaxValue) and MaxValue.
 >
 > For example, with factor=3,interval=100,maxInterval=1000,jitterAdjustment=0.2, the retry delay will be random(80,120), random(240,360), random(720,1000), random(800,1000), random(800,1000), ...
 >
-> Note that the 3rd retry random range is between 720 and 1000 because 900 + 0.2*900 (the upper value of the random range) > 1000 (maxInterval) 
+> Note that the 3rd retry random range is between 720 and 1000 because 900 + 0.2*900 (the upper value of the random range) > 1000 (maxInterval)
 
 ## Events
 
@@ -168,7 +167,6 @@ the retry delay for 1st retry will be a random value between 90 and 110, for 2nd
 | `failure-without-retry`   | Called the module execution fails without retrying.    | `Mollitia.Circuit` **circuit**                              |
 | `failure-with-retry`      | Called the module execution fails after retrying.      | `Mollitia.Circuit` **circuit**, `number` **attempts**       |
 | `delay-before-next-retry` | Called when the delay before next retry starts.        | `Mollitia.Circuit` **circuit**, `number` **waitDuration**   |
-
 
 ## Methods
 
