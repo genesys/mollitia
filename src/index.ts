@@ -2,13 +2,13 @@ import { circuits, Circuit, CircuitFactory, CircuitFunction, CircuitOptions, NoF
 import { use, Addon } from './addon';
 import { modules, Module, ModuleOptions } from './module/index';
 import { Timeout, TimeoutError, TimeoutOptions } from './module/timeout';
-import { Retry, RetryOptions } from './module/retry';
+import { Retry, RetryOptions, RetryMode } from './module/retry';
 import { Ratelimit, RatelimitError } from './module/ratelimit';
 import { Fallback, FallbackOptions } from './module/fallback';
 import { BreakerError, BreakerMaxAllowedRequestError, BreakerState, SlidingWindowBreakerOptions } from './module/breaker';
 import { Cache, CacheOptions } from './module/cache';
-import { SlidingCountBreaker } from './module/breaker/sliding-count-breaker'; 
-import { SlidingTimeBreaker } from './module/breaker/sliding-time-breaker'; 
+import { SlidingCountBreaker } from './module/breaker/sliding-count-breaker';
+import { SlidingTimeBreaker } from './module/breaker/sliding-time-breaker';
 import { Bulkhead, BulkheadOptions, BulkheadOverloadError, BulkheadQueueWaitError } from './module/bulkhead';
 
 // Default Export
@@ -31,6 +31,7 @@ export {
   // Retry
   Retry,
   RetryOptions,
+  RetryMode,
   // Fallback
   Fallback,
   FallbackOptions,
