@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, 'Release mollitia@')"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.16.1'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-mollitia-node-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install
+        run: npm ci && cd docs && npm ci
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm run test
+      - name: Lint
+        run: npm run lint
+      - name: Fix Coverage Paths
+        working-directory: ./coverage
+        run: |
+          sed -i 's/\/home\/runner\/work\/mollitia\/mollitia\//\/github\/workspace\//g' lcov.info
+          sed -i 's/\/home\/runner\/work\/mollitia\/mollitia\//\/github\/workspace\//g' clover.xml
+      - name: Sonar
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Documentation
+        if: github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: ./docs/dist
