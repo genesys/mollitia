@@ -1,9 +1,16 @@
 # Changelog
 
-## [0.0.9](https://github.com/genesys/mollitia/compare/0.0.8...0.0.9)
+## [0.1.0](https://github.com/genesys/mollitia/compare/0.0.9...0.1.0)
+
+- Add extended capabilities for Retry Module (Retry modes, including Ji… [`#12`](https://github.com/genesys/mollitia/pull/12)
+- migrate to manual release workflow [`239d990`](https://github.com/genesys/mollitia/commit/239d9903f96fa605f934b8193fbc2440a2a83bd1)
+- retrieve git history on release [`98d6cc8`](https://github.com/genesys/mollitia/commit/98d6cc880f6b25738a9728c5c129b4b1d4624f33)
+
+## [0.0.9](https://github.com/genesys/mollitia/compare/0.0.8...0.0.9) (2022-06-28)
 
 - Fix package-lock security issue with ansi-regex [`#11`](https://github.com/genesys/mollitia/pull/11)
 - Circuit Breaker adjustment to avoid opening the circuit if last request is a success [`#10`](https://github.com/genesys/mollitia/pull/10)
+- Release mollitia@0.0.9 [`cd1b045`](https://github.com/genesys/mollitia/commit/cd1b045a95e3db8c23dd1402fcb1f4415bdbdd23)
 - bump v0.0.9 [`dd96810`](https://github.com/genesys/mollitia/commit/dd968107d86c0b69dc009a5531049ef18f8a68b7)
 
 ## [0.0.8](https://github.com/genesys/mollitia/compare/0.0.7...0.0.8) (2021-12-20)
