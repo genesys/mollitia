@@ -86,4 +86,4 @@ It is very similar at what does [Resilience4j](https://github.com/resilience4j/r
 ## License
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2021 © [Genesys](https://www.genesys.com/).
+- Copyright 2023 © [Genesys](https://www.genesys.com/).
