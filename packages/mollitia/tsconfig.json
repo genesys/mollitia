@@ -1,0 +1,7 @@
+{
+  "extends": "@shared/tsconfig/tsconfig.lib.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "exclude": ["dist"]
+}

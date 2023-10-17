@@ -1,0 +1,56 @@
+{
+  "name": "@mollitia/prometheus",
+  "type": "module",
+  "version": "0.0.8",
+  "description": "Prometheus Mollitia Addon",
+  "author": "Jérémie Pichon <jeremie.pichon@genesys.com>",
+  "license": "MIT",
+  "keywords": [
+    "mollitia",
+    "mollitia-prometheus",
+    "resiliency",
+    "resilience",
+    "node",
+    "nodejs",
+    "javascript",
+    "typescript",
+    "monitoring",
+    "time-series",
+    "metrics",
+    "alerting",
+    "prometheus",
+    "graphing"
+  ],
+  "homepage": "https://genesys.github.io/mollitia/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genesys/mollitia/blob/main/packages/@mollitia/prometheus"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@shared/tsconfig": "*",
+    "@shared/vite": "*",
+    "eslint-config-mollitia": "*"
+  },
+  "peerDependencies": {
+    "mollitia": "*"
+  }
+}

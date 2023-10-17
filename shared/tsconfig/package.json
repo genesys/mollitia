@@ -1,0 +1,7 @@
+{
+  "name": "@shared/tsconfig",
+  "private": true,
+  "devDependencies": {
+    "@shared/vite": "*"
+  }
+}

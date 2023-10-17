@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"module": "node16",
+		"types": ["vite/client"],
+		"paths": {
+			"mollitia": ["../packages/mollitia/src/index.ts"]
+		}
+	},
+	"include": [
+		".vitepress/**/*",
+		"src/**/*"
+	]
+}

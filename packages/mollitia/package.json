@@ -1,0 +1,57 @@
+{
+  "name": "mollitia",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "JavaScript Resilience Library",
+  "author": "Jérémie Pichon <jeremie.pichon@genesys.com>",
+  "license": "MIT",
+  "keywords": [
+    "mollitia",
+    "resiliency",
+    "resilience",
+    "polly",
+    "node",
+    "nodejs",
+    "javascript",
+    "typescript",
+    "circuit-breaker",
+    "fallback",
+    "cache",
+    "retry",
+    "timeout",
+    "ratelimit",
+    "bulkhead",
+    "fault-handling"
+  ],
+  "homepage": "https://genesys.github.io/mollitia/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genesys/mollitia/blob/main/packages/mollitia"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite build -m development --watch",
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@shared/tsconfig": "*",
+    "@shared/vite": "*",
+    "eslint-config-mollitia": "*",
+    "yaml": "^2.3.3"
+  }
+}

@@ -1,0 +1,26 @@
+{
+    "name": "@shared/vite",
+    "private": true,
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./index.ts"
+        },
+        "./types/lib": {
+            "types": "./types/lib.d.ts"
+        },
+        "./types/vitest": {
+            "types": "./types/vitest.d.ts"
+        },
+        "./utils/vitest": {
+            "types": "./utils/vitest.ts"
+        }
+    },
+    "devDependencies": {
+        "@vitest/coverage-v8": "^0.34.6",
+        "vite": "^4.5.0",
+        "vite-plugin-dts": "^3.6.3",
+        "vitest": "^0.34.6",
+        "typescript": "^5.2.2"
+    }
+}
