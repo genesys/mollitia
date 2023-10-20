@@ -9,7 +9,7 @@
 <p align="center"><br/><img width="200" src="https://genesys.github.io/mollitia/icon.svg" alt="Mollitia Icon"/><br/><br/></p>
 
 `Mollitia` is a **JavaScript Resilience** library that works on Node and on browsers.
-The purpose of such kind of tool is to help organize **asynchronous operations** under a highly customizable circuit that helps managing error use cases.
+Its purpose is to help organize **asynchronous operations** under a highly customizable circuit that helps manage error use cases.
 When everything is falling apart, it stops the classic flow and uses modules to manage failures.
 
 ## Documentation
@@ -58,8 +58,8 @@ await circuit.fn(yourFunction).execute('dummy');
 
 ## Features
 
-The point of `Mollitia` is to get every **Resilience patterns** into one library.
-It is very similar at what does [Resilience4j](https://github.com/resilience4j/resilience4j) on **Java**, but on **Node**.
+The point of `Mollitia` is to get every **Resilience pattern** into one library.
+It is very similar to the [Resilience4j](https://github.com/resilience4j/resilience4j) **Java** library, but on **Node**.
 
 - Works on Node and on browser (even **Internet Explorer 11**, wow).
 - Implements a wide variety of Resilience patterns.
@@ -72,11 +72,11 @@ It is very similar at what does [Resilience4j](https://github.com/resilience4j/r
   - Misses the **Cache** and **Ratelimit** modules.
   - Cannot create **module** or **addons**.
 - [opossum](https://github.com/nodeshift/opossum)
-  - **Only support the Circuit Breaker module**
+  - **Only supports the Circuit Breaker module**
   - Cannot have **Method Agnostic** circuits.
   - Cannot create **module** or **addons**.
 - [brakes](https://github.com/awolden/brakes)
-  - **Only support the Circuit Breaker module**
+  - **Only supports the Circuit Breaker module**
   - Cannot have **Method Agnostic** circuits.
   - Cannot create **module** or **addons**.
 
