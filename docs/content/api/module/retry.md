@@ -24,7 +24,7 @@ You can configure:
 
 ``` javascript
 // Imports needed components
-const { Circuit, Retry } = require('mollitia');
+const { Circuit, Retry, RetryMode } = require('mollitia');
 // Creates a circuit
 const circuit = new Circuit({
   options: {
@@ -34,7 +34,7 @@ const circuit = new Circuit({
         attempts: 2, // Will retry two times
         interval: 500,
         mode: RetryMode.LINEAR,
-        factor: 1 // With interval=500, mode=LINEAR and factor 1, the interval between attempts will grow linearly (500ms before 1st retry, then 1000ms before 2nd retry)
+        factor: 1, // With interval=500, mode=LINEAR and factor 1, the interval between attempts will grow linearly (500ms before 1st retry, then 1000ms before 2nd retry)
         onRejection: (err, attempt) => { // Can help filtering error and modifying the retry behavior
           // Second parameter represent the current attempt
           // In this example, onRejection will be called 3 times
