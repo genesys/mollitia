@@ -1,0 +1,10 @@
+{
+  "extends": "@shared/tsconfig/tsconfig.lib.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "paths": {
+      "mollitia": ["../../mollitia/src/index.ts"]
+    }
+  },
+  "exclude": ["dist"]
+}

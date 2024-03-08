@@ -1,0 +1,55 @@
+{
+  "name": "@mollitia/redis-storage",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Redis Storage Addon",
+  "author": "Stephane Hervochon <stephane.hervochon@genesys.com>",
+  "license": "MIT",
+  "keywords": [
+    "mollitia",
+    "mollitia-storage",
+    "resiliency",
+    "resilience",
+    "node",
+    "nodejs",
+    "javascript",
+    "typescript",
+    "storage"
+  ],
+  "homepage": "https://genesys.github.io/mollitia/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/genesys/mollitia/blob/main/packages/@mollitia/redis-storage"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "lint": "eslint .",
+    "test:unit": "vitest run"
+  },
+  "devDependencies": {
+    "@shared/tsconfig": "*",
+    "@shared/vite": "*",
+    "eslint-config-mollitia": "*"
+  },
+  "peerDependencies": {
+    "mollitia": "*"
+  },
+  "dependencies": {
+    "@types/redis": "4.0.11",
+    "redis": "4.6.10"
+  }
+}

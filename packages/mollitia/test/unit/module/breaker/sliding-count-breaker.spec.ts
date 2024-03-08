@@ -13,7 +13,7 @@ describe('Sliding Count Breaker', () => {
       state: Mollitia.BreakerState.OPENED,
       openStateDelay: 20
     });
-    new Mollitia.Circuit({
+    const circuit = new Mollitia.Circuit({
       options: {
         modules: [
           slidingCountBreaker
@@ -21,7 +21,13 @@ describe('Sliding Count Breaker', () => {
       }
     });
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
-    await delay(30);
+    try {
+      await circuit.fn(failureAsync).execute('dummy');
+    } catch {
+      // Request is executed in opened state - Failing with exception, this is normal situation.
+      // The execute request is just there to start timeout to switch from inital state (Opened) to other state (Half Opened) after OpenStateDelay timeout
+    }
+    await delay(100);
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.HALF_OPENED);
   });
   it('Switch to Open when failure rate exceeded', async () => {
@@ -48,8 +54,8 @@ describe('Sliding Count Breaker', () => {
   });
   it('Half Open State max duration', async () => {
     const slidingCountBreaker = new Mollitia.SlidingCountBreaker({
-      halfOpenStateMaxDelay: 20,
-      openStateDelay: 10,
+      halfOpenStateMaxDelay: 200,
+      openStateDelay: 100,
       state: Mollitia.BreakerState.HALF_OPENED,
       permittedNumberOfCallsInHalfOpenState: 1,
       minimumNumberOfCalls: 1
@@ -63,13 +69,13 @@ describe('Sliding Count Breaker', () => {
     });
     await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
-    await delay(10);
+    await delay(100);
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.HALF_OPENED);
-    await delay(10);
+    await delay(100);
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.HALF_OPENED);
-    await delay(10);
+    await delay(100);
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
-    await delay(10);
+    await delay(100);
     await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
     expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
     await delay(100);
