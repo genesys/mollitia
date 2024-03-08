@@ -66,7 +66,10 @@ export {
   BreakerError,
   BreakerMaxAllowedRequestError,
   BreakerState,
-  SlidingWindowBreakerOptions
+  SlidingWindowBreaker,
+  SlidingWindowBreakerOptions,
+  SlidingWindowRequestResult,
+  type SlidingElem
 } from './module/breaker/index.js';
 
 // Sliding Count Breaker
@@ -78,3 +81,10 @@ export {
 export {
   SlidingTimeBreaker
 } from './module/breaker/sliding-time-breaker.js';
+
+export {
+  type Serializable,
+  type SerializableRecord,
+  type SerializablePrimitive,
+  type SerializableArray
+} from './helpers/serializable.js';

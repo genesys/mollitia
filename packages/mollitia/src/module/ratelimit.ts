@@ -1,5 +1,6 @@
 import { Module, ModuleOptions } from './index.js';
 import { Circuit, CircuitFunction } from '../circuit.js';
+import { SerializableRecord } from '../helpers/serializable.js';
 
 /**
  * Properties that customizes the ratelimit behavior.
@@ -51,12 +52,46 @@ export class Ratelimit extends Module {
     this.limitForPeriod = (options?.limitForPeriod !== undefined) ? options.limitForPeriod : Infinity;
     this.requestsTime = [];
   }
+  public async getState(): Promise<SerializableRecord> {
+    return new Promise((resolve) => {
+      resolve({ requests: this.requestsTime });
+    });
+  }
+  public async setState(state: SerializableRecord[], ttl?: number): Promise<void> {
+    return new Promise((resolve) => {
+      resolve();
+    });
+  }
+  public async clearState(): Promise<void> {
+    return new Promise((resolve) => {
+      this.requestsTime = [];
+      resolve();
+    });
+  }
   // Public Methods
-  public async execute<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
+  public async execute<T>(circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
+    let currentState;
+    try {
+      currentState = await this.getState();
+    } catch (e) {
+      console.warn('Cannot get state');
+    }
+    if (currentState?.requests) {
+      this.requestsTime = currentState?.requests as number[];
+    }
     const _exec = this._promiseRatelimit<T>(circuit, promise, ...params);
     const _params = this.getExecParams(circuit, params);
     this.emit('execute', circuit, _exec, _params);
     return _exec;
+  }
+
+  private async addCurrentRequest(requestDate: number): Promise<void> {
+    this.requestsTime.push(requestDate);
+    try {
+      await this.setState( [{ key: 'requests', value: this.requestsTime }], this.limitPeriod );
+    } catch (e) {
+      console.warn('Cannot set the state');
+    }
   }
   // Private Methods
   private async _promiseRatelimit<T> (circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
@@ -65,13 +100,13 @@ export class Ratelimit extends Module {
     }
     const now = (new Date()).getTime();
     if (this.requestsTime.length < this.limitForPeriod) {
-      this.requestsTime.push(now);
+      await this.addCurrentRequest(now);
       return promise(...params);
     } else {
       const deltaSinceFirstRequest = now - this.requestsTime[0];
       if (deltaSinceFirstRequest > this.limitPeriod) {
-        this.requestsTime.shift();
-        this.requestsTime.push(now);
+        this.requestsTime.splice(0, 1);
+        await this.addCurrentRequest(now);
         return promise(...params);
       } else {
         this.logger?.debug(`${circuit.name}/${this.name} - Ratelimited`);
