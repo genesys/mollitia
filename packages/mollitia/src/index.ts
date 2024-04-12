@@ -68,8 +68,7 @@ export {
   BreakerState,
   SlidingWindowBreaker,
   SlidingWindowBreakerOptions,
-  SlidingWindowRequestResult,
-  type SlidingElem
+  SlidingWindowRequestResult
 } from './module/breaker/index.js';
 
 // Sliding Count Breaker

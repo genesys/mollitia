@@ -85,7 +85,7 @@ export default withMermaid({
 							collapsed: false,
 							items: [
                 { text: 'Prometheus', link: '/guide/customization/addons/prometheus' },
-                { text: 'Redis Storage', link: '/guide/customization/addons/redisStorage' }
+                { text: 'Redis', link: '/guide/customization/addons/redis' }
 							]
 						}
 					]

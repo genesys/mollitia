@@ -1,37 +1,39 @@
-# Redis Storage
+# Redis
 
-The `Mollitia` [Redis Storage](https://redis.io/) addon adds redis storage for some modules of every circuit. The list of modules coming with redis support are RateLimit, SlidingCountBreaker and SlidingTimeBreaker.
-
-``` bash
-
-```
+The `Mollitia` [Redis](https://redis.io/) addon adds redis for some modules of every circuit. The list of modules coming with redis support are Ratelimit, SlidingCountBreaker and SlidingTimeBreaker.
 
 ## Quick Start
 
 ``` bash
 # Install mollitia
 npm install mollitia --save
-# Install the Redis storage addon
-npm install @mollitia/redis-storage --save
+# Install the Redis addon
+npm install @mollitia/redis --save
 ```
 
 ``` typescript
 // Then add the addon
 import * as Mollitia from 'mollitia';
-import { StorageAddon } from '@mollitia/redis-storage';
-// Adds the Redis Storage addon to Mollitia
-Mollitia.use(new StorageAddOn({ host: <Redis hostName>, port: <Redis Port>, password: <Redis Password> }));
+import { RedisAddOn } from '@mollitia/redis';
+// Adds the Redis addon to Mollitia
+Mollitia.use(
+  new RedisAddOn({ 
+    host: <Redis hostName>, 
+    port: <Redis Port>,
+    password: <Redis Password> 
+  })
+);
 ```
 
-Then, add `storage` options when creating modules. Storage is only available for RateLimit, SlindingCountBreaker or SlidingTimeBreaker module.
+Then, add `redis` options when creating modules. Redis is only available for Ratelimit, SlidingCountBreaker or SlidingTimeBreaker module.
 
 ``` typescript
 const rateLimitModule = new Mollitia.Ratelimit({
   name: 'myRateLimitModule',
   limitForPeriod: 2,
   limitPeriod: 20000,
-  storage: {
-    // Setting storage.use to true indicates Redis Storage should be used
+  redis: {
+    // Setting redis.use to true indicates Redis should be used
     use: true
   }
 };
@@ -58,17 +60,17 @@ await myCircuit.execute('dummy');
 
 | Name             | Description                                                                 | Default    |
 |:-----------------|:----------------------------------------------------------------------------|:-----------|
-| `getMaxDelay`    | Specifies the maximum time, in milliseconds,to get data from Redis storage  | `500`      |
-| `setMaxDelay`    | Specifies the maximum time, in milliseconds,to set data to Redis storage    | `500`      |
+| `getMaxDelay`    | Specifies the maximum time, in milliseconds,to get data from Redis          | `500`      |
+| `setMaxDelay`    | Specifies the maximum time, in milliseconds,to set data to Redis            | `500`      |
 | `ttl`            | Specifies the maximum duration, in milliseconds, the data stays in  Redis   | `0`        |
 
 #### At module level
 
 | Name             | Description                                                                 | Default    |
 |:-----------------|:----------------------------------------------------------------------------|:-----------|
-| `use`            | Specifies if the redis storage is used for the module                       | `false`    |
-| `getMaxDelay`    | Specifies the maximum time, in milliseconds,to get data from Redis storage  | `500`      |
-| `setMaxDelay`    | Specifies the maximum time, in milliseconds,to set data to Redis storage    | `500`      |
+| `use`            | Specifies if the redis is used for the module                               | `false`    |
+| `getMaxDelay`    | Specifies the maximum time, in milliseconds,to get data from Redis          | `500`      |
+| `setMaxDelay`    | Specifies the maximum time, in milliseconds,to set data to Redis            | `500`      |
 | `ttl`            | Specifies the maximum duration, in milliseconds, the data stays in  Redis   | `0`        |
 
 #### Option priority
@@ -77,12 +79,12 @@ When an option is defined both at AddOn level and at module level, the option va
 
 Example:
 ``` typescript
-Mollitia.use(new StorageAddOn({ host: <Redis hostName>, port: <Redis Port>, password: <Redis Password>, getMaxDelay: 1000, setMaxDelay: 1000 }));
+Mollitia.use(new RedisAddOn({ host: <Redis hostName>, port: <Redis Port>, password: <Redis Password>, getMaxDelay: 1000, setMaxDelay: 1000 }));
 const rateLimitModule = new Mollitia.Ratelimit({
   name: 'myRateLimitModule',
   limitForPeriod: 2,
   limitPeriod: 20000,
-  storage: {
+  redis: {
     use: true,
     getMaxDelay: 500
   }
@@ -99,8 +101,8 @@ These options are available to avoid blocking the operations for a long time whe
 
 * ttl
 
-This option could be used to avoid keeping some keys in Redis storage for a long duration. Setting ttl to 0 deactivate the ttl.
+This option could be used to avoid keeping some keys in Redis for a long duration. Setting ttl to 0 deactivate the ttl.
 
-Please note that this option is only applicable when the Redis Storage is used with SlindingCountBreaker module, as SlidingTimeBreker module and RateLimit module come with existing ttl (slidingWindowSize for SlidingCoundBreaker, limitPeriod for RateLimit).
+Please note that this option is only applicable when Redis is used with SlidingCountBreaker module, as SlidingTimeBreaker module and Ratelimit module come with existing ttl (slidingWindowSize for SlidingCountBreaker, limitPeriod for Ratelimit).
 
 This option is converted to a number of seconds, and rounded to the next integer.

@@ -4,13 +4,12 @@ import * as Mollitia from 'mollitia';
 import { successAsync, failureAsync } from '../../../../../../../shared/vite/utils/vitest.js';
 import * as RedisStorage from '../../../../src/index.js';
 
+const redisAddOn = new RedisStorage.RedisAddOn({ host: 'localhost', port: 6379, password: '' });
 vi.mock('redis', () => {
   return redisMock;
 });
-
-const storageAddOn = new RedisStorage.StorageAddon({ host: 'localhost', port: 6379, password: '' });
-((storageAddOn as any).storage as any).initializePromise = new Promise<void>((resolve) => resolve());
-Mollitia.use(storageAddOn);
+redisAddOn['redis']['initializePromise'] = new Promise<void>((resolve) => resolve());
+Mollitia.use(redisAddOn);
 
 const delay = (delay = 1) => {
   return new Promise<void>((resolve) => {
@@ -29,7 +28,7 @@ describe('Sliding Time Breaker', () => {
     const slidingTimeBreaker = new Mollitia.SlidingTimeBreaker({
       state: Mollitia.BreakerState.OPENED,
       openStateDelay: 20,
-      storage: {
+      redis: {
         use: true
       }
     });
@@ -52,7 +51,7 @@ describe('Sliding Time Breaker', () => {
       minimumNumberOfCalls: 3,
       failureRateThreshold: 70,
       openStateDelay: 2000,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingTimeBreaker1'
@@ -62,7 +61,7 @@ describe('Sliding Time Breaker', () => {
       minimumNumberOfCalls: 3,
       failureRateThreshold: 70,
       openStateDelay: 2000,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingTimeBreaker2'
@@ -110,7 +109,7 @@ describe('Sliding Time Breaker', () => {
       openStateDelay: 10,
       state: Mollitia.BreakerState.HALF_OPENED,
       permittedNumberOfCallsInHalfOpenState: 2,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingTimeBreaker3'
@@ -146,7 +145,7 @@ describe('Sliding Time Breaker', () => {
       permittedNumberOfCallsInHalfOpenState: 1,
       slowCallDurationThreshold: 100,
       slowCallRateThreshold: 50,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingTimeBreaker4'
@@ -188,7 +187,7 @@ describe('Sliding Time Breaker', () => {
         minimumNumberOfCalls: 2,
         failureRateThreshold: 60,
         permittedNumberOfCallsInHalfOpenState: 1,
-        storage: {
+        redis: {
           use: true
         },
         name: moduleName
@@ -210,17 +209,17 @@ describe('Sliding Time Breaker', () => {
       await expect(circuit2.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
       expect(slidingTimeBreaker2.state).toEqual(Mollitia.BreakerState.CLOSED);
       await delay(500);
-      let res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      let res = await slidingTimeBreaker2.getState();
       expect(JSON.stringify(res)).toContain('requests');
       await delay(500);
       // Delay to wait TTL -> Redis storage is cleared
-      res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      res = await slidingTimeBreaker2.getState();
       expect(JSON.stringify(res)).toEqual('{}');
       // So even if a request fails, the circuit is closed because this is the only request stored
       await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
       expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
     });
-    it('Should ignore module storage ttl for SlidingTimeBreaker module, and use TTL from SlidingTimeBreaker', async () => {
+    it('Should ignore module redis ttl for SlidingTimeBreaker module, and use TTL from SlidingTimeBreaker', async () => {
       const moduleName = 'mySlidingTimeBreaker6';
       const breakerData = {
         openStateDelay: 1000,
@@ -228,7 +227,7 @@ describe('Sliding Time Breaker', () => {
         minimumNumberOfCalls: 2,
         failureRateThreshold: 60,
         permittedNumberOfCallsInHalfOpenState: 1,
-        storage: {
+        redis: {
           use: true,
           ttl: 1000
         },
@@ -250,9 +249,9 @@ describe('Sliding Time Breaker', () => {
       await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
       await expect(circuit2.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
       expect(slidingTimeBreaker2.state).toEqual(Mollitia.BreakerState.CLOSED);
-      // Delay to wait is > module storage TTL but < slidingWindowSize, so Redis Storage is not cleared
+      // Delay to wait is > redis TTL but < slidingWindowSize, so Redis   is not cleared
       await delay(1100);
-      const res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      const res = await slidingTimeBreaker2.getState();
       expect(JSON.stringify(res)).toContain('requests');
       // Hence, another request failure leads to circuit being opened
       await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');

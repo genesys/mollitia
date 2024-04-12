@@ -4,13 +4,12 @@ import * as Mollitia from 'mollitia';
 import { successAsync, failureAsync } from '../../../../../../../shared/vite/utils/vitest.js';
 import * as RedisStorage from '../../../../src/index.js';
 
+const redisAddOn = new RedisStorage.RedisAddOn({ host: 'localhost', port: 6379, password: '', ttl: 1000 });
 vi.mock('redis', () => {
   return redisMock;
 });
-
-const storageAddOn = new RedisStorage.StorageAddon({ host: 'localhost', port: 6379, password: '', ttl: 1000});
-((storageAddOn as any).storage as any).initializePromise = new Promise<void>((resolve) => resolve());
-Mollitia.use(storageAddOn);
+redisAddOn['redis']['initializePromise'] = new Promise<void>((resolve) => resolve());
+Mollitia.use(redisAddOn);
 
 const delay = (delay = 1) => {
   return new Promise<void>((resolve) => {
@@ -29,7 +28,7 @@ describe('Sliding Count Breaker', () => {
     const slidingCountBreaker = new Mollitia.SlidingCountBreaker({
       state: Mollitia.BreakerState.OPENED,
       openStateDelay: 20,
-      storage: {
+      redis: {
         use: true
       }
     });
@@ -52,7 +51,7 @@ describe('Sliding Count Breaker', () => {
       minimumNumberOfCalls: 3,
       failureRateThreshold: 60,
       openStateDelay: 2000,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingCountBreaker1'
@@ -62,7 +61,7 @@ describe('Sliding Count Breaker', () => {
       minimumNumberOfCalls: 3,
       failureRateThreshold: 60,
       openStateDelay: 2000,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingCountBreaker2'
@@ -106,7 +105,7 @@ describe('Sliding Count Breaker', () => {
       failureRateThreshold: 40,
       permittedNumberOfCallsInHalfOpenState: 1,
       minimumNumberOfCalls: 2,
-      storage: {
+      redis: {
         use: true
       }
     };
@@ -141,7 +140,7 @@ describe('Sliding Count Breaker', () => {
       openStateDelay: 10,
       state: Mollitia.BreakerState.HALF_OPENED,
       permittedNumberOfCallsInHalfOpenState: 2,
-      storage: {
+      redis: {
         use: true
       }
     };
@@ -174,7 +173,7 @@ describe('Sliding Count Breaker', () => {
       slowCallDurationThreshold: 100,
       slowCallRateThreshold: 50,
       name: 'mySlidingCountBreaker5',
-      storage: {
+      redis: {
         use: true
       }
     };
@@ -206,7 +205,7 @@ describe('Sliding Count Breaker', () => {
       openStateDelay: 10,
       slidingWindowSize: 5,
       minimumNumberOfCalls: 3,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingCountBreaker6'
@@ -238,7 +237,7 @@ describe('Sliding Count Breaker', () => {
       minimumNumberOfCalls: 2,
       failureRateThreshold: 60,
       openStateDelay: 20,
-      storage: {
+      redis: {
         use: true
       },
       name: 'mySlidingCountBreaker7',
@@ -269,14 +268,14 @@ describe('Sliding Count Breaker', () => {
   });
 
   describe('Redis TTL - Sliding Count', () => {
-    it('Should use module storage TTL if found - SCB', async () => {
+    it('Should use module Redis TTL if found - SCB', async () => {
       const moduleName = 'mySlidingCountBreaker8';
       const breakerData = {
         slidingWindowSize: 3,
         minimumNumberOfCalls: 2,
         openStateDelay: 2000,
         failureRateThreshold: 60,
-        storage: {
+        redis: {
           use: true,
           ttl: 2000
         },
@@ -299,25 +298,25 @@ describe('Sliding Count Breaker', () => {
       await expect(circuit2.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
       expect(slidingCountBreaker2.state).toEqual(Mollitia.BreakerState.CLOSED);
       await delay(100);
-      let res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      let res = await slidingCountBreaker2.getState();
       expect(JSON.stringify(res)).toContain('requests');
       await delay(1400);
-      res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      res = await slidingCountBreaker2.getState();
       expect(JSON.stringify(res)).toContain('requests');
       await delay(500);
-      res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      res = await slidingCountBreaker2.getState();
       expect(JSON.stringify(res)).toEqual('{}');
       await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
       expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
     });
-    it('Should use AddOn storage TTL if found and no module TTL- SCB', async () => {
+    it('Should use AddOn Redis TTL if found and no module TTL- SCB', async () => {
       const moduleName = 'mySlidingCountBreaker9';
       const breakerData = {
         slidingWindowSize: 3,
         minimumNumberOfCalls: 2,
         openStateDelay: 2000,
         failureRateThreshold: 60,
-        storage: {
+        redis: {
           use: true
         },
         name: moduleName
@@ -339,13 +338,11 @@ describe('Sliding Count Breaker', () => {
       await expect(circuit2.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
       expect(slidingCountBreaker2.state).toEqual(Mollitia.BreakerState.CLOSED);
       await delay(100);
-      let res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      let res = await slidingCountBreaker2.getState();
       expect(JSON.stringify(res)).toContain('requests');
       await delay(1000);
-      res = await storageAddOn.getStateWithStorage(moduleName, 1000);
+      res = await slidingCountBreaker2.getState();
       expect(JSON.stringify(res)).toEqual('{}');
     });
   });
-},{
-    timeout: 300000,
 });

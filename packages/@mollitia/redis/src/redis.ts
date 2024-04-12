@@ -20,9 +20,6 @@ export class RedisStorage implements CircuitStorage {
       disableOfflineQueue: true, //disableOfflineQueue should be set to true to avoid blocking requests when Redis is down
       password
     });
-    this.client.on('error', () => {
-      //console.log(err);
-    });
     this.initializePromise = new Promise<void>((resolve) => {
       this.client.on('ready', () => {
         resolve();
@@ -34,7 +31,7 @@ export class RedisStorage implements CircuitStorage {
     const data: Mollitia.SerializableRecord = {};
     await this.initializePromise;
     const keys = await this.client.keys(`${this.prefix}::module::${moduleName}::*`);
-    for await (const key of keys) {
+    for (const key of keys) {
       const val = await this.client.get(key);
       if (val) {
         try {
@@ -63,7 +60,7 @@ export class RedisStorage implements CircuitStorage {
   public async clearState(moduleName: string): Promise<void> {
     try {
       const keys = await this.client.keys(`${this.prefix}::module::${moduleName}::*`);
-      for await (const key of keys) {
+      for (const key of keys) {
         await this.client.del(key);
       }
     } catch {

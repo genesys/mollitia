@@ -93,9 +93,14 @@ export enum SlidingWindowRequestResult {
   TIMEOUT =  2
 }
 
-export interface SlidingElem extends SerializableRecord{
+export interface SlidingRequest extends SerializableRecord {
   result: SlidingWindowRequestResult,
   timestamp?: number
+}
+
+export interface SlidingState extends SerializableRecord {
+  state: BreakerState,
+  timestamp: number
 }
 
 export abstract class SlidingWindowBreaker extends Module {
@@ -149,7 +154,7 @@ export abstract class SlidingWindowBreaker extends Module {
   private halfOpenMaxDelayTimeout = 0;
   private openTimeout = 0;
   public nbRequestsInHalfOpenedState: number;
-  public requests: SlidingElem[];
+  public requests: SlidingRequest[];
   private isInitialized = false;
 
   constructor (options?: SlidingWindowBreakerOptions) {
@@ -186,26 +191,53 @@ export abstract class SlidingWindowBreaker extends Module {
     this.reinitializeCounters();
   }
 
+  private isSomeEnum<T extends object>(obj: T, possibleValue: any): possibleValue is T[keyof T] {
+    return Object.values(obj).includes(possibleValue);
+  }
+
+  private isValidTimestamp(data: object): boolean {
+    return !('timestamp' in data) || ('timestamp' in data && typeof (data.timestamp) === 'number');
+  }
+
+  private isValidState(data: unknown): data is SlidingState {
+    return !!(
+      data &&
+      typeof (data) === 'object' &&
+      ('state' in data && this.isSomeEnum(BreakerState, data.state)) &&
+      this.isValidTimestamp(data)
+    );
+  }
+
+  private isValidRequest(data: unknown): data is SlidingRequest {
+    return !!(
+      data &&
+      typeof(data) === 'object' &&
+      ('result' in data && this.isSomeEnum(SlidingWindowRequestResult, data.result)) &&
+      this.isValidTimestamp(data)
+    );
+  }
+
+  private isValidData(data: SerializableRecord): data is { requests?: SlidingRequest[], state?: SlidingState } {
+    return (
+      (!data.state || this.isValidState(data.state)) &&
+      (!data.requests || (Array.isArray(data.requests) && !data.requests.some((req) => !this.isValidRequest(req))))
+    );
+  }
+
   public async execute<T>(circuit: Circuit, promise: CircuitFunction, ...params: any[]): Promise<T> {
-    let data;
     try {
-      data = await this.getState();
+      const data = await this.getState();
+      if (this.isValidData(data)) {
+        this.requests = data.requests ?
+          (data.requests.map((r) => r.timestamp ? { result: r.result, timestamp: r.timestamp } : { result: r.result })) :
+          [];
+        if (data.state) {
+          this.state = data.state.state;
+          this.stateTimestamp = data.state.timestamp;
+        }
+      }
     } catch (e) {
       console.warn('Cannot get state');
-    }
-    if (data?.requests) {
-      this.requests = (data.requests as SerializableRecord[]).map((r) => {
-        if (r.timestamp) {
-          return { result: r.result as SlidingWindowRequestResult, timestamp: r.timestamp as number}
-        }
-        return { result: r.result as SlidingWindowRequestResult}
-      });
-    } else {
-      this.requests = [];
-    }
-    if (data?.state) {
-      this.state = (data.state as SerializableRecord).state as BreakerState;
-      this.stateTimestamp = (data.state as SerializableRecord).timestamp as number;
     }
     if (!this.isInitialized) {
       this.isInitialized = true;
@@ -305,7 +337,7 @@ export abstract class SlidingWindowBreaker extends Module {
     );
   }
 
-  protected getNbSlowAndFailure(acc: {nbSlow: number, nbFailure: number}, current: SlidingElem): {nbSlow: number, nbFailure: number} {
+  protected getNbSlowAndFailure(acc: {nbSlow: number, nbFailure: number}, current: SlidingRequest): {nbSlow: number, nbFailure: number} {
     switch(current.result) {
       case SlidingWindowRequestResult.FAILURE:
         acc.nbFailure++;

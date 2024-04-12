@@ -2,9 +2,9 @@
 
 <p align="center"><br/><img width="200" src="https://genesys.github.io/mollitia/favicon.svg" alt="Mollitia Icon"/><br/><br/></p>
 
-> Mollitia - Redis Storage Addon
+> Mollitia - Redis Addon
 
-The `Mollitia` [Redis Storage](https://redis.io/) addon adds redis storage for some modules of every circuit. The list of modules coming with redis support are RateLimit, SlidingCountBreaker and SlidingTimeBreaker.
+The `Mollitia` [Redis](https://redis.io/) addon adds redis for some modules of every circuit. The list of modules coming with redis support are Ratelimit, SlidingCountBreaker and SlidingTimeBreaker.
 
 ## 📄 Documentation
 
@@ -13,7 +13,7 @@ Please check out the official documentation to get started using **Mollitia**, v
 ## ⚙️ Installation
 
 ``` bash
-npm install --save @mollitia/redis-storage
+npm install --save @mollitia/redis
 ```
 
 ## 🚀 Usage
@@ -21,20 +21,24 @@ npm install --save @mollitia/redis-storage
 ``` typescript
 // Imports the library
 import * as Mollitia from 'mollitia';
-import { StorageAddon } from '@mollitia/redis-storage';
-// Adds the Redis Storage addon to Mollitia
-Mollitia.use(new StorageAddOn({ host: <Redis hostName>, port: <Redis Port>, password: <Redis Password> }));
-// Creates the module that will be used in your circuit, using Redis Storage
-// Redis Storage is only applicable for Modules:
-//  - RateLimit
+import { RedisAddOn } from '@mollitia/redis';
+// Adds the Redis addon to Mollitia
+Mollitia.use(new RedisAddOn({
+  host: <Redis hostName>,
+  port: <Redis Port>,
+  password: <Redis Password>
+}));
+// Creates the module that will be used in your circuit, using Redis
+// Redis is only applicable for Modules:
+//  - Ratelimit
 //  - SlidingCountBreaker
 //  - SlidingTimeBreaker
 const rateLimit = new Mollitia.Ratelimit({
   name: 'myRateLimit',
   limitForPeriod: 2,
   limitPeriod: 20000,
-  storage: {
-    // Setting storage.use to true indicates Redis Storage should be used
+  redis: {
+    // Setting redis.use to true indicates Redis should be used
     use: true
   }
 };

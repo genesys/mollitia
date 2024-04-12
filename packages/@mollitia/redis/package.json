@@ -1,25 +1,26 @@
 {
-  "name": "@mollitia/redis-storage",
+  "name": "@mollitia/redis",
   "type": "module",
   "version": "0.0.1",
-  "description": "Redis Storage Addon",
+  "description": "Redis Addon",
   "author": "Stephane Hervochon <stephane.hervochon@genesys.com>",
   "license": "MIT",
   "keywords": [
     "mollitia",
-    "mollitia-storage",
+    "mollitia-redis",
     "resiliency",
     "resilience",
     "node",
     "nodejs",
     "javascript",
     "typescript",
+    "redis",
     "storage"
   ],
   "homepage": "https://genesys.github.io/mollitia/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/genesys/mollitia/blob/main/packages/@mollitia/redis-storage"
+    "url": "https://github.com/genesys/mollitia/blob/main/packages/@mollitia/redis"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
