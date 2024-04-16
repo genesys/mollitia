@@ -2,14 +2,14 @@ import { redisMock } from '../../../helper/redis-mock.js';
 import { describe, afterEach, it, expect, vi } from 'vitest';
 import * as Mollitia from 'mollitia';
 import { successAsync, failureAsync } from '../../../../../../../shared/vite/utils/vitest.js';
-import { RedisAddOn } from '../../../../src/index.js';
-const redisAddOn = new RedisAddOn({ host: 'localhost', port: 6379, password: '', ttl: 1000 });
+import { RedisAddon } from '../../../../src/index.js';
+const redisAddon = new RedisAddon({ host: 'localhost', port: 6379, logger: console, ttl: 1000 });
 vi.mock('redis', () => {
   return redisMock;
 });
-redisAddOn['redis']['initializePromise'] = new Promise<void>((resolve) => resolve());
+redisAddon['redis']!['initializePromise'] = new Promise<void>((resolve) => resolve());
 
-Mollitia.use(redisAddOn);
+Mollitia.use(redisAddon);
 
 const delay = (delay = 1) => {
   return new Promise<void>((resolve) => {

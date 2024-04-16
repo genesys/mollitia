@@ -4,12 +4,12 @@ import * as Mollitia from 'mollitia';
 import { successAsync, failureAsync } from '../../../../../../../shared/vite/utils/vitest.js';
 import * as RedisStorage from '../../../../src/index.js';
 
-const redisAddOn = new RedisStorage.RedisAddOn({ host: 'localhost', port: 6379, password: '' });
+const redisAddon = new RedisStorage.RedisAddon({ host: 'localhost', port: 6379, password: '' });
 vi.mock('redis', () => {
   return redisMock;
 });
-redisAddOn['redis']['initializePromise'] = new Promise<void>((resolve) => resolve());
-Mollitia.use(redisAddOn);
+redisAddon['redis']!['initializePromise'] = new Promise<void>((resolve) => resolve());
+Mollitia.use(redisAddon);
 
 const delay = (delay = 1) => {
   return new Promise<void>((resolve) => {

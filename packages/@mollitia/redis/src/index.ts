@@ -10,9 +10,21 @@ declare module 'mollitia' {
      * Redis Circuit helper. [Redis Addon]
      */
     redis?: {
+      /**
+       * Specifies if redis is used for the module.
+      */
       use: boolean;
+      /**
+       * Max Delay to wait before timing out requests to get value for a Redis Key within this module.
+      */
       getMaxDelay?: number;
+      /**
+       * Global Max Delay to wait before timing out requests to set value for a Redis Key within this module.
+      */
       setMaxDelay?: number;
+      /**
+       * Time to Live for Redis keys within this module.
+      */
       ttl?: number;
     }
   }
@@ -22,38 +34,84 @@ declare module 'mollitia' {
  */
 export const modules: Mollitia.Module[] = [];
 
+//TODO: Add Redis Cluster connection capability
+export interface RedisAddonOptions {
+  /**
+   * The Logger for Redis Addon
+   */
+  logger?: Mollitia.Logger,
+  /**
+   * Redis Url (Connect using either Redis URL or Redis Host + Redis Port).
+  */
+  url?: string,
+  /**
+   * Redis Host.
+  */
+  host?: string,
+  /**
+   * Redis Port.
+  */
+  port?: number,
+  /**
+   * Username to connect to Redis
+  */
+  username?: string,
+  /**
+   * Password to connect to Redis
+  */
+  password?: string,
+  /**
+   * Global TTL (Time To Live) for Redis keys. This could be overridden per module.
+  */
+  ttl?: number,
+  /**
+   * Global Max Delay to wait before timing out requests to get value for a Redis Key. This could be overridden per module.
+  */
+  getMaxDelay?: number,
+  /**
+   * Global Max Delay to wait before timing out requests to set value for a Redis Key. This could be overridden per module.
+  */
+  setMaxDelay?: number
+}
+
 /**
- * The RedisAddOn Class, that should be added to the core Mollitia module. [Redis Addon]
+ * The RedisAddon Class, that should be added to the core Mollitia module. [Redis Addon]
  * @example
- * Mollitia.use(new RedisStorage.RedisAddOn());
+ * Mollitia.use(new MollitiaRedis.RedisAddon());
  */
-export class RedisAddOn implements Mollitia.Addon {
-  private redis;
-  private getMaxDelay: number;
-  private setMaxDelay: number;
-  private ttl: number;
-  constructor(configuration: { host: string, port: number, password: string, ttl?: number, getMaxDelay?: number, setMaxDelay?: number }) {
-    this.redis = new RedisStorage(configuration.host, configuration.port, configuration.password);
-    this.getMaxDelay = configuration.getMaxDelay || 500; //0 for getMaxDelay is not a valid value
-    this.setMaxDelay = configuration.setMaxDelay ?? 500;
-    this.ttl = configuration.ttl || 0;
+export class RedisAddon implements Mollitia.Addon {
+  private redis?: RedisStorage;
+  private getMaxDelay = 500;
+  private setMaxDelay = 500;
+  private ttl = 0;
+  private logger?: Mollitia.Logger;
+
+  constructor(options: RedisAddonOptions) {
+    this.logger = options.logger;
+    if (!options.url && (!options.host || !options.port)) {
+      this.logger?.warn('Redis configuration is invalid');
+      return;
+    }
+    this.redis = new RedisStorage(options);
+    this.getMaxDelay = options.getMaxDelay || 500; //0 for getMaxDelay is not a valid value
+    this.setMaxDelay = options.setMaxDelay ?? 500;
+    this.ttl = options.ttl || 0;
   }
 
   private async getStateWithRedis (moduleName: string, getMaxDelay: number): Promise<Mollitia.SerializableRecord> {
     return new Promise((resolve, reject) => {
       const opTimeout = setTimeout(() => {
-        reject();
+        reject('Getting the state from Redis timed out.');
       }, getMaxDelay);
       try {
-        this.redis.getState(moduleName).then((data) => {
+        this.redis!.getState(moduleName).then((data) => {
           clearTimeout(opTimeout);
           resolve(data);
         });
       }
       catch (e) {
-        console.log('Error occurred while trying to get the state from Redis');
         clearTimeout(opTimeout);
-        reject();
+        reject('Error occurred while trying to get the state from Redis.');
       }
     });
   }
@@ -61,17 +119,16 @@ export class RedisAddOn implements Mollitia.Addon {
   private async setStateWithRedis(moduleName: string, state: Mollitia.SerializableRecord[], setMaxDelay: number, ttl: number): Promise<void> {
     return new Promise((resolve, reject) => {
       const opTimeout = setTimeout(() => {
-        reject();
+        reject('Setting the state in Redis timed out.');
       }, setMaxDelay);
       try {
-        this.redis.setState(moduleName, state, ttl).then(() => {
+        this.redis!.setState(moduleName, state, ttl).then(() => {
           clearTimeout(opTimeout);
           resolve();
         });
       } catch (e) {
-        console.log('Error occurred while trying to set the state in Redis');
         clearTimeout(opTimeout);
-        reject();
+        reject('Error occurred while trying to set the state in Redis');
       }
     });
   }
@@ -84,11 +141,11 @@ export class RedisAddOn implements Mollitia.Addon {
       return this.setStateWithRedis(mod.name, state, setMaxDelay, ttl || moduleTtl);
     }
     mod.clearState = async (): Promise<void> => {
-      return this.redis.clearState(mod.name);
+      return this.redis!.clearState(mod.name);
     }
   }
   onModuleCreate (module: Mollitia.Module, options: Mollitia.ModuleOptions): void {
-    if (options.redis?.use) {
+    if (options.redis?.use && this.redis) {
       const getMaxDelay = options.redis.getMaxDelay || this.getMaxDelay;
       const setMaxDelay = options.redis.setMaxDelay ?? this.setMaxDelay;
       const moduleTtl = options.redis.ttl || this.ttl;

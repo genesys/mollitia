@@ -2,13 +2,13 @@ import { redisMock, setRedisOptions } from '../../helper/redis-mock.js';
 import { describe, it, vi, expect } from 'vitest';
 import * as Mollitia from 'mollitia';
 import * as RedisStorage from '../../../src/index.js';
-const redisAddOn = new RedisStorage.RedisAddOn({ host: 'localhost', port: 6379, password: '' });
+const redisAddon = new RedisStorage.RedisAddon({ url:'redis://localhost:6379', logger: console });
 vi.mock('redis', () => {
   return redisMock;
 });
-redisAddOn['redis']['initializePromise'] = new Promise<void>((resolve) => resolve());
+redisAddon['redis']!['initializePromise'] = new Promise<void>((resolve) => resolve());
 
-Mollitia.use(redisAddOn);
+Mollitia.use(redisAddon);
 
 const successAsync = vi.fn().mockImplementation((res: unknown, delay = 1) => {
   return new Promise((resolve) => {
@@ -55,6 +55,7 @@ describe('ratelimit with Redis', () => {
         modules: [rateLimit2]
       }
     });
+    // await delay(10000);
     await rateLimit.clearState();
     await rateLimit2.clearState();
     await circuit1.fn(successAsync).execute('dummy');

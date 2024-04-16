@@ -4,12 +4,12 @@ import * as Mollitia from 'mollitia';
 import { successAsync, failureAsync } from '../../../../../../../shared/vite/utils/vitest.js';
 import * as RedisStorage from '../../../../src/index.js';
 
-const redisAddOn = new RedisStorage.RedisAddOn({ host: 'localhost', port: 6379, password: '', ttl: 1000 });
+const redisAddon = new RedisStorage.RedisAddon({ host: 'localhost', port: 6379, password: '', ttl: 1000 });
 vi.mock('redis', () => {
   return redisMock;
 });
-redisAddOn['redis']['initializePromise'] = new Promise<void>((resolve) => resolve());
-Mollitia.use(redisAddOn);
+redisAddon['redis']!['initializePromise'] = new Promise<void>((resolve) => resolve());
+Mollitia.use(redisAddon);
 
 const delay = (delay = 1) => {
   return new Promise<void>((resolve) => {
@@ -309,7 +309,7 @@ describe('Sliding Count Breaker', () => {
       await expect(circuit.fn(failureAsync).execute('dummy')).rejects.toEqual('dummy');
       expect(slidingCountBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
     });
-    it('Should use AddOn Redis TTL if found and no module TTL- SCB', async () => {
+    it('Should use Redis Addon TTL if found and no module TTL- SCB', async () => {
       const moduleName = 'mySlidingCountBreaker9';
       const breakerData = {
         slidingWindowSize: 3,

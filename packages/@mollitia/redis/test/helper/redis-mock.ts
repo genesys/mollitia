@@ -18,7 +18,7 @@ const delay = (delay = 1) => {
 
 export const redisMock = {
   createClient: () => {
-    const keyValuesCollection: { key: string, value: any }[] = [];
+    const keyValuesCollection: { key: string, value: string }[] = [];
     return {
       on: (): Promise<void> | void => {
         return;
@@ -40,7 +40,7 @@ export const redisMock = {
           resolve(matchingKeys);
         });
       },
-      get: async (key: string): Promise<any> => {
+      get: async (key: string): Promise<string | null> => {
         if (redisCrash) {
           throw ('Redis Error');
         }
@@ -52,7 +52,7 @@ export const redisMock = {
           resolve(elem?.value || null);
         });
       },
-      set: async (key: string, value: any): Promise<void> => {
+      set: async (key: string, value: string): Promise<void> => {
         if (redisCrash) {
           throw ('Redis Error');
         }

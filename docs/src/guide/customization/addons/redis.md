@@ -14,10 +14,10 @@ npm install @mollitia/redis --save
 ``` typescript
 // Then add the addon
 import * as Mollitia from 'mollitia';
-import { RedisAddOn } from '@mollitia/redis';
+import { RedisAddon } from '@mollitia/redis';
 // Adds the Redis addon to Mollitia
 Mollitia.use(
-  new RedisAddOn({ 
+  new RedisAddon({ 
     host: <Redis hostName>, 
     port: <Redis Port>,
     password: <Redis Password> 
@@ -75,11 +75,11 @@ await myCircuit.execute('dummy');
 
 #### Option priority
 
-When an option is defined both at AddOn level and at module level, the option value is taken from module
+When an option is defined both at Addon level and at module level, the option value is taken from module
 
 Example:
 ``` typescript
-Mollitia.use(new RedisAddOn({ host: <Redis hostName>, port: <Redis Port>, password: <Redis Password>, getMaxDelay: 1000, setMaxDelay: 1000 }));
+Mollitia.use(new RedisAddon({ host: <Redis hostName>, port: <Redis Port>, password: <Redis Password>, getMaxDelay: 1000, setMaxDelay: 1000 }));
 const rateLimitModule = new Mollitia.Ratelimit({
   name: 'myRateLimitModule',
   limitForPeriod: 2,

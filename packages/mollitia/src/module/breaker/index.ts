@@ -153,8 +153,8 @@ export abstract class SlidingWindowBreaker extends Module {
   // Private Attributes
   private halfOpenMaxDelayTimeout = 0;
   private openTimeout = 0;
-  public nbRequestsInHalfOpenedState: number;
-  public requests: SlidingRequest[];
+  private nbRequestsInHalfOpenedState: number;
+  protected requests: SlidingRequest[];
   private isInitialized = false;
 
   constructor (options?: SlidingWindowBreakerOptions) {
@@ -237,7 +237,7 @@ export abstract class SlidingWindowBreaker extends Module {
         }
       }
     } catch (e) {
-      console.warn('Cannot get state');
+      this.logger?.warn(e);
     }
     if (!this.isInitialized) {
       this.isInitialized = true;
@@ -278,7 +278,7 @@ export abstract class SlidingWindowBreaker extends Module {
     try {
       await this.setState(state, ttl);
     } catch (e) {
-      console.warn('Cannot set the state');
+      this.logger?.warn(e);
     }
   }
 
@@ -387,14 +387,10 @@ export abstract class SlidingWindowBreaker extends Module {
       this.state = BreakerState.CLOSED;
       this.stateTimestamp = Date.now();
       this.onClosed();
-      try {
-        await this.setStateSecure([
-          { key: 'state', value: { state: BreakerState.CLOSED, timestamp: Date.now() } },
-          { key: 'requests', value: '' }
-        ]);
-      } catch (e) {
-        console.warn('Timeout while setting state');
-      }
+      await this.setStateSecure([
+        { key: 'state', value: { state: BreakerState.CLOSED, timestamp: Date.now() } },
+        { key: 'requests', value: '' }
+      ]);
       this.emit('state-changed', this.state);
     }
   }

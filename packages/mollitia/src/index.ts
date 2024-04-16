@@ -11,7 +11,8 @@ export {
   CircuitFactory,
   type CircuitFunction,
   CircuitOptions,
-  NoFuncError
+  NoFuncError,
+  type Logger
 } from './circuit.js';
 
 // Module

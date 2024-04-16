@@ -21,9 +21,9 @@ npm install --save @mollitia/redis
 ``` typescript
 // Imports the library
 import * as Mollitia from 'mollitia';
-import { RedisAddOn } from '@mollitia/redis';
+import { RedisAddon } from '@mollitia/redis';
 // Adds the Redis addon to Mollitia
-Mollitia.use(new RedisAddOn({
+Mollitia.use(new RedisAddon({
   host: <Redis hostName>,
   port: <Redis Port>,
   password: <Redis Password>

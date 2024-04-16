@@ -1,5 +1,6 @@
 import * as Mollitia from 'mollitia';
 import { RedisClientType, RedisModules, createClient } from 'redis';
+import { RedisAddonOptions } from './index.js';
 
 export interface CircuitStorage {
   getState(moduleName: string): Promise<Mollitia.SerializableRecord>;
@@ -11,18 +12,36 @@ export class RedisStorage implements CircuitStorage {
   private client: RedisClientType<RedisModules>;
   private prefix = 'mollitia';
   private initializePromise: Promise<void>;
-  constructor(host: string, port: number, password = '') {
-    this.client = createClient({
+  private logger?: Mollitia.Logger;
+  constructor(options: RedisAddonOptions) {
+    const clientInfo: { disableOfflineQueue: boolean, url?: string, username?: string, password?: string, socket: { host?: string, port?: number, reconnectStrategy?: () => number } } = {
       socket: {
-        host,
-        port
+        reconnectStrategy: () => 500
       },
-      disableOfflineQueue: true, //disableOfflineQueue should be set to true to avoid blocking requests when Redis is down
-      password
-    });
+      disableOfflineQueue: true //disableOfflineQueue should be set to true to avoid blocking requests when Redis is down
+    };
+    if (options.password) {
+      clientInfo.password = options.password;
+    }
+    if (options.username) {
+      clientInfo.username = options.username;
+    }
+    if (options.url) {
+      clientInfo.url = options.url;
+    } else {
+      clientInfo.socket.host = options.host!;
+      clientInfo.socket.port = options.port!;
+    }
+    this.client = createClient(clientInfo);
+    this.logger = options.logger;
     this.initializePromise = new Promise<void>((resolve) => {
       this.client.on('ready', () => {
+        this.logger?.debug('Redis Ready');
         resolve();
+      });
+      // This error handler should be kept, otherwise the reconnection mechanism does not work
+      this.client.on('error', () => {
+        this.logger?.debug('Redis Connection Error');
       });
     });
     this.client.connect();

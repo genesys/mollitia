@@ -74,7 +74,7 @@ export class Ratelimit extends Module {
     try {
       currentState = await this.getState();
     } catch (e) {
-      console.warn('Cannot get state');
+      this.logger?.warn(e);
     }
     if (currentState?.requests) {
       this.requestsTime = currentState?.requests as number[];
@@ -90,7 +90,7 @@ export class Ratelimit extends Module {
     try {
       await this.setState( [{ key: 'requests', value: this.requestsTime }], this.limitPeriod );
     } catch (e) {
-      console.warn('Cannot set the state');
+      this.logger?.warn(e);
     }
   }
   // Private Methods
