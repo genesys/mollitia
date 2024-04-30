@@ -118,6 +118,7 @@ const testRateLimitModule = async () => {
       process.exit(1);
     }
   }
+  console.log('Testing Rate Limit Module - Result is OK');
 }
 
 const testSlidingCountBreakerModule = async () => {
@@ -147,6 +148,7 @@ const testSlidingCountBreakerModule = async () => {
   check(slidingCountBreaker.state === Mollitia.BreakerState.CLOSED, 'Ok, circuit is closed', 'Circuit is not closed as expected...');
   await failure(circuit2, { data: 'Circuit2' });
   check(slidingCountBreaker2.state === Mollitia.BreakerState.OPENED, 'Ok, circuit is opened', 'Circuit is not opened as expected...');
+  console.log('Testing Sliding Count Breaker Module - Result is OK');
 }
 const testSlidingTimeBreakerModule = async () => {
   console.log('Testing Sliding Time Breaker Module');
@@ -188,44 +190,48 @@ const testSlidingTimeBreakerModule = async () => {
   check(slidingTimeBreaker3.state === Mollitia.BreakerState.CLOSED, 'Ok, circuit is closed', 'Circuit is not closed as expected...');
   await failure(circuit3, { data: 'Circuit3' });
   check(slidingTimeBreaker3.state === Mollitia.BreakerState.OPENED, 'Ok, circuit is opened', 'Circuit is not opened as expected...');
+  console.log('Testing Sliding Time Breaker Module - Result is OK');
 }
 const testSlidingTimeBreakerModuleSlowRequest = async () => {
+  console.log('Testing Sliding Time Breaker Module With Slow Requests');
   const breakerData = {
-      failureRateThreshold: 50,
-      openStateDelay: 10,
-      slidingWindowSize: 1000,
-      minimumNumberOfCalls: 2,
-      permittedNumberOfCallsInHalfOpenState: 1,
-      slowCallDurationThreshold: 100,
-      slowCallRateThreshold: 50,
-      redis: {
-        use: true
-      },
-      name: 'mySlidingTimeBreakerSlow'
-    };
-    const slidingTimeBreaker = new Mollitia.SlidingTimeBreaker(breakerData);
-    const slidingTimeBreaker2 = new Mollitia.SlidingTimeBreaker(breakerData);
-    const circuit1 = new Mollitia.Circuit({ options: { modules: [slidingTimeBreaker] } });
-    const circuit2 = new Mollitia.Circuit({ options: { modules: [slidingTimeBreaker2] } });
-    await success(circuit1, { data: 'Circuit1', delay: 150 });
-    await success(circuit2, { data: 'Circuit2' });
-    // Even if 50% of slow requests, circuit is kept closed as last request is success
-    check(slidingTimeBreaker2.state === Mollitia.BreakerState.CLOSED, 'Ok, circuit is closed', 'Circuit is not closed as expected...');
-    await success(circuit1, { data: 'Circuit1', delay: 150 });
-    check(slidingTimeBreaker.state === Mollitia.BreakerState.OPENED, 'Ok, circuit is opened', 'Circuit is not opened as expected...');
-    await delay(150);
-    check(slidingTimeBreaker.state === Mollitia.BreakerState.HALF_OPENED, 'Ok, circuit is Half Opened', 'Circuit is not Half Opened as expected...');
-    await success(circuit2, { data: 'Circuit2', delay: 150 });
-    check(slidingTimeBreaker2.state === Mollitia.BreakerState.OPENED, 'Ok, circuit is opened', 'Circuit is not opened as expected...');
-    await delay(10);
-    await expect(circuit.fn(successAsync).execute('dummy')).resolves.toEqual('dummy');
-    expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.CLOSED);
+    failureRateThreshold: 50,
+    openStateDelay: 10,
+    slidingWindowSize: 1000,
+    minimumNumberOfCalls: 2,
+    permittedNumberOfCallsInHalfOpenState: 1,
+    slowCallDurationThreshold: 100,
+    slowCallRateThreshold: 50,
+    redis: {
+      use: true
+    },
+    name: 'mySlidingTimeBreakerSlow'
+  };
+  const slidingTimeBreaker = new Mollitia.SlidingTimeBreaker(breakerData);
+  const slidingTimeBreaker2 = new Mollitia.SlidingTimeBreaker(breakerData);
+  const circuit1 = new Mollitia.Circuit({ options: { modules: [slidingTimeBreaker] } });
+  const circuit2 = new Mollitia.Circuit({ options: { modules: [slidingTimeBreaker2] } });
+  await success(circuit1, { data: 'Circuit1', delay: 150 });
+  await success(circuit2, { data: 'Circuit2' });
+  // Even if 50% of slow requests, circuit is kept closed as last request is success
+  check(slidingTimeBreaker2.state === Mollitia.BreakerState.CLOSED, 'Ok, circuit is closed', 'Circuit is not closed as expected...');
+  await success(circuit1, { data: 'Circuit1', delay: 150 });
+  check(slidingTimeBreaker.state === Mollitia.BreakerState.OPENED, 'Ok, circuit is opened', 'Circuit is not opened as expected...');
+  await delay(150);
+  check(slidingTimeBreaker.state === Mollitia.BreakerState.HALF_OPENED, 'Ok, circuit is Half Opened', 'Circuit is not Half Opened as expected...');
+  await success(circuit2, { data: 'Circuit2', delay: 150 });
+  check(slidingTimeBreaker2.state === Mollitia.BreakerState.OPENED, 'Ok, circuit is opened', 'Circuit is not opened as expected...');
+  await delay(10);
+  await success(circuit1, { data: 'Circuit1' });
+  check(slidingTimeBreaker.state === Mollitia.BreakerState.CLOSED, 'Ok, circuit is closed', 'Circuit is not closed as expected...');
+  console.log('Testing Sliding Time Breaker Module With Slow Requests - Result is OK');
 }
 
 const main = async () => {
   await testRateLimitModule();
   await testSlidingCountBreakerModule();
   await testSlidingTimeBreakerModule();
+  await testSlidingTimeBreakerModuleSlowRequest();
   process.exit(0);
 }
 
