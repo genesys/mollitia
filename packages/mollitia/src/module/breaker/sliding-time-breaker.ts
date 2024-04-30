@@ -1,15 +1,11 @@
 import { CircuitFunction } from '../../circuit.js';
 import { SlidingWindowBreaker, SlidingWindowBreakerOptions, SlidingWindowRequestResult } from './index.js';
-
-interface SlidingTimeElem {
-  result: SlidingWindowRequestResult,
-  timestamp: number
-}
+import { SerializableRecord } from '../../helpers/serializable.js';
 
 /**
  * The Sliding Time Breaker Module, that allows to break the circuit if it often fails on a time window.
  */
-export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
+export class SlidingTimeBreaker extends SlidingWindowBreaker {
   private maxSize: number;
 
   constructor(options?: SlidingWindowBreakerOptions) {
@@ -19,16 +15,16 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
   }
 
   private filterCalls(): void {
-    let nbCalls = this.callsInClosedState.length;
+    let nbCalls = this.requests.length;
     if (nbCalls >= this.maxSize) {
-      this.callsInClosedState.shift();
+      this.requests.splice(0, 1);
       nbCalls--;
     }
     let stillOk = true;
     const now = (new Date()).getTime();
     for (let i=0; i<nbCalls && stillOk;i++) {
-      if ((now - this.callsInClosedState[0].timestamp) > this.slidingWindowSize) {
-        this.callsInClosedState.shift();
+      if ((now - this.requests[0].timestamp!) > this.slidingWindowSize) {
+        this.requests.splice(0, 1);
       } else {
         stillOk = false;
       }
@@ -39,33 +35,24 @@ export class SlidingTimeBreaker extends SlidingWindowBreaker<SlidingTimeElem> {
     const {requestResult, response, shouldReportFailure } = await this.executePromise(promise, ...params);
     this.filterCalls();
     const adjustedRequestResult = this.adjustRequestResult(requestResult, shouldReportFailure);
-    this.callsInClosedState.push({
+    this.requests.push({
       result: adjustedRequestResult,
       timestamp: (new Date()).getTime()
     });
-    if (this.callsInClosedState.length >= this.minimumNumberOfCalls && adjustedRequestResult !== SlidingWindowRequestResult.SUCCESS) {
-      this.checkCallRatesClosed(this.open.bind(this));
+    let stateSet = false;
+    if (this.requests.length >= this.minimumNumberOfCalls && adjustedRequestResult !== SlidingWindowRequestResult.SUCCESS) {
+        if (!this.checkCallRatesClosed()) {
+          await this.open();
+          stateSet = true;
+        }
+    }
+    if (!stateSet) {
+      await this.setStateSecure([ { key: 'requests', value: this.requests } ], this.slidingWindowSize);
     }
     if (requestResult === SlidingWindowRequestResult.FAILURE) {
       return Promise.reject(response);
     } else {
       return Promise.resolve(response);
     }
-  }
-
-  private checkCallRatesClosed(callbackFailure: (() => void)): void {
-    const {nbSlow, nbFailure} = this.callsInClosedState.reduce(this.getNbSlowAndFailureTimeElem, {nbSlow: 0, nbFailure: 0});
-    this.checkResult(nbSlow, nbFailure, this.callsInClosedState.length, callbackFailure);
-  }
-
-  public getNbSlowAndFailureTimeElem (acc: {nbSlow: number, nbFailure: number}, current: SlidingTimeElem): {nbSlow: number, nbFailure: number} {
-    switch(current.result) {
-      case SlidingWindowRequestResult.FAILURE:
-        acc.nbFailure++;
-        break;
-      case SlidingWindowRequestResult.TIMEOUT:
-        acc.nbSlow++;
-    }
-    return acc;
   }
 }

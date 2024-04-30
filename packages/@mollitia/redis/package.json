@@ -1,37 +1,31 @@
 {
-  "name": "mollitia",
+  "name": "@mollitia/redis",
   "type": "module",
-  "version": "0.1.0",
-  "description": "JavaScript Resilience Library",
-  "author": "Jérémie Pichon <jeremie.pichon@genesys.com>",
+  "version": "0.0.1",
+  "description": "Redis Addon",
+  "author": "Stephane Hervochon <stephane.hervochon@genesys.com>",
   "license": "MIT",
   "keywords": [
     "mollitia",
+    "mollitia-redis",
     "resiliency",
     "resilience",
-    "polly",
     "node",
     "nodejs",
     "javascript",
     "typescript",
-    "circuit-breaker",
-    "fallback",
-    "cache",
-    "retry",
-    "timeout",
-    "ratelimit",
-    "bulkhead",
-    "fault-handling"
+    "redis",
+    "storage"
   ],
   "homepage": "https://genesys.github.io/mollitia/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/genesys/mollitia/blob/main/packages/mollitia"
+    "url": "https://github.com/genesys/mollitia/blob/main/packages/@mollitia/redis"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "unpkg": "./dist/index.umd.js",
+  "unpkg": "./dist/index.js",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -43,7 +37,6 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite build -m development --watch",
     "build": "tsc && vite build",
     "lint": "eslint .",
     "test:unit": "vitest run",
@@ -53,6 +46,10 @@
     "@shared/tsconfig": "*",
     "@shared/vite": "*",
     "eslint-config-mollitia": "*",
-    "yaml": "^2.3.3"
+    "@types/redis": "4.0.11"
+  },
+  "peerDependencies": {
+    "mollitia": "*",
+    "redis": "4.6.10"
   }
 }

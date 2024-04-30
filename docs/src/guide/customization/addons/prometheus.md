@@ -14,9 +14,9 @@ npm install @mollitia/prometheus --save
 ``` typescript
 // Then add the addon
 import * as Mollitia from 'mollitia';
-import { PrometheusAddon } from '@mollitia/prometheus';
+import * as MollitiaPrometheus from '@mollitia/prometheus';
 
-Mollitia.use(new PrometheusAddon());
+Mollitia.use(new MollitiaPrometheus.PrometheusAddon());
 ```
 
 Then, add `Prometheus` options when creating circuits or modules:
@@ -48,8 +48,8 @@ const myCircuitScrap = myCircuit.prometheus.scrap(); // Will return the Promethe
 Finally, you can get `Prometheus` metrics or scrap like this:
 
 ``` typescript
-const metrics = Mollitia.metrics(); // Will return an object containing all metrics from all circuits and modules
-const scrap = Mollitia.scrap(); // Will return the Prometheus scrap
+const metrics = MollitiaPrometheus.metrics(); // Will return an object containing all metrics from all circuits and modules
+const scrap = MollitiaPrometheus.scrap(); // Will return the Prometheus scrap
 ```
 
 ## API Reference

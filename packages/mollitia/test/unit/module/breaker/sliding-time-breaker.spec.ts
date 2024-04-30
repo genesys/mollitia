@@ -3,7 +3,7 @@ import * as Mollitia from '../../../../src/index.js';
 import { delay } from '../../../../src/helpers/time.js';
 import { successAsync, failureAsync } from '../../../../../../shared/vite/utils/vitest.js';
 
-describe('Sliding Count Breaker', () => {
+describe('Sliding Time Breaker', () => {
   afterEach(() => {
     successAsync.mockClear();
     failureAsync.mockClear();
@@ -13,7 +13,7 @@ describe('Sliding Count Breaker', () => {
       state: Mollitia.BreakerState.OPENED,
       openStateDelay: 20
     });
-    new Mollitia.Circuit({
+    const circuit = new Mollitia.Circuit({
       options: {
         modules: [
           slidingTimeBreaker
@@ -21,7 +21,13 @@ describe('Sliding Count Breaker', () => {
       }
     });
     expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.OPENED);
-    await delay(30);
+    try {
+      await circuit.fn(failureAsync).execute('dummy');
+    } catch {
+      // Request is executed in opened state - Failing with exception, this is normal situation.
+      // The execute request is just there to start timeout to switch from inital state (Opened) to other state (Half Opened) after OpenStateDelay timeout
+    }
+    await delay(100);
     expect(slidingTimeBreaker.state).toEqual(Mollitia.BreakerState.HALF_OPENED);
   });
   it('switch to Open when failure rate exceeded', async () => {

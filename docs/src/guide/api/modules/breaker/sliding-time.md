@@ -86,7 +86,7 @@ await circuit.fn(myFunction5).execute();
 | `slowCallDurationThreshold`             | Specifies the duration (in ms) threshold above which calls are considered as slow                                        | `60000`  |
 | `permittedNumberOfCallsInHalfOpenState` | Specifies the number of permitted calls when the circuit is half open                                                    | `2`      |
 | `halfOpenStateMaxDelay`                 | Specifies the maximum wait (in ms) in Half Open State, before switching back to open. 0 deactivates this                 | `0`      |
-| `slidingWindowSize`                     | Specifies the sliding duration (in ms) used to calculate failure and slow call rate percentages                          | `10`     |
+| `slidingWindowSize`                     | Specifies the sliding duration (in ms) used to calculate failure and slow call rate percentages                          | `60`     |
 | `minimumNumberOfCalls`                  | Specifies the minimum number of calls used to calculate failure and slow call rate percentages                           | `10`     |
 | `openStateDelay`                        | Specifies the time (in ms) the circuit stay opened before switching to half-open                                         | `60000`  |
 | `onError`                               | Allows filtering of the error to report as a failure or not.                                                             | `None`   |

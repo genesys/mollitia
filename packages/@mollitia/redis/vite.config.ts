@@ -4,18 +4,20 @@ import { version } from './package.json';
 
 export default defineLibConfig(
   {
-    name: 'MollitiaPrometheus',
+    name: 'MollitiaRedis',
     base: './src',
     entry: ['./index.ts'],
-    version
+    version,
+    formats: ['cjs','es']
   },
   () => ({
     build: {
       rollupOptions: {
-        external: ['mollitia'],
+        external: ['redis', 'mollitia'],
         output: {
           globals: {
-            mollitia: 'mollitia'
+            mollitia: 'mollitia',
+            redis: 'redis'
           }
         }
       }
