@@ -14,7 +14,6 @@
     "build": "nx run-many -t build --output-style=stream",
     "test": "nx run-many -t test:unit --output-style=stream",
     "lint": "nx run-many -t lint --output-style=stream",
-    "clean": "nx run-many -t clean --output-style=stream && rm -rf node_modules",
     "preview": "nx preview docs",
     "version": "lerna version",
     "changelog": "vertis generate",
