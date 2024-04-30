@@ -25,7 +25,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "unpkg": "./dist/index.umd.js",
+  "unpkg": "./dist/index.js",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -39,18 +39,17 @@
   "scripts": {
     "build": "tsc && vite build",
     "lint": "eslint .",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "clean": "rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
     "@shared/tsconfig": "*",
     "@shared/vite": "*",
-    "eslint-config-mollitia": "*"
+    "eslint-config-mollitia": "*",
+    "@types/redis": "4.0.11"
   },
   "peerDependencies": {
-    "mollitia": "*"
-  },
-  "dependencies": {
-    "@types/redis": "4.0.11",
+    "mollitia": "*",
     "redis": "4.6.10"
   }
 }

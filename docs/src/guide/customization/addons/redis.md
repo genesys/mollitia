@@ -7,7 +7,8 @@ The `Mollitia` [Redis](https://redis.io/) addon adds redis for some modules of e
 ``` bash
 # Install mollitia
 npm install mollitia --save
-# Install the Redis addon
+# Install Redis and the Redis addon
+npm install redis --save
 npm install @mollitia/redis --save
 ```
 

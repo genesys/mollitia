@@ -5,18 +5,19 @@ import * as path from 'node:path';
 import dts from 'vite-plugin-dts';
 
 export type LibOptions = {
-    name: string;
-    base: string;
-    entry: string[];
-    version: string;
+  name: string;
+  base: string;
+  entry: string[];
+  version: string;
+  formats?: string[];
 };
-export function defineLibConfig ({ name, base, entry, version }: LibOptions, userConfig?: UserConfigFnObject): UserConfigFnObject {
+export function defineLibConfig ({ name, base, entry, version, formats = ['es', 'cjs', 'umd'] }: LibOptions, userConfig?: UserConfigFnObject): UserConfigFnObject {
     const computeDefaultConfig = defineConfig(() => ({
         build: {
             emptyOutDir: false,
             lib: {
                 entry: entry.map((file) => path.join(base, file)),
-                formats: ['es', 'cjs', 'umd'],
+                formats,
                 name,
                 fileName (format, entryName) {
                     switch (format) {

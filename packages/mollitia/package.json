@@ -46,7 +46,8 @@
     "dev": "vite build -m development --watch",
     "build": "tsc && vite build",
     "lint": "eslint .",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "clean": "rm -rf node_modules && rm -rf dist"
   },
   "devDependencies": {
     "@shared/tsconfig": "*",
