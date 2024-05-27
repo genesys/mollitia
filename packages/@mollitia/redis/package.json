@@ -1,7 +1,7 @@
 {
   "name": "@mollitia/redis",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Redis Addon",
   "author": "Stephane Hervochon <stephane.hervochon@genesys.com>",
   "license": "MIT",
@@ -45,8 +45,8 @@
   "devDependencies": {
     "@shared/tsconfig": "*",
     "@shared/vite": "*",
-    "eslint-config-mollitia": "*",
-    "@types/redis": "4.0.11"
+    "@types/redis": "4.0.11",
+    "eslint-config-mollitia": "*"
   },
   "peerDependencies": {
     "mollitia": "*",
