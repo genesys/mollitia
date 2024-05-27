@@ -34,7 +34,8 @@ jobs:
     - name: Changelog
       run: |
         npm run changelog
-        git commit -a -m "chore: changelog"
+        git add CHANGELOG.md
+        git commit -m "chore: changelog"
         git push --force
     - name: Publish
       run: npm run publish

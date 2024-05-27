@@ -3,7 +3,9 @@
   "version": "independent",
   "command": {
     "version": {
-      "allowBranch": ["main"],
+      "allowBranch": [
+        "main"
+      ],
       "conventionalCommits": true,
       "message": "chore: release",
       "changelog": false,

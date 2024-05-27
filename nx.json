@@ -9,7 +9,7 @@
           "test",
           "lint"
         ],
-        "parallel": 3
+        "parallel": 4
       }
     }
   },
