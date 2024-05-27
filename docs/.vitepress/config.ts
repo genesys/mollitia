@@ -3,6 +3,7 @@ import { withMermaid } from 'vitepress-plugin-mermaid';
 
 export default withMermaid({
 	title: 'Mollitia',
+	base: '/mollitia/',
 	cleanUrls: true,
 	srcDir: './src',
 	head: [
