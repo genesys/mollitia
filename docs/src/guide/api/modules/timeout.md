@@ -44,7 +44,7 @@ circuit.fn(myLongFunction).execute()
 ### Options
 
 | Name     | Description                                          | Default |
-|:---------|:------------------------------------------------ ----|:--------|
+|:---------|:-----------------------------------------------------|:--------|
 | `delay`  | The amount of time before a the promise is rejected. | `60000` |
 
 ### Methods
