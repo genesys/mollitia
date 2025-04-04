@@ -2,6 +2,7 @@
   // Helpers
   import * as Mollitia from 'mollitia';
   import { onMounted, onUnmounted, ref, watch } from 'vue';
+  import * as MollitiaPrometheus from '@mollitia/prometheus';
   // Components
   import Circuit from '../../circuit.vue';
 	import Number from '../../../form/number.vue';
@@ -31,13 +32,19 @@
     slowCallRateThreshold: cbSlowCallRateThreshold.value,
     permittedNumberOfCallsInHalfOpenState: cbPermittedNumberOfCallsInHalfOpenState.value,
     openStateDelay: cbOpenStateDelay.value,
-    halfOpenStateMaxDelay: cbHalfOpenStateMaxDelay.value
+    halfOpenStateMaxDelay: cbHalfOpenStateMaxDelay.value,
+    prometheus: {
+      name: 'sliding_count_module'
+    }
   });
   const circuit = new Mollitia.Circuit({
     options: {
       modules: [
         slidingCount
-      ]
+      ],
+      prometheus: {
+        name: 'sliding_count_circuit'
+      }
     }
   });
   // Handlers

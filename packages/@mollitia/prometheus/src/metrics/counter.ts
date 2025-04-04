@@ -27,13 +27,9 @@ export class PrometheusCounter implements PrometheusMetric {
     this.values[circuitName] += value;
     return this.values[circuitName];
   }
-  public scrap (): string {
-    let str = '';
-    if (Object.keys(this.values).length) {
-      str = this.scrapHelp();
-      str += this.scrapValues();
-    }
-    return str;
+  public reset (circuitName: string): number {
+    this.values[circuitName] = 0;
+    return this.values[circuitName];
   }
   public scrapHelp (): string {
     let str = `# HELP ${this.key} ${this.description}\n`;

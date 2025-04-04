@@ -129,6 +129,7 @@ interface ValueMetrics {
 
 interface ScrapMetrics {
   [key: string]: {
+    key: string;
     help: string;
     value: string;
   }
@@ -198,6 +199,7 @@ export const scrap = (): string => {
         _metrics[metric].value += circuit.prometheus.metrics[metric].scrapValues();
       } else {
         _metrics[metric] = {
+          key: circuit.prometheus.metrics[metric].key,
           help: circuit.prometheus.metrics[metric].scrapHelp(),
           value: circuit.prometheus.metrics[metric].scrapValues()
         };
@@ -210,17 +212,24 @@ export const scrap = (): string => {
         _metrics[metric].value += module.prometheus.metrics[metric].scrapValues();
       } else {
         _metrics[metric] = {
+          key: module.prometheus.metrics[metric].key,
           help: module.prometheus.metrics[metric].scrapHelp(),
           value: module.prometheus.metrics[metric].scrapValues()
         };
       }
     }
   }
-  let str = '';
+  let scrap = '';
+  const helps: Set<string> = new Set();
   for (const metric in _metrics) {
-    str += `${_metrics[metric].help}${_metrics[metric].value}\n`;
+    const key = _metrics[metric].key;
+    if (!helps.has(key)) {
+      scrap += _metrics[metric].help;
+      helps.add(key);
+    }
+    scrap += `${_metrics[metric].value}\n`;
   }
-  return str;
+  return scrap;
 };
 
 /**
@@ -239,8 +248,14 @@ export class PrometheusAddon implements Mollitia.Addon {
         metrics: PrometheusCircuit.attachMetrics(circuit, options),
         scrap: () => {
           let scrap = '';
+          const helps: Set<string> = new Set();
           for (const metric in circuit.prometheus.metrics) {
-            scrap += circuit.prometheus.metrics[metric].scrap();
+            const key = circuit.prometheus.metrics[metric].key;
+            if (!helps.has(key)) {
+              scrap += circuit.prometheus.metrics[metric].scrapHelp();
+              helps.add(key);
+            }
+            scrap += circuit.prometheus.metrics[metric].scrapValues();
           }
           return scrap;
         }
@@ -297,8 +312,14 @@ export class PrometheusAddon implements Mollitia.Addon {
         metrics: attachMetrics(module, options),
         scrap: () => {
           let scrap = '';
+          const helps: Set<string> = new Set();
           for (const metric in module.prometheus.metrics) {
-            scrap += module.prometheus.metrics[metric].scrap();
+            const key = module.prometheus.metrics[metric].key;
+            if (!helps.has(key)) {
+              scrap += module.prometheus.metrics[metric].scrapHelp();
+              helps.add(key);
+            }
+            scrap += module.prometheus.metrics[metric].scrapValues();
           }
           return scrap;
         }
