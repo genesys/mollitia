@@ -27,7 +27,7 @@ export class BreakerError extends Error {
 export class BreakerMaxAllowedRequestError extends Error {
   constructor() {
     super('Max allowed requests reached');
-    Object.setPrototypeOf(this, BreakerError.prototype);
+    Object.setPrototypeOf(this, BreakerMaxAllowedRequestError.prototype);
   }
 }
 
@@ -38,6 +38,14 @@ export enum BreakerState {
   CLOSED = 'closed',
   HALF_OPENED = 'half-opened',
   OPENED = 'opened'
+}
+
+export interface SlidingWindowBreakerState extends SerializableRecord {
+  requests: SlidingRequest[];
+  state: {
+    state: BreakerState;
+    timestamp: number;
+  };
 }
 
 /**
@@ -435,7 +443,7 @@ export abstract class SlidingWindowBreaker extends Module {
       this.openTimeout = 0;
     }
   }
-  public async getState(): Promise<SerializableRecord> {
+  public async getState(): Promise<SlidingWindowBreakerState> {
     return new Promise((resolve) => {
       resolve({
         requests: this.requests,

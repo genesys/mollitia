@@ -41,6 +41,7 @@
     "dist"
   ],
   "scripts": {
+    "dev": "vite build -m development --watch",
     "build": "tsc && vite build",
     "lint": "eslint .",
     "test:unit": "vitest run",

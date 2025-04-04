@@ -10,6 +10,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': 1,
         '@typescript-eslint/ban-types': 1,
         'no-empty-pattern': 1,
+        'no-inner-declarations': 0,
         'no-unused-vars': 0,
         'prefer-const': 1
     }

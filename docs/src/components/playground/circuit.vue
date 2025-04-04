@@ -20,7 +20,7 @@
 	// Props
 	const props = withDefaults(defineProps<{
 		circuit: Mollitia.Circuit;
-		duration?: any; // TODO check why number throws: "TypeError: Right-hand side of 'instanceof' is not callable"
+		duration?: any;
 	}>(), {
 		duration: 500
 	});

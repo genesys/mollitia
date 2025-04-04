@@ -34,14 +34,6 @@ export class PrometheusGauge implements PrometheusMetric {
     this.values[circuitName] = value;
     return this.values[circuitName];
   }
-  public scrap (): string {
-    let str = '';
-    if (Object.keys(this.values).length) {
-      str = this.scrapHelp();
-      str += this.scrapValues();
-    }
-    return str;
-  }
   public scrapHelp (): string {
     let str = `# HELP ${this.key} ${this.description}\n`;
     str += `# TYPE ${this.key} ${this.type}\n`;
