@@ -1,13 +1,13 @@
 // Helpers
 import { defineLibConfig } from '../../../shared/vite/index.js';
-import { version } from './package.json';
+import pkg from './package.json';
 
 export default defineLibConfig(
   {
     name: 'MollitiaRedis',
     base: './src',
     entry: ['./index.ts'],
-    version,
+    version: pkg.version,
     formats: ['cjs','es']
   },
   () => ({
