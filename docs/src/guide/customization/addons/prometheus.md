@@ -90,3 +90,11 @@ const scrap = MollitiaPrometheus.scrap(); // Will return the Prometheus scrap
 | `success_with_retries`     | The amount of executions that succeed after retrying.   | `Counter` |
 | `failures_without_retries` | The amount of executions that failed without retrying.  | `Counter` |
 | `failures_with_retries`    | The amount of executions that failed after retrying.    | `Gauge`   |
+
+### Breaker
+
+| Name                     | Description                                     | Type      | 
+|:-------------------------|:------------------------------------------------|:----------|
+| `breaker_state` | Current State of the Circuit as an enum (Needs to check `state` label). | `Counter` |
+| `failure_rate` | The percentage of failure in circuit. | `Counter` |
+| `slow_rate` | The percentage of slow requests in circuit. | `Counter` |
