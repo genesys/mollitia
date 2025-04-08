@@ -1,7 +1,7 @@
 {
   "name": "@mollitia/redis",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Redis Addon",
   "author": "Stephane Hervochon <stephane.hervochon@genesys.com>",
   "license": "MIT",

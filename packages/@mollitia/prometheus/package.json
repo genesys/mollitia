@@ -1,7 +1,7 @@
 {
   "name": "@mollitia/prometheus",
   "type": "module",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Prometheus Mollitia Addon",
   "author": "Jérémie Pichon <jeremie.pichon@genesys.com>",
   "license": "MIT",
